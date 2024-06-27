@@ -6,19 +6,26 @@ interface Props {
   showModal: boolean;
   handleClose: () => void;
   handleData: () => void;
-  name: string;
-  setName: (name: string) => void;
+  title: string;
+  text: string;
+  setTitle: (title: string) => void;
+  setText: (text: string) => void;
 }
 
 const Modal = ({
   showModal,
   handleClose,
   handleData,
-  name,
-  setName,
+  title,
+  text,
+  setTitle,
+  setText,
 }: Props) => {
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+  const handleNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setData: (x: string) => void
+  ) => {
+    setData(e.target.value);
   };
 
   return (
@@ -31,9 +38,15 @@ const Modal = ({
           <h2>Modal</h2>
           <input
             type="text"
-            placeholder="Enter the Name of ..."
-            value={name}
-            onChange={handleNameChange}
+            placeholder="Enter the Title of ..."
+            value={title}
+            onChange={(e) => handleNameChange(e, setTitle)}
+          />
+          <input
+            type="text"
+            placeholder="Enter the Text of ..."
+            value={text}
+            onChange={(e) => handleNameChange(e, setText)}
           />
           <button onClick={handleData}>Display Data</button>
         </div>

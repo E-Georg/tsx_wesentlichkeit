@@ -1,18 +1,19 @@
 export interface Stackholder {
   id: number;
-  name: string;
+  text: string;
 }
 
 export interface Cell {
-  stackholderID: number;
-  subGroupID: number;
+  clientStakeholderId: number;
+  clientSubGroupId: number;
+  id: number;
   message: {
+    title: string;
     text: string;
-    date: string;
   };
 }
 
 export interface SubGroup {
   id: number;
-  name: string;
+  text: string;
 }

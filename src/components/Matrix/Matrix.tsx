@@ -5,6 +5,8 @@ import {
   AddSubGroup,
   handleCellClick,
 } from "./MatrixFunctions";
+import Modal from "../Modal/Modal";
+import { Zellen } from "../../utils/data.api";
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 
@@ -15,8 +17,11 @@ interface Props {
   setColumns: (column: Stackholder[]) => void;
   cells: Cell[];
   showAddToMatrix: boolean;
-  name: string;
-  setName: (name: string) => void;
+  title: string;
+  text: string;
+  setTitle: (name: string) => void;
+  setText: (name: string) => void;
+  count: (number: number) => void;
 }
 
 const Matrix = ({
@@ -26,46 +31,68 @@ const Matrix = ({
   setColumns,
   cells,
   showAddToMatrix,
-  name,
-  setName,
+  title,
+  text,
+  setTitle,
+  setText,
+  count,
 }: Props) => {
   const [inputValue, setInputValue] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [stackholder, setStackholder] = useState(false);
+  const [subGroup, setSubGroup] = useState(false);
 
   return (
     <>
       {showAddToMatrix ? (
         <div>
-          <input
+          {/* <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-          />
+          /> */}
           <button
             onClick={() => {
               setShowModal(true);
-              AddStackholder(inputValue, columns, setColumns, setInputValue);
+              setStackholder(true);
+              // AddStackholder(inputValue, columns, setColumns, setInputValue);
             }}
           >
             Add Stackholder
           </button>
-          <Modal
-            name={name}
-            setName={setName}
-            handleData={() =>
-              AddStackholder(name, columns, setColumns, setInputValue)
-            }
-            showModal={showModal}
-            handleClose={() => setShowModal(false)}
-          />
 
           <button
-            onClick={() =>
-              AddSubGroup(inputValue, rows, setRows, setInputValue)
-            }
+            onClick={() => {
+              setShowModal(true);
+              setSubGroup(true);
+              // AddSubGroup(inputValue, rows, setRows, setInputValue);
+            }}
           >
             Add SubGroup
           </button>
+
+          <Modal
+            title={title}
+            text={text}
+            setTitle={setTitle}
+            setText={setText}
+            handleData={() => {
+              if (stackholder) {
+                AddStackholder(text, columns, setColumns, setInputValue);
+                setStackholder(false);
+              } else if (subGroup) {
+                AddSubGroup(text, rows, setRows, setInputValue);
+                setSubGroup(false);
+              }
+
+              count(1);
+              setShowModal(false);
+              setTitle("");
+              setText("");
+            }}
+            showModal={showModal}
+            handleClose={() => setShowModal(false)}
+          />
         </div>
       ) : (
         <></>
@@ -75,8 +102,11 @@ const Matrix = ({
           <tr>
             <th></th>
             {columns.map((column) => (
-              <th style={{ border: "1px solid green" }} key={column.id}>
-                {column.name}
+              <th
+                style={{ border: "1px solid green", fontSize: "1rem" }}
+                key={column.id}
+              >
+                {column.text}
               </th>
             ))}
           </tr>
@@ -84,8 +114,11 @@ const Matrix = ({
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td style={{ border: "1px solid black" }} key={row.id}>
-                {row.name}
+              <td
+                style={{ border: "1px solid black", fontSize: "1rem" }}
+                key={row.id}
+              >
+                {row.text}
               </td>
               {columns.map((column) => (
                 <td
@@ -93,9 +126,10 @@ const Matrix = ({
                   key={column.id + row.id}
                   onClick={() => handleCellClick(row.id, column.id)}
                 >
-                  {cells.find(
-                    (c) =>
-                      c.stackholderID === column.id && c.subGroupID === row.id
+                  {Zellen.find(
+                    (c: Cell) =>
+                      c.clientStakeholderId === column.id &&
+                      c.clientSubGroupId === row.id
                   )?.message.text || ""}
                 </td>
               ))}
