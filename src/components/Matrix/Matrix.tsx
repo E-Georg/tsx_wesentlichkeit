@@ -2,15 +2,13 @@ import { useState } from "react";
 import {
   Stackholder,
   SubGroup,
-  Zellen,
-  initialColumns,
-  initialRows,
-} from "../../utils/InterfacesData";
+} from "../../utils/data.interfaces";
 import {
   AddStackholder,
   AddSubGroup,
   handleCellClick,
 } from "./MatrixFunctions";
+import { initialRows, initialColumns, Zellen } from "../../utils/data.api";
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 

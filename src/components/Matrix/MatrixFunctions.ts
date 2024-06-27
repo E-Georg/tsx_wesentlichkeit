@@ -1,4 +1,5 @@
-import { Stackholder, SubGroup, Zellen } from "../../utils/InterfacesData";
+import { Stackholder, SubGroup } from "../../utils/data.interfaces";
+import { Zellen } from "../../utils/data.api";
 
 export const AddStackholder = (
   inputValue: string,
@@ -41,9 +42,14 @@ export const AddSubGroup = (
 };
 
 export const handleCellClick = (rowId: number, columnId: number) => {
-  console.log(
-    Zellen.find((c) => c.stackholderID === columnId && c.subGroupID === rowId)
-      ?.message.text || { rowId },
-    { columnId }
+  const zelle = Zellen.find(
+    (c) => c.stackholderID === columnId && c.subGroupID === rowId
   );
+
+  if (zelle) {
+    console.log("zelle: ", zelle.message.text);
+  } else {
+    console.log("rowId: ", rowId);
+    console.log("columnId: ", columnId);
+  }
 };
