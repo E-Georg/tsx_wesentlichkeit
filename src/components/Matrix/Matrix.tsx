@@ -1,30 +1,29 @@
 import { useState } from "react";
-import {
-  Stackholder,
-  SubGroup,
-} from "../../utils/data.interfaces";
-import {
-  AddStackholder,
-  AddSubGroup,
-  handleCellClick,
-} from "./MatrixFunctions";
-import { initialRows, initialColumns, Zellen } from "../../utils/data.api";
+import { SubGroup, Stackholder, Cell } from "../../utils/data.interfaces";
+import { AddStackholder, AddSubGroup, handleCellClick } from "./MatrixFunctions";
+
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 
-const Matrix = () => {
-  const [rows, setRows] = useState<SubGroup[]>(initialRows);
-  const [columns, setColumns] = useState<Stackholder[]>(initialColumns);
-  const [inputValue, setInputValue] = useState("");
+interface props {
+  rows: SubGroup[];
+  setRows: (row: SubGroup[]) => void;
+  columns: Stackholder[];
+  setColumns: (column: Stackholder[]) => void;
+  cells: Cell[];
+}
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+const Matrix = ({ rows, setRows, columns, setColumns, cells }: props) => {
+  const [inputValue, setInputValue] = useState("");
 
   return (
     <>
       <div>
-        <input type="text" value={inputValue} onChange={handleInputChange} />
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
         <button
           onClick={() =>
             AddStackholder(inputValue, columns, setColumns, setInputValue)
@@ -61,7 +60,7 @@ const Matrix = () => {
                   key={column.id + row.id}
                   onClick={() => handleCellClick(row.id, column.id)}
                 >
-                  {Zellen.find(
+                  {cells.find(
                     (c) =>
                       c.stackholderID === column.id && c.subGroupID === row.id
                   )?.message.text || ""}
