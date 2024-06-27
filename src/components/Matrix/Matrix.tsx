@@ -37,7 +37,6 @@ const Matrix = ({
   setText,
   count,
 }: Props) => {
-  const [inputValue, setInputValue] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [stackholder, setStackholder] = useState(false);
   const [subGroup, setSubGroup] = useState(false);
@@ -78,10 +77,10 @@ const Matrix = ({
             setText={setText}
             handleData={() => {
               if (stackholder) {
-                AddStackholder(text, columns, setColumns, setInputValue);
+                AddStackholder(text, columns, setColumns);
                 setStackholder(false);
               } else if (subGroup) {
-                AddSubGroup(text, rows, setRows, setInputValue);
+                AddSubGroup(text, rows, setRows);
                 setSubGroup(false);
               }
 

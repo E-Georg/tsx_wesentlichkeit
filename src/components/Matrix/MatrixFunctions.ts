@@ -1,12 +1,10 @@
-import { Cell, Stackholder, SubGroup } from "../../utils/data.interfaces";
+import { Stackholder, SubGroup } from "../../utils/data.interfaces";
 import { Zellen } from "../../utils/data.api";
-import { fetchData } from "../../services/ApiService";
 
 export const AddStackholder = async (
   inputValue: string,
   columns: Stackholder[],
-  setColumns: (column: Stackholder[]) => void,
-  setInputValue: (text: string) => void
+  setColumns: (column: Stackholder[]) => void
 ) => {
   const inputText = inputValue;
   const stackholder: Stackholder = {
@@ -20,7 +18,6 @@ export const AddStackholder = async (
     console.log(JSON.stringify(stackholder));
     // Feth Data hier => mal gucken ob useeffect ausreicht.
     // fetchData("clientShakeholders", setColumns, 2, null);
-    setInputValue("");
   }
   // Fehlermeldung => gebe Text ein
 };
@@ -28,8 +25,7 @@ export const AddStackholder = async (
 export const AddSubGroup = async (
   inputValue: string,
   rows: SubGroup[],
-  setRows: (row: SubGroup[]) => void,
-  setInputValue: (text: string) => void
+  setRows: (row: SubGroup[]) => void
 ) => {
   const inputText = inputValue;
   const subgroup: SubGroup = {
@@ -41,7 +37,6 @@ export const AddSubGroup = async (
 
     // DATEN HIER SENDEN, bzw funktion aufrufen
     console.log(JSON.stringify(subgroup));
-    setInputValue("");
   }
   // Fehlermeldung => gebe Text ein
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Cell, Stackholder, SubGroup } from "../utils/data.interfaces";
+import { Cell } from "../utils/data.interfaces";
 
 const API = "http://192.168.20.53/wa/api/";
 let phpExtension = ".php?param={";
@@ -24,7 +24,7 @@ export const fetchCells = async (
 
 export const fetchData = async (
   typeParameter: string,
-  setData: any,
+  setData: any, //Stackholder[] | SubGroup[],
   clientID: number | null,
   groupID: number | null
 ): Promise<void> => {
