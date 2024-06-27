@@ -1,14 +1,14 @@
-import { useState } from "react";
 import "./App.css";
 import MatrixContainer from "./containers/MatrixContainer";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <MatrixContainer />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<MatrixContainer />}></Route>
+      </Routes>
+    </Router>
   );
 }
 

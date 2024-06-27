@@ -12,6 +12,7 @@ import {
 const MatrixContainer = () => {
   const [rows, setRows] = useState<SubGroup[]>(initialRows);
   const [columns, setColumns] = useState<Stackholder[]>(initialColumns);
+  const [name, setName] = useState("");
 
   return (
     <>
@@ -21,6 +22,9 @@ const MatrixContainer = () => {
         columns={columns}
         setColumns={setColumns}
         cells={Zellen}
+        showAddToMatrix={true}
+        name={name}
+        setName={setName}
       />
     </>
   );

@@ -5,41 +5,72 @@ import {
   AddSubGroup,
   handleCellClick,
 } from "./MatrixFunctions";
+import Modal from "../Modal/Modal";
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 
-interface props {
+interface Props {
   rows: SubGroup[];
   setRows: (row: SubGroup[]) => void;
   columns: Stackholder[];
   setColumns: (column: Stackholder[]) => void;
   cells: Cell[];
+  showAddToMatrix: boolean;
+  name: string;
+  setName: (name: string) => void;
 }
 
-const Matrix = ({ rows, setRows, columns, setColumns, cells }: props) => {
+const Matrix = ({
+  rows,
+  setRows,
+  columns,
+  setColumns,
+  cells,
+  showAddToMatrix,
+  name,
+  setName,
+}: Props) => {
   const [inputValue, setInputValue] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
-      <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button
-          onClick={() =>
-            AddStackholder(inputValue, columns, setColumns, setInputValue)
-          }
-        >
-          Add Stackholder
-        </button>
-        <button
-          onClick={() => AddSubGroup(inputValue, rows, setRows, setInputValue)}
-        >
-          Add SubGroup
-        </button>
-      </div>
+      {showAddToMatrix ? (
+        <div>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              setShowModal(true);
+              AddStackholder(inputValue, columns, setColumns, setInputValue);
+            }}
+          >
+            Add Stackholder
+          </button>
+          <Modal
+            name={name}
+            setName={setName}
+            handleData={() =>
+              AddStackholder(name, columns, setColumns, setInputValue)
+            }
+            showModal={showModal}
+            handleClose={() => setShowModal(false)}
+          />
+
+          <button
+            onClick={() =>
+              AddSubGroup(inputValue, rows, setRows, setInputValue)
+            }
+          >
+            Add SubGroup
+          </button>
+        </div>
+      ) : (
+        <></>
+      )}
       <table>
         <thead>
           <tr>
