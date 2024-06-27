@@ -1,12 +1,8 @@
 import { useState } from "react";
 import Matrix from "../components/Matrix/Matrix";
-import {
-  Stackholder,
-  SubGroup,
-  Zellen,
-  initialColumns,
-  initialRows,
-} from "../utils/InterfacesData";
+import { initialRows, initialColumns, Zellen } from "../utils/data.api";
+import { SubGroup, Stackholder } from "../utils/data.interfaces";
+
 
 // MatrixContainer.tsx
 const MatrixContainer = () => {
