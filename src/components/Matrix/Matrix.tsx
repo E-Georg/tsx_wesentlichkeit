@@ -120,9 +120,17 @@ const Matrix = ({
                   key={column.id + row.id}
                   // onClick={() => handleCellClick(row.id, column.id)}
                   onClick={() => {
-                    setShowModal(true);
-                    setCell(true);
-                    setCellID([row.id, column.id]);
+                    if (
+                      !cells.find(
+                        (c: Cell) =>
+                          c.clientStakeholderId === column.id &&
+                          c.clientSubGroupId === row.id
+                      )?.message.text
+                    ) {
+                      setShowModal(true);
+                      setCell(true);
+                      setCellID([row.id, column.id]);
+                    } // else update or delete
                   }}
                 >
                   {cells.find(
