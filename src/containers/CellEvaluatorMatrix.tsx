@@ -32,12 +32,12 @@ const CellEvaluatorMatrix = () => {
         columns={columns}
         setColumns={setColumns}
         cells={cells}
+        setCells={setCells}
         showAddToMatrix={true}
         title={title}
         text={text}
         setTitle={setTitle}
         setText={setText}
-        count={setCount}
       />
     </>
   );
