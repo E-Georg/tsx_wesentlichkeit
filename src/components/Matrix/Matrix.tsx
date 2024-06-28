@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { SubGroup, Stackholder, Cell } from "../../utils/data.interfaces";
-import {
-  AddStackholder,
-  AddSubGroup,
-  handleCellClick,
-} from "./MatrixFunctions";
+import { AddCell, AddStackholder, AddSubGroup } from "./MatrixFunctions";
 import Modal from "../Modal/Modal";
-import { Zellen } from "../../utils/data.api";
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 
@@ -16,12 +11,12 @@ interface Props {
   columns: Stackholder[];
   setColumns: (column: Stackholder[]) => void;
   cells: Cell[];
+  setCells: (cell: Cell[]) => void;
   showAddToMatrix: boolean;
   title: string;
   text: string;
   setTitle: (name: string) => void;
   setText: (name: string) => void;
-  count: (number: number) => void;
 }
 
 const Matrix = ({
@@ -30,31 +25,45 @@ const Matrix = ({
   columns,
   setColumns,
   cells,
+  setCells,
   showAddToMatrix,
   title,
   text,
   setTitle,
   setText,
-  count,
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [stackholder, setStackholder] = useState(false);
   const [subGroup, setSubGroup] = useState(false);
+  const [cell, setCell] = useState(false);
+  const [cellID, setCellID] = useState<number[]>([0, 0]);
+
+  const handleModalData = () => {
+    if (stackholder) {
+      AddStackholder(text, columns, setColumns, 2);
+      setStackholder(false);
+    } else if (subGroup) {
+      AddSubGroup(text, rows, setRows, 2, 1);
+      setSubGroup(false);
+    } else if (cell) {
+      AddCell(cellID[0], cellID[1], title, text, 0, 0, cells, setCells);
+      setCell(false);
+    }
+
+    // count(1);
+    setShowModal(false);
+    setTitle("");
+    setText("");
+  };
 
   return (
     <>
       {showAddToMatrix ? (
         <div>
-          {/* <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          /> */}
           <button
             onClick={() => {
               setShowModal(true);
               setStackholder(true);
-              // AddStackholder(inputValue, columns, setColumns, setInputValue);
             }}
           >
             Add Stackholder
@@ -64,7 +73,6 @@ const Matrix = ({
             onClick={() => {
               setShowModal(true);
               setSubGroup(true);
-              // AddSubGroup(inputValue, rows, setRows, setInputValue);
             }}
           >
             Add SubGroup
@@ -75,20 +83,7 @@ const Matrix = ({
             text={text}
             setTitle={setTitle}
             setText={setText}
-            handleData={() => {
-              if (stackholder) {
-                AddStackholder(text, columns, setColumns);
-                setStackholder(false);
-              } else if (subGroup) {
-                AddSubGroup(text, rows, setRows);
-                setSubGroup(false);
-              }
-
-              count(1);
-              setShowModal(false);
-              setTitle("");
-              setText("");
-            }}
+            handleData={handleModalData}
             showModal={showModal}
             handleClose={() => setShowModal(false)}
           />
@@ -123,9 +118,14 @@ const Matrix = ({
                 <td
                   style={{ border: "1px solid red" }}
                   key={column.id + row.id}
-                  onClick={() => handleCellClick(row.id, column.id)}
+                  // onClick={() => handleCellClick(row.id, column.id)}
+                  onClick={() => {
+                    setShowModal(true);
+                    setCell(true);
+                    setCellID([row.id, column.id]);
+                  }}
                 >
-                  {Zellen.find(
+                  {cells.find(
                     (c: Cell) =>
                       c.clientStakeholderId === column.id &&
                       c.clientSubGroupId === row.id

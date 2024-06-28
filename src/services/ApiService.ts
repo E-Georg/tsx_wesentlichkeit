@@ -1,58 +1,98 @@
 import axios from "axios";
-import { Cell } from "../utils/data.interfaces";
+import { Cell, Stackholder, SubGroup } from "../utils/data.interfaces";
 
 const API = "http://192.168.20.53/wa/api/";
-let phpExtension = ".php?param={";
+const phpExtension = ".php?param=";
 
 // Fetch data from the API
 export const fetchCells = async (
+  clientID: number,
+  groupID: number,
   setCells: (cell: Cell[]) => void
 ): Promise<void> => {
   try {
     const response = await axios.get<Cell[]>(
-      "http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param=%7B%20%22clientId%22:2,%20%22clientSubGroupId%22:6,%20%22clientStakeholderId%22:6%20%7D"
+      `${API}clientStakeholderSignificanceAll${phpExtension}{ "clientId":${clientID}, "groupId":${groupID} }`
     );
     const fetchedStackholders: Cell[] = response.data;
-    // Set the fetched stackholders to the state
-
-    //console.log(fetchedStackholders);
+    // const subGroups: SubGroup[] = fetchedStackholders.map(convertCellToSubGroup);
     setCells(fetchedStackholders);
   } catch (error) {
     console.error("Error fetching stackholders:", error);
   }
 };
 
+export const convertCellToSubGroup = (cell: Cell): SubGroup => {
+  return {
+    id: cell.id,
+    text: `${cell.clientStakeholderId}.${cell.clientSubGroupId}`,
+  };
+};
+
 export const fetchData = async (
   typeParameter: string,
-  setData: any, //Stackholder[] | SubGroup[],
-  clientID: number | null,
-  groupID: number | null
+  setData: (data: Stackholder[] | SubGroup[]) => void,
+  clientID: number,
+  groupID?: number
 ): Promise<void> => {
-  try {
-    let type = typeParameter;
-    let apiLink = API + type + phpExtension;
+  let url;
 
-    if (clientID !== null) {
-      apiLink += `"clientId":${clientID.toString()}`;
-    }
-    if (clientID !== null && groupID !== null) {
-      apiLink += ",";
-    }
-    if (groupID !== null) {
-      apiLink += `"groupId":${groupID.toString()}`;
-    }
-    // Remove trailing comma and close the JSON object
-    apiLink = apiLink + "}";
-    const response = await axios.get(apiLink);
+  if (groupID === undefined) {
+    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID}}`;
+  } else {
+    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
+  }
+
+  try {
+    const response = await axios.get(url);
     const fetchedData = response.data;
-    // Set the fetched data to the state
+
     setData(fetchedData);
   } catch (error) {
     console.error(`Error fetching ${typeParameter}:`, error);
   }
 };
 
-// TO SEND DATA
+// TO POST DATA
+
+export const AddCellToDatabase = async (
+  cell: Cell,
+  clientID: number,
+  groupID: number
+) => {
+  const url = `http://example.com?clientId=${clientID}&groupId=${groupID}`;
+  try {
+    // const response = await axios.post(url, cell);
+    // handle response here
+    // console.log(response.data);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+};
+
+export const AddDataToDatabase = async (
+  matrixObject: SubGroup | Stackholder,
+  typeParameter: string,
+  clientID: number,
+  groupID?: number
+) => {
+  let url;
+
+  if (groupID === undefined) {
+    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID}}`;
+  } else {
+    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
+  }
+
+  const urlTemp = `http://example.com?clientId=${clientID}&groupId=${groupID}`;
+  try {
+    // const response = await axios.post(url, matrixObject);
+    // handle response here
+    // console.log(response.data);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+};
 
 // UPDATE DATA
 

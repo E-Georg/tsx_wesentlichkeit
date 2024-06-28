@@ -17,3 +17,8 @@ export interface SubGroup {
   id: number;
   text: string;
 }
+
+export enum ClientTypes {
+  Stakeholders = "clientShakeholders",
+  SubGroups = "clientSubGroups",
+}
