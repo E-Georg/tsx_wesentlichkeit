@@ -4,6 +4,7 @@ import {
   AddCell,
   AddStackholder,
   AddSubGroup,
+  DeleteSubGroup,
   UpdateSubGroup,
 } from "./MatrixFunctions";
 import Modal from "../Modal/Modal";
@@ -42,6 +43,10 @@ const Matrix = ({
   const [subGroup, setSubGroup] = useState(false);
   const [cell, setCell] = useState(false);
   const [cellID, setCellID] = useState<number[]>([0, 0]);
+  const [onUpdate, setOnUpdate] = useState({
+    show: false,
+    clickedRowId: 0,
+  });
 
   const handleModalData = () => {
     if (stackholder) {
@@ -53,9 +58,12 @@ const Matrix = ({
     } else if (cell) {
       AddCell(cellID[0], cellID[1], title, text, 0, 0, cells, setCells);
       setCell(false);
+    } else if (onUpdate.show) {
+      UpdateSubGroup(setRows, rows, onUpdate.clickedRowId, title, text, 2, 1);
+      //DeleteSubGroup(setRows, rows, onUpdate.clickedRowId);
+      setOnUpdate({ show: false, clickedRowId: 0 });
     }
 
-    // count(1);
     setShowModal(false);
     setTitle("");
     setText("");
@@ -90,7 +98,11 @@ const Matrix = ({
             setText={setText}
             handleData={handleModalData}
             showModal={showModal}
-            handleClose={() => setShowModal(false)}
+            handleClose={() => {
+              setText("");
+              setTitle("");
+              setShowModal(false);
+            }}
           />
         </div>
       ) : (
@@ -119,9 +131,15 @@ const Matrix = ({
                 // Delete und Update
                 // Update => id, oldTitle, odlDescription, new One in Modal
                 // Delete => id
-                onClick={() =>
-                  UpdateSubGroup(row.id, row.text, row.description)
-                }
+                onClick={() => {
+                  setText(row.description);
+                  setTitle(row.text);
+                  setOnUpdate({
+                    show: true,
+                    clickedRowId: row.id,
+                  });
+                  setShowModal(true);
+                }}
               >
                 {row.text}
               </td>

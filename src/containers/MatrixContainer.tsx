@@ -13,7 +13,7 @@ const MatrixContainer = () => {
   const [rows, setRows] = useState<SubGroup[]>(initialRows);
   const [columns, setColumns] = useState<Stackholder[]>(initialColumns);
   const [cells, setCells] = useState<Cell[]>(Zellen);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Test");
   const [text, setText] = useState("");
 
   const [count, setCount] = useState(1);

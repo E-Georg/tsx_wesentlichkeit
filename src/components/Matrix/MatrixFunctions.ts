@@ -8,6 +8,8 @@ import { Zellen } from "../../utils/data.api";
 import {
   AddCellToDatabase,
   AddDataToDatabase,
+  DeleteDataFromDatabase,
+  UpdateDataToDatabase,
 } from "../../services/ApiService";
 
 export const AddStackholder = async (
@@ -88,11 +90,46 @@ export const AddCell = async (
 };
 
 export const UpdateSubGroup = async (
+  setRows: (row: SubGroup[]) => void,
+  rows: SubGroup[],
   id: number,
-  title: string,
-  description: string
+  text: string,
+  description: string,
+  clientID: number,
+  groupID: number
 ) => {
-  console.log("ferti");
+  const subGroup: SubGroup = {
+    id: id,
+    text: text,
+    description: description,
+  };
+
+  // call API
+  const res = await UpdateDataToDatabase(
+    subGroup,
+    ClientTypes.SubGroups,
+    clientID,
+    groupID
+  );
+  if (res === 1) {
+    // TEMPORÄR
+    const updatedRows = rows.map((row) => {
+      if (row.id === id) {
+        return { ...row, text: text, description: description };
+      }
+      return row;
+    });
+    setRows(updatedRows);
+  }
+};
+
+export const DeleteSubGroup = async (
+  setRows: (row: SubGroup[]) => void,
+  rows: SubGroup[],
+  id: number
+) => {
+  DeleteDataFromDatabase(id, ClientTypes.SubGroups);
+  setRows(rows.filter((item) => item.id !== id));
 };
 
 export const handleCellClick = (rowId: number, columnId: number) => {

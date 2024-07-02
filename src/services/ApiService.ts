@@ -39,9 +39,9 @@ export const fetchData = async (
   let url;
 
   if (groupID === undefined) {
+    console.log("Test");
     url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${clientID}}`;
   } else {
-    // url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
     url = `${API}${typeParameter}${phpExtension} { "action":"r", "groupId": ${groupID}, "clientId":${clientID} }`;
   }
 
@@ -96,5 +96,48 @@ export const AddDataToDatabase = async (
 };
 
 // UPDATE DATA
+export const UpdateDataToDatabase = async (
+  matrixObject: SubGroup | Stackholder,
+  typeParameter: string,
+  clientID: number,
+  groupID?: number
+) => {
+  let url;
+  console.log(matrixObject);
+  if (groupID === undefined) {
+    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientId":${clientID}}`;
+  } else {
+    url = `${API}${typeParameter}${phpExtension}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.text}", "description":"${matrixObject.description}", "clientId":${clientID}, "groupId":${groupID}  } `;
+  }
+  try {
+    console.log(url);
+    const response = await axios.put(url);
+    // handle response here
+    return response.data;
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+};
 
 // DELETE DATA
+
+export const DeleteDataFromDatabase = async (
+  id: number,
+  typeParameter: string
+) => {
+  let url;
+  // if (groupID === undefined) {
+  //   url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientId":${clientID}}`;
+  // } else {
+  url = `${API}${typeParameter}${phpExtension}{ "action":"d", "clientSubGroupId": ${id} }`;
+  // }
+
+  try {
+    console.log(url);
+    const response = await axios.delete(url);
+    // handle response here
+    console.log(response.data);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+};
