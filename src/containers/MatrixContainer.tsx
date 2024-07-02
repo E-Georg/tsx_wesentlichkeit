@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Matrix from "../components/Matrix/Matrix";
-import { initialRows, initialColumns, Zellen } from "../utils/data.api";
 import {
   SubGroup,
   Stackholder,
@@ -8,10 +7,8 @@ import {
   ClientTypes,
 } from "../utils/data.interfaces";
 import { fetchCells, fetchData } from "../services/ApiService";
+import { Zellen, initialColumns, initialRows } from "../utils/data.api";
 
-// ENUM FÜR API TYPES
-
-// MatrixContainer.tsx
 const MatrixContainer = () => {
   const [rows, setRows] = useState<SubGroup[]>(initialRows);
   const [columns, setColumns] = useState<Stackholder[]>(initialColumns);
@@ -21,17 +18,24 @@ const MatrixContainer = () => {
 
   const [count, setCount] = useState(1);
 
+  // use REDUX
   useEffect(() => {
-    // console.log("why");
-    // if (count > 1) return;
     fetchData(ClientTypes.Stakeholders, setColumns, 2);
+    console.log("COLUMNS", columns, count);
+    setCount(() => count + 1);
+  }, []);
+
+  useEffect(() => {
     fetchData(ClientTypes.SubGroups, setRows, 2, 1);
+    console.log("ROWS", rows, count);
+    setCount(() => count + 1);
+  }, []);
+
+  useEffect(() => {
     fetchCells(2, 1, setCells);
-    console.log("Cells: ", cells);
-    console.log("Columns: ", columns);
-    setCount(count + 1);
-    console.log(" Counter: ", count);
-  }, [columns.length, rows.length, cells.length]);
+    console.log("CELLS", cells, count);
+    setCount(() => count + 1);
+  }, []);
 
   return (
     <>

@@ -1,4 +1,9 @@
-import { Cell, Stackholder, SubGroup } from "../../utils/data.interfaces";
+import {
+  Cell,
+  ClientTypes,
+  Stackholder,
+  SubGroup,
+} from "../../utils/data.interfaces";
 import { Zellen } from "../../utils/data.api";
 import {
   AddCellToDatabase,
@@ -6,15 +11,16 @@ import {
 } from "../../services/ApiService";
 
 export const AddStackholder = async (
-  inputValue: string,
+  text: string,
+  description: string,
   columns: Stackholder[],
   setColumns: (column: Stackholder[]) => void,
   clientID: number
 ) => {
-  const inputText = inputValue;
   const stackholder: Stackholder = {
     id: columns.length + 1,
-    text: inputText,
+    text: text,
+    description: description,
   };
   if (stackholder.text !== "") {
     setColumns([...columns, stackholder]);
@@ -22,7 +28,7 @@ export const AddStackholder = async (
     // DATEN HIER SENDEN, bzw funktion aufrufen
     console.log(JSON.stringify(stackholder));
 
-    AddDataToDatabase(stackholder, "stackholder", clientID);
+    AddDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID);
     // Feth Data hier => mal gucken ob useeffect ausreicht.
     // fetchData("clientShakeholders", setColumns, 2, null);
   }
@@ -30,16 +36,17 @@ export const AddStackholder = async (
 };
 
 export const AddSubGroup = async (
-  inputValue: string,
+  title: string,
+  text: string,
   rows: SubGroup[],
   setRows: (row: SubGroup[]) => void,
   clientID: number,
   groupID: number
 ) => {
-  const inputText = inputValue;
   const subgroup: SubGroup = {
     id: rows.length + 1,
-    text: inputText,
+    text: title,
+    description: text,
   };
   if (subgroup.text !== "") {
     setRows([...rows, subgroup]); // KANN man sich nach dem post sparen
@@ -47,7 +54,7 @@ export const AddSubGroup = async (
     // DATEN HIER SENDEN, bzw funktion aufrufen
     console.log(JSON.stringify(subgroup));
 
-    AddDataToDatabase(subgroup, "subgroup", clientID, groupID);
+    AddDataToDatabase(subgroup, ClientTypes.SubGroups, clientID, groupID);
   }
   // Fehlermeldung => gebe Text ein
 };
@@ -78,6 +85,14 @@ export const AddCell = async (
     AddCellToDatabase(newCell, clientID, groupID);
   }
   setCell([...cell, newCell]);
+};
+
+export const UpdateSubGroup = async (
+  id: number,
+  title: string,
+  description: string
+) => {
+  console.log("ferti");
 };
 
 export const handleCellClick = (rowId: number, columnId: number) => {

@@ -1,6 +1,7 @@
 export interface Stackholder {
   id: number;
   text: string;
+  description: string;
 }
 
 export interface Cell {
@@ -16,9 +17,10 @@ export interface Cell {
 export interface SubGroup {
   id: number;
   text: string;
+  description: string;
 }
 
 export enum ClientTypes {
-  Stakeholders = "clientShakeholders",
+  Stakeholders = "clientStakeholders",
   SubGroups = "clientSubGroups",
 }

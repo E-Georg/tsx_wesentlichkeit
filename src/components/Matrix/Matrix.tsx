@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { SubGroup, Stackholder, Cell } from "../../utils/data.interfaces";
-import { AddCell, AddStackholder, AddSubGroup } from "./MatrixFunctions";
+import {
+  AddCell,
+  AddStackholder,
+  AddSubGroup,
+  UpdateSubGroup,
+} from "./MatrixFunctions";
 import Modal from "../Modal/Modal";
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
@@ -40,10 +45,10 @@ const Matrix = ({
 
   const handleModalData = () => {
     if (stackholder) {
-      AddStackholder(text, columns, setColumns, 2);
+      AddStackholder(title, text, columns, setColumns, 2);
       setStackholder(false);
     } else if (subGroup) {
-      AddSubGroup(text, rows, setRows, 2, 1);
+      AddSubGroup(title, text, rows, setRows, 2, 1);
       setSubGroup(false);
     } else if (cell) {
       AddCell(cellID[0], cellID[1], title, text, 0, 0, cells, setCells);
@@ -111,6 +116,12 @@ const Matrix = ({
               <td
                 style={{ border: "1px solid black", fontSize: "1rem" }}
                 key={row.id}
+                // Delete und Update
+                // Update => id, oldTitle, odlDescription, new One in Modal
+                // Delete => id
+                onClick={() =>
+                  UpdateSubGroup(row.id, row.text, row.description)
+                }
               >
                 {row.text}
               </td>

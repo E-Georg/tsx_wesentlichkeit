@@ -12,7 +12,7 @@ export const fetchCells = async (
 ): Promise<void> => {
   try {
     const response = await axios.get<Cell[]>(
-      `${API}clientStakeholderSignificanceAll${phpExtension}{ "clientId":${clientID}, "groupId":${groupID} }`
+      `${API}clientStakeholderSignificanceAll${phpExtension}{ "action":"r", "clientId":${clientID}, "groupId":${groupID} }`
     );
     const fetchedStackholders: Cell[] = response.data;
     // const subGroups: SubGroup[] = fetchedStackholders.map(convertCellToSubGroup);
@@ -26,6 +26,7 @@ export const convertCellToSubGroup = (cell: Cell): SubGroup => {
   return {
     id: cell.id,
     text: `${cell.clientStakeholderId}.${cell.clientSubGroupId}`,
+    description: "",
   };
 };
 
@@ -38,9 +39,10 @@ export const fetchData = async (
   let url;
 
   if (groupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID}}`;
+    url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${clientID}}`;
   } else {
-    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
+    // url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
+    url = `${API}${typeParameter}${phpExtension} { "action":"r", "groupId": ${groupID}, "clientId":${clientID} }`;
   }
 
   try {
@@ -77,18 +79,17 @@ export const AddDataToDatabase = async (
   groupID?: number
 ) => {
   let url;
-
+  console.log(matrixObject);
   if (groupID === undefined) {
     url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID}}`;
   } else {
-    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID},"groupId":${groupID}}`;
+    url = `${API}${typeParameter}${phpExtension}{ "action":"i", "groupId": ${groupID}, "clientId":${clientID}, "text":"${matrixObject.text}", "description":"${matrixObject.description}" } `;
   }
-
-  const urlTemp = `http://example.com?clientId=${clientID}&groupId=${groupID}`;
   try {
-    // const response = await axios.post(url, matrixObject);
+    console.log(url);
+    const response = await axios.post(url);
     // handle response here
-    // console.log(response.data);
+    console.log(response.data);
   } catch (error) {
     console.error(`Error: ${error}`);
   }

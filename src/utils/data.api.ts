@@ -22,13 +22,13 @@ export const Zellen: Cell[] = [
 ];
 
 export const initialRows: SubGroup[] = [
-  { id: 1, text: "Row 1" },
-  { id: 2, text: "Row 2" },
+  { id: 1, text: "Row 1", description: "BeispiuelText1" },
+  { id: 2, text: "Row 2", description: "BeispiuelText2" },
   // Add more rows as needed
 ];
 
 export const initialColumns: Stackholder[] = [
-  { id: 1, text: "Stackholder 1" },
-  { id: 2, text: "Stackholder 2" },
+  { id: 1, text: "COLUMN 1", description: "BeispiuelText1" },
+  { id: 2, text: "Column 2", description: "BeispiuelText2" },
   // Add more columns as needed
 ];
