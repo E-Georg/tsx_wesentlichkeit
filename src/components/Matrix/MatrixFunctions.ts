@@ -23,6 +23,7 @@ export const AddStackholder = async (
     id: columns.length + 1,
     text: text,
     description: description,
+    classification: 1,
   };
   if (stackholder.text !== "") {
     setColumns([...columns, stackholder]);
@@ -111,7 +112,7 @@ export const UpdateSubGroup = async (
     clientID,
     groupID
   );
-  if (res === 1) {
+  if (res.return === 1) {
     // TEMPORÄR
     const updatedRows = rows.map((row) => {
       if (row.id === id) {
@@ -123,6 +124,40 @@ export const UpdateSubGroup = async (
   }
 };
 
+export const UpdateStackholder = async (
+  setColumns: (row: Stackholder[]) => void,
+  column: Stackholder[],
+  id: number,
+  text: string,
+  description: string,
+  clientID: number,
+  groupID: number
+) => {
+  const stackholder: Stackholder = {
+    id: id,
+    text: text,
+    description: description,
+  };
+
+  const res = await UpdateDataToDatabase(
+    stackholder,
+    ClientTypes.Stakeholders,
+    clientID,
+    groupID
+  );
+
+  if (res.return == 1) {
+    // TEMPORÄR
+    const updatedRows = await column.map((col) => {
+      if (col.id === id) {
+        return { ...col, text: text, description: description };
+      }
+      return col;
+    });
+    setColumns(updatedRows);
+  }
+};
+
 export const DeleteSubGroup = async (
   setRows: (row: SubGroup[]) => void,
   rows: SubGroup[],
@@ -130,6 +165,15 @@ export const DeleteSubGroup = async (
 ) => {
   DeleteDataFromDatabase(id, ClientTypes.SubGroups);
   setRows(rows.filter((item) => item.id !== id));
+};
+
+export const DeleteStackholder = async (
+  setColumns: (row: Stackholder[]) => void,
+  columns: Stackholder[],
+  id: number
+) => {
+  DeleteDataFromDatabase(id, ClientTypes.Stakeholders);
+  setColumns(columns.filter((item) => item.id !== id));
 };
 
 export const handleCellClick = (rowId: number, columnId: number) => {

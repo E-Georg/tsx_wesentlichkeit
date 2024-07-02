@@ -2,6 +2,7 @@ export interface Stackholder {
   id: number;
   text: string;
   description: string;
+  classification?: number;
 }
 
 export interface Cell {

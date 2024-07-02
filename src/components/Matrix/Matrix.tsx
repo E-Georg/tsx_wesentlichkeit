@@ -4,7 +4,9 @@ import {
   AddCell,
   AddStackholder,
   AddSubGroup,
+  DeleteStackholder,
   DeleteSubGroup,
+  UpdateStackholder,
   UpdateSubGroup,
 } from "./MatrixFunctions";
 import Modal from "../Modal/Modal";
@@ -47,6 +49,10 @@ const Matrix = ({
     show: false,
     clickedRowId: 0,
   });
+  const [onStackholderDelete, setOnStackholderDelete] = useState({
+    show: false,
+    clickedStackholderId: 0,
+  });
 
   const handleModalData = () => {
     if (stackholder) {
@@ -61,6 +67,22 @@ const Matrix = ({
     } else if (onUpdate.show) {
       UpdateSubGroup(setRows, rows, onUpdate.clickedRowId, title, text, 2, 1);
       //DeleteSubGroup(setRows, rows, onUpdate.clickedRowId);
+      setOnUpdate({ show: false, clickedRowId: 0 });
+    } else if (onStackholderDelete.show) {
+      UpdateStackholder(
+        setColumns,
+        columns,
+        onStackholderDelete.clickedStackholderId,
+        title,
+        text,
+        2,
+        1
+      );
+      // DeleteStackholder(
+      //   setColumns,
+      //   columns,
+      //   onStackholderDelete.clickedStackholderId
+      // );
       setOnUpdate({ show: false, clickedRowId: 0 });
     }
 
@@ -114,6 +136,15 @@ const Matrix = ({
             <th></th>
             {columns.map((column) => (
               <th
+                onClick={() => {
+                  setText(column.description);
+                  setTitle(column.text);
+                  setOnStackholderDelete({
+                    show: true,
+                    clickedStackholderId: column.id,
+                  });
+                  setShowModal(true);
+                }}
                 style={{ border: "1px solid green", fontSize: "1rem" }}
                 key={column.id}
               >

@@ -28,7 +28,7 @@ export const initialRows: SubGroup[] = [
 ];
 
 export const initialColumns: Stackholder[] = [
-  { id: 1, text: "COLUMN 1", description: "BeispiuelText1" },
-  { id: 2, text: "Column 2", description: "BeispiuelText2" },
+  { id: 1, text: "COLUMN 1", description: "BeispiuelText1", classification: 1 },
+  { id: 2, text: "Column 2", description: "BeispiuelText2", classification: 1 },
   // Add more columns as needed
 ];

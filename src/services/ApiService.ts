@@ -1,5 +1,10 @@
 import axios from "axios";
-import { Cell, Stackholder, SubGroup } from "../utils/data.interfaces";
+import {
+  Cell,
+  ClientTypes,
+  Stackholder,
+  SubGroup,
+} from "../utils/data.interfaces";
 
 const API = "http://192.168.20.53/wa/api/";
 const phpExtension = ".php?param=";
@@ -47,7 +52,9 @@ export const fetchData = async (
 
   try {
     const response = await axios.get(url);
-    const fetchedData = response.data;
+    const fetchedData: Stackholder[] | SubGroup[] = response.data;
+
+    console.log(fetchedData);
 
     setData(fetchedData);
   } catch (error) {
@@ -81,7 +88,7 @@ export const AddDataToDatabase = async (
   let url;
   console.log(matrixObject);
   if (groupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{"clientId":${clientID}}`;
+    url = `${API}${typeParameter}${phpExtension}{"action":"i","clientId":${clientID},"text":"${matrixObject.text}","description":"${matrixObject.description}","classification":2}`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"i", "groupId": ${groupID}, "clientId":${clientID}, "text":"${matrixObject.text}", "description":"${matrixObject.description}" } `;
   }
@@ -104,8 +111,8 @@ export const UpdateDataToDatabase = async (
 ) => {
   let url;
   console.log(matrixObject);
-  if (groupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientId":${clientID}}`;
+  if (typeParameter === ClientTypes.Stakeholders) {
+    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.text}", "description":"${matrixObject.description}"}`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.text}", "description":"${matrixObject.description}", "clientId":${clientID}, "groupId":${groupID}  } `;
   }
@@ -113,6 +120,7 @@ export const UpdateDataToDatabase = async (
     console.log(url);
     const response = await axios.put(url);
     // handle response here
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -126,11 +134,12 @@ export const DeleteDataFromDatabase = async (
   typeParameter: string
 ) => {
   let url;
-  // if (groupID === undefined) {
-  //   url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientId":${clientID}}`;
-  // } else {
-  url = `${API}${typeParameter}${phpExtension}{ "action":"d", "clientSubGroupId": ${id} }`;
-  // }
+
+  if (typeParameter === ClientTypes.Stakeholders) {
+    url = `${API}${typeParameter}${phpExtension}{"action":"d","clientStakeholderId":${id}}`;
+  } else {
+    url = `${API}${typeParameter}${phpExtension}{ "action":"d", "clientSubGroupId": ${id} }`;
+  }
 
   try {
     console.log(url);
