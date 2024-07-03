@@ -16,13 +16,15 @@ import {
   SelectAll,
   SimpleUploadAdapter,
   Undo,
+  ImageResizeEditing,
+  ImageResizeHandles,
 } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import "./Editor.css";
 import axios from "axios";
 
 const Editor = () => {
-  const [text, setText] = useState("Welcome to E.Infra <3");
+  const [text, setText] = useState("<p>Welcome to E.Infra <3</p>");
   const [selectedFile, setSelectedFile] = useState<any>();
   const [selectedFileData, setSelectedFileData] = useState<any>();
   const [imageUrl, setImageUrl] = useState<any>("");
@@ -65,7 +67,77 @@ const Editor = () => {
       console.error("Error sending data:", error.message);
     }
   };
-
+  const editorConfig = {
+    toolbar: {
+      items: [
+        "undo",
+        "redo",
+        "|",
+        "selectAll",
+        "|",
+        "bold",
+        "italic",
+        "|",
+        "insertImage",
+        "|",
+        "accessibilityHelp",
+      ],
+      shouldNotGroupWhenFull: false,
+    },
+    plugins: [
+      AccessibilityHelp,
+      Autosave,
+      Bold,
+      Essentials,
+      ImageBlock,
+      ImageInsert,
+      ImageInsertViaUrl,
+      ImageToolbar,
+      ImageUpload,
+      ImageResizeEditing,
+      ImageResizeHandles,
+      Italic,
+      Paragraph,
+      SelectAll,
+      SimpleUploadAdapter,
+      Undo,
+    ],
+    image: {
+      toolbar: [
+        "imageTextAlternative",
+        "resizeImage:50",
+        "resizeImage:75",
+        "resizeImage:original",
+        "resizeImage:custom",
+      ],
+      resizeOptions: [
+        {
+          name: "resizeImage:original",
+          value: null,
+          icon: "original",
+        },
+        {
+          name: "resizeImage:custom",
+          value: "custom",
+          icon: "custom",
+        },
+        {
+          name: "resizeImage:50",
+          value: "50",
+          icon: "medium",
+        },
+        {
+          name: "resizeImage:75",
+          value: "75",
+          icon: "large",
+        },
+      ],
+    },
+    simpleUpload: {
+      uploadUrl: `http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param={%20%22action%22:%22i%22,%22clientId%22:2,%20%22clientSubGroupId%22:23,%20%22clientStakeholderId%22:38,%22title%22:"aa",%20%22text%22:"aa"}`,
+      withCredentials: true,
+    },
+  };
   return (
     <div>
       <div className="main-container">
@@ -84,21 +156,21 @@ const Editor = () => {
               margin: "0",
               display: "flex",
               flexDirection: "column",
-              alignItems: "end",
+              alignItems: "start",
             }}
           >
-            <h5 style={{ padding: "0", margin: "0.1rem" }}>Titel</h5>
+            <h4 style={{ padding: "0", margin: "0.1rem" }}>Titel</h4>
             <h6 style={{ padding: "0", margin: "0.1rem" }}>
               der Zelle mit der ID: 35.22:
             </h6>
+            <input
+              type="text"
+              placeholder="Enter title"
+              onChange={(event) => {
+                const title = event.target.value;
+              }}
+            />
           </div>
-          <input
-            type="text"
-            placeholder="Enter title"
-            onChange={(event) => {
-              const title = event.target.value;
-            }}
-          />
         </div>
 
         <div className="editor-container editor-container_classic-editor">
@@ -122,14 +194,14 @@ const Editor = () => {
           }}
         >
           <div>
-            <h5>Upload a File</h5>
+            <h4>Upload a File</h4>
             <input
               type="file"
               onChange={handleFileChangeData}
             />
           </div>
 
-          <div>
+          {/* <div>
             <h5>Upload an Image</h5>
             <input
               type="file"
@@ -157,7 +229,7 @@ const Editor = () => {
                 style={{ maxWidth: "300px", maxHeight: "300px" }}
               />
             )}
-          </div>
+          </div> */}
         </div>
         <div style={{ padding: "2rem" }}>
           <button onClick={handleUpload}>Upload and Save</button>
@@ -165,48 +237,6 @@ const Editor = () => {
       </div>
     </div>
   );
-};
-
-const editorConfig = {
-  toolbar: {
-    items: [
-      "undo",
-      "redo",
-      "|",
-      "selectAll",
-      "|",
-      "bold",
-      "italic",
-      "|",
-      "insertImage",
-      "|",
-      "accessibilityHelp",
-    ],
-    shouldNotGroupWhenFull: false,
-  },
-  plugins: [
-    AccessibilityHelp,
-    Autosave,
-    Bold,
-    Essentials,
-    ImageBlock,
-    ImageInsert,
-    ImageInsertViaUrl,
-    ImageToolbar,
-    ImageUpload,
-    Italic,
-    Paragraph,
-    SelectAll,
-    SimpleUploadAdapter,
-    Undo,
-  ],
-  image: {
-    toolbar: ["imageTextAlternative"],
-  },
-  simpleUpload: {
-    uploadUrl: `http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param={%20%22action%22:%22i%22,%22clientId%22:2,%20%22clientSubGroupId%22:23,%20%22clientStakeholderId%22:38,%22title%22:"aa",%20%22text%22:"aa"}`,
-    withCredentials: true,
-  },
 };
 
 export default Editor;

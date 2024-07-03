@@ -23,3 +23,10 @@
 	min-width: 795px;
 	max-width: 795px;
 }
+
+.ck-content .image img {
+    width: 30%;
+	height: auto;
+	display: flex;
+    box-sizing: border-box;
+}
