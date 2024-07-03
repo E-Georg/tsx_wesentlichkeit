@@ -11,17 +11,20 @@ const phpExtension = ".php?param=";
 
 // Fetch data from the API
 export const fetchCells = async (
+  typeParameter: string,
   clientID: number,
   groupID: number,
   setCells: (cell: Cell[]) => void
 ): Promise<void> => {
+  // einzelne Zelle auslesen.
+  //let url = `${API}${typeParameter}${phpExtension}{%20%22action%22:%22r%22,%22clientId%22:${clientID},%20%22clientSubGroupId%22:2,%20%22clientStakeholderId%22:2%20}`;
+  let url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${clientID}, "groupId":${groupID} }`;
+  console.log(url);
   try {
-    const response = await axios.get<Cell[]>(
-      `${API}clientStakeholderSignificanceAll${phpExtension}{ "action":"r", "clientId":${clientID}, "groupId":${groupID} }`
-    );
-    const fetchedStackholders: Cell[] = response.data;
-    // const subGroups: SubGroup[] = fetchedStackholders.map(convertCellToSubGroup);
-    setCells(fetchedStackholders);
+    const response = await axios.get<Cell[]>(url);
+    const fetchedCells: Cell[] = response.data;
+    console.log(fetchedCells);
+    setCells(fetchedCells);
   } catch (error) {
     console.error("Error fetching stackholders:", error);
   }
@@ -69,11 +72,16 @@ export const AddCellToDatabase = async (
   clientID: number,
   groupID: number
 ) => {
-  const url = `http://example.com?clientId=${clientID}&groupId=${groupID}`;
+  let type = ClientTypes.Cell;
+  console.log(cell);
+
+  let url = `${API}${type}${phpExtension}{%20%22action%22:%22i%22,%22clientId%22:${clientID},%20%22clientSubGroupId%22:${cell.clientSubGroupId},%20%22clientStakeholderId%22:${cell.clientStakeholderId},%22title%22:"${cell.message.title}",%20%22text%22:"${cell.message.text}"}`;
+  // url = `http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param={%20%22action%22:%22i%22,%22clientId%22:1,%20%22clientSubGroupId%22:143,%20%22clientStakeholderId%22:2,%22title%22:%22Marktsituation%22,%20%22text%22:%22ist%20ok%22%20}`;
   try {
-    // const response = await axios.post(url, cell);
+    console.log(url);
+    const response = await axios.post(url, cell);
     // handle response here
-    // console.log(response.data);
+    return response.status;
   } catch (error) {
     console.error(`Error: ${error}`);
   }

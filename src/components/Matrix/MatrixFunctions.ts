@@ -63,8 +63,8 @@ export const AddSubGroup = async (
 };
 
 export const AddCell = async (
-  clientStakeholderId: number,
   clientSubGroupId: number,
+  clientStakeholderId: number,
   title: string,
   text: string,
   clientID: number,
@@ -82,12 +82,18 @@ export const AddCell = async (
     },
   };
 
+  // NEUE ZELLE
   console.log(newCell);
 
   if (newCell.message.text !== "" || newCell.message.title !== "") {
-    AddCellToDatabase(newCell, clientID, groupID);
+    const status = await AddCellToDatabase(newCell, clientID, groupID);
+
+    if (status === 200) {
+      console.log(cell);
+      setCell([...cell, newCell]);
+      console.log(cell);
+    }
   }
-  setCell([...cell, newCell]);
 };
 
 export const UpdateSubGroup = async (

@@ -15,24 +15,26 @@ const MatrixContainer = () => {
   const [cells, setCells] = useState<Cell[]>(Zellen);
   const [title, setTitle] = useState("Test");
   const [text, setText] = useState("");
-
   const [count, setCount] = useState(1);
+
+  const clientID: number = 2;
+  const GroupID: number = 1;
 
   // use REDUX
   useEffect(() => {
-    fetchData(ClientTypes.Stakeholders, setColumns, 2);
+    fetchData(ClientTypes.Stakeholders, setColumns, clientID);
     console.log("COLUMNS", columns, count);
     setCount(() => count + 1);
   }, []);
 
   useEffect(() => {
-    fetchData(ClientTypes.SubGroups, setRows, 2, 1);
+    fetchData(ClientTypes.SubGroups, setRows, clientID, GroupID);
     console.log("ROWS", rows, count);
     setCount(() => count + 1);
   }, []);
 
   useEffect(() => {
-    fetchCells(2, 1, setCells);
+    fetchCells(ClientTypes.Cells, clientID, GroupID, setCells);
     console.log("CELLS", cells, count);
     setCount(() => count + 1);
   }, []);

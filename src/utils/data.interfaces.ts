@@ -24,4 +24,6 @@ export interface SubGroup {
 export enum ClientTypes {
   Stakeholders = "clientStakeholders",
   SubGroups = "clientSubGroups",
+  Cells = "clientStakeholderSignificanceAll",
+  Cell = "clientStakeholderSignificance",
 }
