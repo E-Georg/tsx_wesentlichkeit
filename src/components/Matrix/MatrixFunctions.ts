@@ -68,7 +68,6 @@ export const AddCell = async (
   title: string,
   text: string,
   clientID: number,
-  groupID: number,
   cell: Cell[],
   setCell: (cell: Cell[]) => void
 ) => {
@@ -86,7 +85,7 @@ export const AddCell = async (
   console.log(newCell);
 
   if (newCell.message.text !== "" || newCell.message.title !== "") {
-    const status = await AddCellToDatabase(newCell, clientID, groupID);
+    const status = await AddCellToDatabase(newCell, clientID);
 
     if (status === 200) {
       console.log(cell);

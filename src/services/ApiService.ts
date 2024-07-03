@@ -67,20 +67,15 @@ export const fetchData = async (
 
 // TO POST DATA
 
-export const AddCellToDatabase = async (
-  cell: Cell,
-  clientID: number,
-  groupID: number
-) => {
+export const AddCellToDatabase = async (cell: Cell, clientID: number) => {
   let type = ClientTypes.Cell;
   console.log(cell);
 
   let url = `${API}${type}${phpExtension}{%20%22action%22:%22i%22,%22clientId%22:${clientID},%20%22clientSubGroupId%22:${cell.clientSubGroupId},%20%22clientStakeholderId%22:${cell.clientStakeholderId},%22title%22:"${cell.message.title}",%20%22text%22:"${cell.message.text}"}`;
-  // url = `http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param={%20%22action%22:%22i%22,%22clientId%22:1,%20%22clientSubGroupId%22:143,%20%22clientStakeholderId%22:2,%22title%22:%22Marktsituation%22,%20%22text%22:%22ist%20ok%22%20}`;
   try {
     console.log(url);
     const response = await axios.post(url, cell);
-    // handle response here
+
     return response.status;
   } catch (error) {
     console.error(`Error: ${error}`);

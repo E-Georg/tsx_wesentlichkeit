@@ -62,7 +62,7 @@ const Matrix = ({
       AddSubGroup(title, text, rows, setRows, 2, 1);
       setSubGroup(false);
     } else if (cell) {
-      AddCell(cellID[0], cellID[1], title, text, 2, 1, cells, setCells);
+      AddCell(cellID[0], cellID[1], title, text, 2, cells, setCells);
       setCell(false);
     } else if (onUpdate.show) {
       UpdateSubGroup(setRows, rows, onUpdate.clickedRowId, title, text, 2, 1);

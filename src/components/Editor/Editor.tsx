@@ -25,25 +25,25 @@ import axios from "axios";
 
 const Editor = () => {
   const [text, setText] = useState("<p>Welcome to E.Infra <3</p>");
-  const [selectedFile, setSelectedFile] = useState<any>();
+  const [selectedFile] = useState<any>(); // , setSelectedFile] = useState<any>();
   const [selectedFileData, setSelectedFileData] = useState<any>();
-  const [imageUrl, setImageUrl] = useState<any>("");
+  const [imageUrl] = useState<any>(""); // , setImageUrl] = useState<any>("");
 
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    setImageUrl(null);
-  };
+  //   const handleFileChange = (event: any) => {
+  //     const file = event.target.files[0];
+  //     setSelectedFile(file);
+  //     setImageUrl(null);
+  //   };
 
   const handleFileChangeData = (event: any) => {
     const file = event.target.files[0];
     setSelectedFileData(file);
   };
 
-  const handleImageUrlChange = (event: any) => {
-    setImageUrl(event.target.value);
-    setSelectedFile(null); // Clear selectedFile when an image URL is provided
-  };
+  //   const handleImageUrlChange = (event: any) => {
+  //     setImageUrl(event.target.value);
+  //     setSelectedFile(null); // Clear selectedFile when an image URL is provided
+  //   };
 
   const handleUpload = async () => {
     try {
@@ -166,8 +166,9 @@ const Editor = () => {
             <input
               type="text"
               placeholder="Enter title"
-              onChange={(event) => {
-                const title = event.target.value;
+              onChange={() => {
+                //event) => {
+                // const title = event.target.value;
               }}
             />
           </div>
