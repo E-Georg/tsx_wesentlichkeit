@@ -1,16 +1,13 @@
-import {
-  Cell,
-  ClientTypes,
-  Stackholder,
-  SubGroup,
-} from "../../utils/data.interfaces";
-import { Zellen } from "../../utils/data.api";
+import { Cell, ClientTypes, Stackholder, SubGroup } from '../../utils/data.interfaces';
+import { Zellen } from '../../utils/data.api';
 import {
   AddCellToDatabase,
   AddDataToDatabase,
   DeleteDataFromDatabase,
+  fetchCells,
+  fetchData,
   UpdateDataToDatabase,
-} from "../../services/ApiService";
+} from '../../services/ApiService';
 
 export const AddStackholder = async (
   text: string,
@@ -25,15 +22,10 @@ export const AddStackholder = async (
     description: description,
     classification: 1,
   };
-  if (stackholder.text !== "") {
-    setColumns([...columns, stackholder]);
+  if (stackholder.text !== '') {
+    const res = await AddDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID);
 
-    // DATEN HIER SENDEN, bzw funktion aufrufen
-    console.log(JSON.stringify(stackholder));
-
-    AddDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID);
-    // Feth Data hier => mal gucken ob useeffect ausreicht.
-    // fetchData("clientShakeholders", setColumns, 2, null);
+    if (res === 200) fetchData(ClientTypes.Stakeholders, setColumns, 2); // setColumns([...columns, stackholder]);
   }
   // Fehlermeldung => gebe Text ein
 };
@@ -51,13 +43,10 @@ export const AddSubGroup = async (
     text: title,
     description: text,
   };
-  if (subgroup.text !== "") {
-    setRows([...rows, subgroup]); // KANN man sich nach dem post sparen
+  if (subgroup.text !== '') {
+    const res = await AddDataToDatabase(subgroup, ClientTypes.SubGroups, clientID, groupID);
 
-    // DATEN HIER SENDEN, bzw funktion aufrufen
-    console.log(JSON.stringify(subgroup));
-
-    AddDataToDatabase(subgroup, ClientTypes.SubGroups, clientID, groupID);
+    if (res === 200) fetchData(ClientTypes.SubGroups, setRows, 2, 1); // setRows([...rows, subgroup]);
   }
   // Fehlermeldung => gebe Text ein
 };
@@ -68,8 +57,8 @@ export const AddCell = async (
   title: string,
   text: string,
   clientID: number,
-  cell: Cell[],
-  setCell: (cell: Cell[]) => void
+  cells: Cell[], // depends on the method
+  setCells: (cell: Cell[]) => void
 ) => {
   const newCell: Cell = {
     clientStakeholderId: clientStakeholderId,
@@ -81,16 +70,11 @@ export const AddCell = async (
     },
   };
 
-  // NEUE ZELLE
-  console.log(newCell);
-
-  if (newCell.message.text !== "" || newCell.message.title !== "") {
+  if (newCell.message.text !== '' || newCell.message.title !== '') {
     const status = await AddCellToDatabase(newCell, clientID);
 
     if (status === 200) {
-      console.log(cell);
-      setCell([...cell, newCell]);
-      console.log(cell);
+      fetchCells(ClientTypes.Cells, 2, 1, setCells); // setCells([...cells, newCell])
     }
   }
 };
@@ -111,12 +95,7 @@ export const UpdateSubGroup = async (
   };
 
   // call API
-  const res = await UpdateDataToDatabase(
-    subGroup,
-    ClientTypes.SubGroups,
-    clientID,
-    groupID
-  );
+  const res = await UpdateDataToDatabase(subGroup, ClientTypes.SubGroups, clientID, groupID);
   if (res.return === 1) {
     // TEMPORÄR
     const updatedRows = rows.map((row) => {
@@ -126,6 +105,7 @@ export const UpdateSubGroup = async (
       return row;
     });
     setRows(updatedRows);
+    // oder new Fetch
   }
 };
 
@@ -144,12 +124,7 @@ export const UpdateStackholder = async (
     description: description,
   };
 
-  const res = await UpdateDataToDatabase(
-    stackholder,
-    ClientTypes.Stakeholders,
-    clientID,
-    groupID
-  );
+  const res = await UpdateDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID, groupID);
 
   if (res.return == 1) {
     // TEMPORÄR
@@ -160,16 +135,14 @@ export const UpdateStackholder = async (
       return col;
     });
     setColumns(updatedRows);
+
+    // oder new Fetch
   }
 };
 
-export const DeleteSubGroup = async (
-  setRows: (row: SubGroup[]) => void,
-  rows: SubGroup[],
-  id: number
-) => {
-  DeleteDataFromDatabase(id, ClientTypes.SubGroups);
-  setRows(rows.filter((item) => item.id !== id));
+export const DeleteSubGroup = async (setRows: (row: SubGroup[]) => void, rows: SubGroup[], id: number) => {
+  const res = await DeleteDataFromDatabase(id, ClientTypes.SubGroups);
+  if (res === 200) setRows(rows.filter((item) => item.id !== id)); // FetchData(...)
 };
 
 export const DeleteStackholder = async (
@@ -177,16 +150,14 @@ export const DeleteStackholder = async (
   columns: Stackholder[],
   id: number
 ) => {
-  DeleteDataFromDatabase(id, ClientTypes.Stakeholders);
-  setColumns(columns.filter((item) => item.id !== id));
+  const res = await DeleteDataFromDatabase(id, ClientTypes.Stakeholders);
+  if (res === 200) setColumns(columns.filter((item) => item.id !== id));
 };
 
 export const handleCellClick = (rowId: number, columnId: number) => {
-  const zelle = Zellen.find(
-    (c) => c.clientStakeholderId === columnId && c.clientSubGroupId === rowId
-  );
+  const zelle = Zellen.find((c) => c.clientStakeholderId === columnId && c.clientSubGroupId === rowId);
 
-  if (zelle?.message.text) console.log("zelle: ", zelle.message.text);
+  if (zelle?.message.text) console.log('zelle: ', zelle.message.text);
   else console.log({ columnId }, { rowId });
 };
 

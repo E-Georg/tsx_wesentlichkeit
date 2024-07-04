@@ -1,32 +1,25 @@
-import axios from "axios";
-import {
-  Cell,
-  ClientTypes,
-  Stackholder,
-  SubGroup,
-} from "../utils/data.interfaces";
+import axios from 'axios';
+import { Cell, ClientTypes, Stackholder, SubGroup } from '../utils/data.interfaces';
 
-const API = "http://192.168.20.53/wa/api/";
-const phpExtension = ".php?param=";
+const API = 'http://192.168.20.53/wa/api/';
+const phpExtension = '.php?param=';
 
-// Fetch data from the API
+// ========================================== GET DATA ==========================================================
 export const fetchCells = async (
   typeParameter: string,
   clientID: number,
   groupID: number,
   setCells: (cell: Cell[]) => void
-): Promise<void> => {
-  // einzelne Zelle auslesen.
-  //let url = `${API}${typeParameter}${phpExtension}{%20%22action%22:%22r%22,%22clientId%22:${clientID},%20%22clientSubGroupId%22:2,%20%22clientStakeholderId%22:2%20}`;
+): Promise<any> => {
   let url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${clientID}, "groupId":${groupID} }`;
-  console.log(url);
+
   try {
     const response = await axios.get<Cell[]>(url);
     const fetchedCells: Cell[] = response.data;
-    console.log(fetchedCells);
-    setCells(fetchedCells);
+
+    if (response.status === 200) setCells(fetchedCells);
   } catch (error) {
-    console.error("Error fetching stackholders:", error);
+    console.error('Error fetching stackholders:', error);
   }
 };
 
@@ -34,7 +27,7 @@ export const convertCellToSubGroup = (cell: Cell): SubGroup => {
   return {
     id: cell.id,
     text: `${cell.clientStakeholderId}.${cell.clientSubGroupId}`,
-    description: "",
+    description: '',
   };
 };
 
@@ -47,7 +40,6 @@ export const fetchData = async (
   let url;
 
   if (groupID === undefined) {
-    console.log("Test");
     url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${clientID}}`;
   } else {
     url = `${API}${typeParameter}${phpExtension} { "action":"r", "groupId": ${groupID}, "clientId":${clientID} }`;
@@ -57,23 +49,17 @@ export const fetchData = async (
     const response = await axios.get(url);
     const fetchedData: Stackholder[] | SubGroup[] = response.data;
 
-    console.log(fetchedData);
-
-    setData(fetchedData);
+    if (response.status === 200) setData(fetchedData);
   } catch (error) {
     console.error(`Error fetching ${typeParameter}:`, error);
   }
 };
 
-// TO POST DATA
+// ========================================== POST DATA ==========================================================
 
 export const AddCellToDatabase = async (cell: Cell, clientID: number) => {
-  let type = ClientTypes.Cell;
-  console.log(cell);
-
-  let url = `${API}${type}${phpExtension}{%20%22action%22:%22i%22,%22clientId%22:${clientID},%20%22clientSubGroupId%22:${cell.clientSubGroupId},%20%22clientStakeholderId%22:${cell.clientStakeholderId},%22title%22:"${cell.message.title}",%20%22text%22:"${cell.message.text}"}`;
+  let url = `${API}${ClientTypes.Cell}${phpExtension}{ "action":"i","clientId":${clientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
   try {
-    console.log(url);
     const response = await axios.post(url, cell);
 
     return response.status;
@@ -89,23 +75,20 @@ export const AddDataToDatabase = async (
   groupID?: number
 ) => {
   let url;
-  console.log(matrixObject);
   if (groupID === undefined) {
     url = `${API}${typeParameter}${phpExtension}{"action":"i","clientId":${clientID},"text":"${matrixObject.text}","description":"${matrixObject.description}","classification":2}`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"i", "groupId": ${groupID}, "clientId":${clientID}, "text":"${matrixObject.text}", "description":"${matrixObject.description}" } `;
   }
   try {
-    console.log(url);
     const response = await axios.post(url);
-    // handle response here
-    console.log(response.data);
+    return response.status;
   } catch (error) {
     console.error(`Error: ${error}`);
   }
 };
 
-// UPDATE DATA
+// // ========================================== UPDATE DATA ==========================================================
 export const UpdateDataToDatabase = async (
   matrixObject: SubGroup | Stackholder,
   typeParameter: string,
@@ -113,29 +96,22 @@ export const UpdateDataToDatabase = async (
   groupID?: number
 ) => {
   let url;
-  console.log(matrixObject);
   if (typeParameter === ClientTypes.Stakeholders) {
     url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.text}", "description":"${matrixObject.description}"}`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.text}", "description":"${matrixObject.description}", "clientId":${clientID}, "groupId":${groupID}  } `;
   }
   try {
-    console.log(url);
     const response = await axios.put(url);
-    // handle response here
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
   }
 };
 
-// DELETE DATA
+// ========================================== DELETE DATA ==========================================================
 
-export const DeleteDataFromDatabase = async (
-  id: number,
-  typeParameter: string
-) => {
+export const DeleteDataFromDatabase = async (id: number, typeParameter: string) => {
   let url;
 
   if (typeParameter === ClientTypes.Stakeholders) {
@@ -145,10 +121,8 @@ export const DeleteDataFromDatabase = async (
   }
 
   try {
-    console.log(url);
     const response = await axios.delete(url);
-    // handle response here
-    console.log(response.data);
+    return response.status;
   } catch (error) {
     console.error(`Error: ${error}`);
   }

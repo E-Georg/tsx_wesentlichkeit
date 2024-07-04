@@ -1,57 +1,20 @@
 import { SubGroup, Stackholder, Cell } from '../../utils/data.interfaces';
-import { AddCell, AddStackholder, AddSubGroup, DeleteStackholder, DeleteSubGroup, UpdateStackholder, UpdateSubGroup } from './MatrixFunctions';
-import Modal from '../Modal/Modal';
-import { useMatrixStore } from '../../store';
+import { useStore } from '../../store';
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 // React Query
 
 interface Props {
   rows: SubGroup[];
-  setRows: (row: SubGroup[]) => void;
   columns: Stackholder[];
-  setColumns: (column: Stackholder[]) => void;
   cells: Cell[];
-  setCells: (cell: Cell[]) => void;
   showAddToMatrix: boolean;
-  title: string;
-  text: string;
   setTitle: (name: string) => void;
   setText: (name: string) => void;
 }
 
-const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddToMatrix, title, text, setTitle, setText }: Props) => {
-  const { showModal, setShowModal, stackholder, setStackholder, subGroup, setSubGroup, cell, setCell, onUpdateRow, setOnUpdateRow, onUpdateStackholder, setOnUpdateStackholder, cellID, setCellID } =
-    useMatrixStore();
-
-  const handleModalData = () => {
-    if (stackholder) {
-      AddStackholder(title, text, columns, setColumns, 2);
-      setStackholder();
-    } else if (subGroup) {
-      AddSubGroup(title, text, rows, setRows, 2, 1);
-      setSubGroup();
-    } else if (cell) {
-      AddCell(cellID[0], cellID[1], title, text, 2, cells, setCells);
-      setCell();
-    } else if (onUpdateRow.show) {
-      UpdateSubGroup(setRows, rows, onUpdateRow.clickedRowId, title, text, 2, 1);
-      //DeleteSubGroup(setRows, rows, onUpdate.clickedRowId);
-      setOnUpdateRow(false, 0);
-    } else if (onUpdateStackholder.show) {
-      UpdateStackholder(setColumns, columns, onUpdateStackholder.clickedColId, title, text, 2, 1);
-      // DeleteStackholder(
-      //   setColumns,
-      //   columns,
-      //   onStackholderDelete.clickedStackholderId
-      // );
-      setOnUpdateRow(false, 0);
-    }
-
-    setShowModal();
-    setTitle('');
-    setText('');
-  };
+const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Props) => {
+  const { setShowModal, setColumn, setRow, setCell, setOnUpdateRow, setOnUpdateColumn, cellID, setCellID } = useStore();
 
   return (
     <>
@@ -60,7 +23,7 @@ const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddTo
           <button
             onClick={() => {
               setShowModal();
-              setStackholder();
+              setColumn();
             }}
           >
             Add Stackholder
@@ -69,25 +32,11 @@ const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddTo
           <button
             onClick={() => {
               setShowModal();
-              setSubGroup();
+              setRow();
             }}
           >
             Add SubGroup
           </button>
-
-          <Modal
-            title={title}
-            text={text}
-            setTitle={setTitle}
-            setText={setText}
-            handleData={handleModalData}
-            showModal={showModal}
-            handleClose={() => {
-              setText('');
-              setTitle('');
-              setShowModal();
-            }}
-          />
         </div>
       ) : (
         <></>
@@ -101,7 +50,7 @@ const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddTo
                 onClick={() => {
                   setText(column.description);
                   setTitle(column.text);
-                  setOnUpdateStackholder(true, column.id);
+                  setOnUpdateColumn(true, column.id);
                   setShowModal();
                 }}
                 style={{
@@ -140,10 +89,12 @@ const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddTo
                 <td
                   style={{ border: '1px solid red' }}
                   key={column.id + row.id}
-                  // onClick={() => handleCellClick(row.id, column.id)}
                   onClick={() => {
                     setCellID([row.id, column.id]);
-                    if (!cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)?.message.text) {
+                    if (
+                      !cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                        ?.message.text
+                    ) {
                       setShowModal();
                       setCell();
                       // setCellID([row.id, column.id]);
@@ -151,7 +102,8 @@ const Matrix = ({ rows, setRows, columns, setColumns, cells, setCells, showAddTo
                     console.log(cellID);
                   }}
                 >
-                  {cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)?.message.text || ''}
+                  {cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                    ?.message.text || ''}
                 </td>
               ))}
             </tr>
