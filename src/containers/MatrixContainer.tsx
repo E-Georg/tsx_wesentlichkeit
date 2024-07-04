@@ -1,42 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Matrix from "../components/Matrix/Matrix";
 import {
-  SubGroup,
-  Stackholder,
-  Cell,
   ClientTypes,
 } from "../utils/data.interfaces";
 import { fetchCells, fetchData } from "../services/ApiService";
-import { Zellen, initialColumns, initialRows } from "../utils/data.api";
+import { useMatrixContainerStore } from "../store";
 
 const MatrixContainer = () => {
-  const [rows, setRows] = useState<SubGroup[]>(initialRows);
-  const [columns, setColumns] = useState<Stackholder[]>(initialColumns);
-  const [cells, setCells] = useState<Cell[]>(Zellen);
-  const [title, setTitle] = useState("Test");
-  const [text, setText] = useState("");
-  const [count, setCount] = useState(1);
+  const {count, increment, title,setTitle, text, setText, ClientID, GroupID, rows,setRows, columns, setColumns, cells,setCells} = useMatrixContainerStore();
 
-  const clientID: number = 2;
-  const GroupID: number = 1;
 
   // use REDUX
   useEffect(() => {
-    fetchData(ClientTypes.Stakeholders, setColumns, clientID);
+    fetchData(ClientTypes.Stakeholders, setColumns, ClientID);
     console.log("COLUMNS", columns, count);
-    setCount(() => count + 1);
+    increment()
   }, []);
 
   useEffect(() => {
-    fetchData(ClientTypes.SubGroups, setRows, clientID, GroupID);
+    fetchData(ClientTypes.SubGroups, setRows, ClientID, GroupID);
     console.log("ROWS", rows, count);
-    setCount(() => count + 1);
+    increment()
   }, []);
 
   useEffect(() => {
-    fetchCells(ClientTypes.Cells, clientID, GroupID, setCells);
+    fetchCells(ClientTypes.Cells, ClientID, GroupID, setCells);
     console.log("CELLS", cells, count);
-    setCount(() => count + 1);
+    increment()
   }, []);
 
   return (
