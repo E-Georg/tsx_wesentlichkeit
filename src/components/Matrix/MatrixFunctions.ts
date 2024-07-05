@@ -3,6 +3,7 @@ import { Zellen } from '../../utils/data.api';
 import {
   AddCellToDatabase,
   AddDataToDatabase,
+  DeleteCellFromDatabase,
   DeleteDataFromDatabase,
   fetchCells,
   fetchData,
@@ -159,6 +160,12 @@ export const handleCellClick = (rowId: number, columnId: number) => {
 
   if (zelle?.message.text) console.log('zelle: ', zelle.message.text);
   else console.log({ columnId }, { rowId });
+};
+
+export const DeleteCell = async (id: number, setCells: (cell: Cell[]) => void, cells: Cell[]) => {
+  const status = await DeleteCellFromDatabase(id);
+
+  if (status === 200) setCells(cells.filter((x: Cell) => x.id !== id));
 };
 
 //    <<<<<<<<<< =============== >>>>>>>>>>

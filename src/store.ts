@@ -14,7 +14,7 @@ interface State {
   cell: boolean;
   onUpdateRow: { show: boolean; clickedRowId: number };
   onUpdateColumn: { show: boolean; clickedColId: number };
-  cellID: [number, number];
+  cellID: [number, number, number];
   ClientID: number;
   GroupID: number;
   rows: SubGroup[];
@@ -31,7 +31,7 @@ interface Action {
   setCell: () => void;
   setOnUpdateRow: (show: boolean, clickedRowId: number) => void;
   setOnUpdateColumn: (show: boolean, clickedColId: number) => void;
-  setCellID: (cellID: [number, number]) => void;
+  setCellID: (cellID: [number, number, number]) => void;
   reset: () => void;
   setRows: (row: SubGroup[]) => void;
   setColumns: (column: Stackholder[]) => void;
@@ -58,8 +58,8 @@ export const useStore = create<State & Action>()(
     onUpdateColumn: { show: false, clickedColId: 0 },
     setOnUpdateColumn: (show: boolean, clickedColId: number) =>
       set(() => ({ onUpdateColumn: { show: show, clickedColId: clickedColId } })),
-    cellID: [0, 0],
-    setCellID: (cellID: [number, number]) => set(() => ({ cellID: cellID })),
+    cellID: [0, 0, 0],
+    setCellID: (cellID: [number, number, number]) => set(() => ({ cellID: cellID })),
     reset: () =>
       set((state) => ({
         title: '',

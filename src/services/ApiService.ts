@@ -127,3 +127,14 @@ export const DeleteDataFromDatabase = async (id: number, typeParameter: string) 
     console.error(`Error: ${error}`);
   }
 };
+
+export const DeleteCellFromDatabase = async (id: number) => {
+  const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"d", "clientStakeholderSignificanceId":${id}}`;
+
+  try {
+    const response = await axios.delete(url);
+    return response.status;
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+};

@@ -90,7 +90,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                   style={{ border: '1px solid red' }}
                   key={column.id + row.id}
                   onClick={() => {
-                    setCellID([row.id, column.id]);
+                    const Idnumber: number =
+                      cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                        ?.id || 0;
+
+                    setCellID([row.id, column.id, Idnumber]);
+
                     if (
                       !cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
                         ?.message.text
@@ -98,7 +103,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                       setShowModal();
                       setCell();
                       // setCellID([row.id, column.id]);
-                    } // else update or delete
+                    } // NEUE VARIABLE ANLEGEN !!!!
                     console.log(cellID);
                   }}
                 >
