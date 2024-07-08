@@ -1,16 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import './modal.style.css';
 import { useStore } from '../../store';
-import {
-  AddCell,
-  AddStackholder,
-  AddSubGroup,
-  DeleteCell,
-  DeleteStackholder,
-  DeleteSubGroup,
-  UpdateStackholder,
-  UpdateSubGroup,
-} from '../Matrix/MatrixFunctions';
+
+import { ClientTypes, HttpAction } from '../../utils/data.interfaces';
+import useSubGroupData from '../Queries/useSubGroupData';
+import useStackholderData from '../Queries/useStackholderData';
+import useCellData from '../Queries/useCellData';
 
 interface Props {
   title: string;
@@ -36,11 +31,19 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
     setCell,
     onUpdateRow,
     setOnUpdateRow,
+    onUpdateCell,
     onUpdateColumn,
     setOnUpdateColumn,
     cellID,
     reset,
+    onChangeSubGroup,
+    onChangeStackholder,
+    onChangeCells,
   } = useStore();
+
+  const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
+  const { addStackholderMutation, deleteStackholderMutation, updateStackholderMutation } = useStackholderData();
+  const { deleteCellsMutation } = useCellData();
 
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -52,26 +55,97 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
     }
   }, [text]);
 
-  const handleModalData = () => {
+  // TODO: FIX the boolean in every if clause
+  // TODO: onUpdateRow {mode: 'enum.Delete/Update/Post' id: } and others
+  const handleModalData = async () => {
     console.log('in in ModalData');
-    if (column) {
-      AddStackholder(title, text, columns, setColumns, 2);
-      setColumn();
-    } else if (row) {
-      AddSubGroup(title, text, rows, setRows, 2, 1);
-      setRow();
-    } else if (cell) {
-      console.log('in Delte');
-      // AddCell(cellID[0], cellID[1], title, text, 2, cells, setCells);
-      DeleteCell(cellID[2] ? cellID[2] : 1, setCells, cells);
-      setCell();
-    } else if (onUpdateRow.show) {
-      DeleteSubGroup(setRows, rows, onUpdateRow.clickedRowId);
-      setOnUpdateRow(false, 0);
-    } else if (onUpdateColumn.show) {
-      DeleteStackholder(setColumns, columns, onUpdateColumn.clickedColId);
-      setOnUpdateColumn(false, 0);
+    console.log(onChangeStackholder);
+    console.log(onChangeSubGroup);
+
+    //===============================================================SUBGROUP===================================================================
+    if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
+      // 3 Fälle
+
+      // DELETE
+      if (onChangeSubGroup.mode === HttpAction.DELETE) {
+        await deleteSubGroupMutation({
+          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          typeParameter: ClientTypes.SubGroups,
+        });
+        //
+        // UPDATE
+      } else if (onChangeSubGroup.mode === HttpAction.UPDATE)
+        await updateSubGroupMutation({
+          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          typeParameter: ClientTypes.SubGroups,
+          clientID: 2,
+          groupID: 1,
+        });
+      //
+      // POST
+      else if (onChangeSubGroup.mode === HttpAction.POST)
+        await addSubGroupMutation({
+          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          typeParameter: ClientTypes.SubGroups,
+          clientID: 2,
+          groupID: 1,
+        });
     }
+    //==========================================================STACKHOLDER========================================================================
+    if (onChangeStackholder.mode !== HttpAction.DEFAULT) {
+      // 3 Fälle
+      //
+      // DELETE
+      if (onChangeStackholder.mode === HttpAction.DELETE)
+        await deleteStackholderMutation({
+          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          typeParameter: ClientTypes.Stakeholders,
+        });
+      //
+      // UPDATE
+      else if (onChangeStackholder.mode === HttpAction.UPDATE)
+        await updateStackholderMutation({
+          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          typeParameter: ClientTypes.Stakeholders,
+          clientID: 2,
+        });
+      //
+      // POST
+      else if (onChangeStackholder.mode === HttpAction.POST)
+        await addStackholderMutation({
+          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          typeParameter: ClientTypes.Stakeholders,
+          clientID: 2,
+        });
+    }
+
+    // ============================================================CELLS )============================================================================
+    if (onChangeCells.mode !== HttpAction.DEFAULT) {
+      if (onChangeCells.mode === HttpAction.DELETE) {
+        await deleteCellsMutation({ ID: cellID[2] });
+      }
+    }
+    // if (column) {
+    //   AddStackholder(title, text, columns, setColumns, 2);
+    //   setColumn();
+    // } else if (row) {
+    //   await addToMutation({ id: 0, text: text, description: title });
+    //   setRow();
+    // } else if (cell) {
+    //   AddCell(cellID[0], cellID[1], title, text, 2, cells, setCells);
+    //   setCell();
+    // } else if (onChangeSubGroup.mode === HttpAction.DELETE) {
+    //   await deleteSubGroup({ id: onUpdateRow.clickedRowId, text: title, description: text });
+    //   //await updateSubGroup({ id: onUpdateRow.clickedRowId, text: title, description: text });
+    //   setOnUpdateRow(false, 0);
+    // } else if (onUpdateColumn.show) {
+    //   DeleteStackholder(setColumns, columns, onUpdateColumn.clickedColId);
+    //   setOnUpdateColumn(false, 0);
+    // } else if (onUpdateCell.show) {
+    //   console.log('UPDATE CELL');
+    //   //DeleteCell(cellID[2] ? cellID[2] : 1, setCells, cells);
+    //   UpdateCell(setCells, cells, cellID, title, text);
+    // }
 
     reset();
   };

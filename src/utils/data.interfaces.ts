@@ -22,8 +22,15 @@ export interface SubGroup {
 }
 
 export enum ClientTypes {
-  Stakeholders = "clientStakeholders",
-  SubGroups = "clientSubGroups",
-  Cells = "clientStakeholderSignificanceAll",
-  Cell = "clientStakeholderSignificance",
+  Stakeholders = 'clientStakeholders',
+  SubGroups = 'clientSubGroups',
+  Cells = 'clientStakeholderSignificanceAll',
+  Cell = 'clientStakeholderSignificance',
+}
+
+export enum HttpAction {
+  DELETE = 'd',
+  UPDATE = 'e',
+  POST = 'i',
+  DEFAULT = '',
 }

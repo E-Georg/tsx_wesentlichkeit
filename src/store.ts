@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Cell, Stackholder, SubGroup } from './utils/data.interfaces';
+import { Cell, HttpAction, Stackholder, SubGroup } from './utils/data.interfaces';
 import { initialColumns, initialRows, Zellen } from './utils/data.api';
 import { devtools } from 'zustand/middleware';
 
@@ -14,6 +14,10 @@ interface State {
   cell: boolean;
   onUpdateRow: { show: boolean; clickedRowId: number };
   onUpdateColumn: { show: boolean; clickedColId: number };
+  onUpdateCell: { show: boolean; clickedCellId: number };
+  onChangeSubGroup: { mode: HttpAction; ID: number };
+  onChangeStackholder: { mode: HttpAction; ID: number };
+  onChangeCells: { mode: HttpAction; ID: number };
   cellID: [number, number, number];
   ClientID: number;
   GroupID: number;
@@ -31,6 +35,10 @@ interface Action {
   setCell: () => void;
   setOnUpdateRow: (show: boolean, clickedRowId: number) => void;
   setOnUpdateColumn: (show: boolean, clickedColId: number) => void;
+  setOnUpdateCell: (show: boolean, clickedCellId: number) => void;
+  setOnChangeSubGroup: (mode: HttpAction, ID: number) => void;
+  setOnChangeStackholder: (mode: HttpAction, ID: number) => void;
+  setOnChangeCells: (mode: HttpAction, ID: number) => void;
   setCellID: (cellID: [number, number, number]) => void;
   reset: () => void;
   setRows: (row: SubGroup[]) => void;
@@ -56,8 +64,18 @@ export const useStore = create<State & Action>()(
     setOnUpdateRow: (show: boolean, clickedRowId: number) =>
       set(() => ({ onUpdateRow: { show: show, clickedRowId: clickedRowId } })),
     onUpdateColumn: { show: false, clickedColId: 0 },
+    onUpdateCell: { show: false, clickedCellId: 0 },
     setOnUpdateColumn: (show: boolean, clickedColId: number) =>
       set(() => ({ onUpdateColumn: { show: show, clickedColId: clickedColId } })),
+    setOnUpdateCell: (show: boolean, clickedCellId: number) =>
+      set(() => ({ onUpdateCell: { show: show, clickedCellId: clickedCellId } })),
+    onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
+    setOnChangeSubGroup: (mode: HttpAction, ID: number) => set(() => ({ onChangeSubGroup: { mode: mode, ID: ID } })),
+    onChangeStackholder: { mode: HttpAction.DEFAULT, ID: 0 },
+    setOnChangeStackholder: (mode: HttpAction, ID: number) =>
+      set(() => ({ onChangeStackholder: { mode: mode, ID: ID } })),
+    onChangeCells: { mode: HttpAction.DEFAULT, ID: 0 },
+    setOnChangeCells: (mode: HttpAction, ID: number) => set(() => ({ onChangeCells: { mode: mode, ID: ID } })),
     cellID: [0, 0, 0],
     setCellID: (cellID: [number, number, number]) => set(() => ({ cellID: cellID })),
     reset: () =>
@@ -70,6 +88,10 @@ export const useStore = create<State & Action>()(
         showModal: false,
         onUpdateColumn: { show: false, clickedColId: state.onUpdateColumn.clickedColId },
         onUpdateRow: { show: false, clickedRowId: state.onUpdateRow.clickedRowId },
+        onUpdateCell: { show: false, clickedCellId: state.onUpdateCell.clickedCellId },
+        onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
+        onChangeStackholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStackholder.ID },
+        onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
       })),
     ClientID: 2,
     GroupID: 1,

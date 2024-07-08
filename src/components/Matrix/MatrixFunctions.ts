@@ -5,8 +5,8 @@ import {
   AddDataToDatabase,
   DeleteCellFromDatabase,
   DeleteDataFromDatabase,
-  fetchCells,
   fetchData,
+  UpdateCellToDatabase,
   UpdateDataToDatabase,
 } from '../../services/ApiService';
 
@@ -75,7 +75,8 @@ export const AddCell = async (
     const status = await AddCellToDatabase(newCell, clientID);
 
     if (status === 200) {
-      fetchCells(ClientTypes.Cells, 2, 1, setCells); // setCells([...cells, newCell])
+      //fetchCells(ClientTypes.Cells, 2, 1, setCells);
+      setCells([...cells, newCell]);
     }
   }
 };
@@ -138,6 +139,38 @@ export const UpdateStackholder = async (
     setColumns(updatedRows);
 
     // oder new Fetch
+  }
+};
+
+export const UpdateCell = async (
+  setCells: (cell: Cell[]) => void,
+  cells: Cell[],
+  cellID: [number, number, number],
+  title: string,
+  text: string
+) => {
+  const newCell: Cell = {
+    id: cellID[2],
+    clientStakeholderId: cellID[0],
+    clientSubGroupId: cellID[1],
+    message: {
+      title: title,
+      text: text,
+    },
+  };
+  const res = await UpdateCellToDatabase(newCell, cellID[2]);
+
+  console.log(res);
+  if (res === 200) {
+    const updatedCells = await cells.map((cell) => {
+      if (cell.id === cellID[2]) {
+        return { ...cell, message: { title: title, text: text }, description: 'description' };
+      }
+      return cell;
+    });
+    console.log(cells);
+    console.log(updatedCells);
+    setCells(updatedCells);
   }
 };
 

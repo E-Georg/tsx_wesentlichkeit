@@ -1,20 +1,33 @@
-import { SubGroup, Stackholder, Cell } from '../../utils/data.interfaces';
+import { Cell, HttpAction } from '../../utils/data.interfaces';
 import { useStore } from '../../store';
 
 // Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
 // React Query
 
 interface Props {
-  rows: SubGroup[];
-  columns: Stackholder[];
-  cells: Cell[];
+  rows: any; //SubGroup[];
+  columns: any; //Stackholder[];
+  cells: any; //Cell[];
   showAddToMatrix: boolean;
   setTitle: (name: string) => void;
   setText: (name: string) => void;
 }
 
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Props) => {
-  const { setShowModal, setColumn, setRow, setCell, setOnUpdateRow, setOnUpdateColumn, cellID, setCellID } = useStore();
+  const {
+    setShowModal,
+    setColumn,
+    setRow,
+    setCell,
+    setOnUpdateRow,
+    setOnUpdateColumn,
+    cellID,
+    setCellID,
+    setOnUpdateCell,
+    setOnChangeSubGroup,
+    setOnChangeStackholder,
+    setOnChangeCells,
+  } = useStore();
 
   return (
     <>
@@ -23,7 +36,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
           <button
             onClick={() => {
               setShowModal();
-              setColumn();
+              setOnChangeStackholder(HttpAction.POST, 0);
+              //setColumn();
             }}
           >
             Add Stackholder
@@ -32,7 +46,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
           <button
             onClick={() => {
               setShowModal();
-              setRow();
+              setOnChangeSubGroup(HttpAction.POST, 0);
+              // setRow();
             }}
           >
             Add SubGroup
@@ -45,12 +60,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
         <thead>
           <tr>
             <th></th>
-            {columns.map((column) => (
+            {columns.map((column: any) => (
               <th
                 onClick={() => {
                   setText(column.description);
                   setTitle(column.text);
-                  setOnUpdateColumn(true, column.id);
+                  setOnChangeStackholder(HttpAction.UPDATE, column.id);
                   setShowModal();
                 }}
                 style={{
@@ -65,7 +80,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows.map((row: any) => (
             <tr key={row.id}>
               <td
                 style={{
@@ -79,36 +94,41 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                 onClick={() => {
                   setText(row.description);
                   setTitle(row.text);
-                  setOnUpdateRow(true, row.id);
+                  setOnChangeSubGroup(HttpAction.UPDATE, row.id);
+                  // setOnUpdateRow(true, row.id);
                   setShowModal();
                 }}
               >
                 {row.text}
               </td>
-              {columns.map((column) => (
+              {columns.map((column: any) => (
                 <td
                   style={{ border: '1px solid red' }}
                   key={column.id + row.id}
                   onClick={() => {
-                    const Idnumber: number =
-                      cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                        ?.id || 0;
+                    const foundCell: Cell | undefined = cells.find(
+                      (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
+                    );
+                    const idOfCell = foundCell === undefined ? 0 : foundCell.id;
+                    setCellID([row.id, column.id, idOfCell]);
 
-                    setCellID([row.id, column.id, Idnumber]);
-
-                    if (
-                      !cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                        ?.message.text
-                    ) {
+                    if (!foundCell) {
                       setShowModal();
                       setCell();
-                      // setCellID([row.id, column.id]);
-                    } // NEUE VARIABLE ANLEGEN !!!!
+                    } else {
+                      setTitle(foundCell.message.title);
+                      setText(foundCell.message.text);
+                      setShowModal();
+                      // setOnUpdateCell(true, foundCell.id);
+                      setOnChangeCells(HttpAction.DELETE, foundCell.id);
+                    }
                     console.log(cellID);
                   }}
                 >
-                  {cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                    ?.message.text || ''}
+                  {(cells &&
+                    cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                      ?.message.text) ||
+                    ''}
                 </td>
               ))}
             </tr>

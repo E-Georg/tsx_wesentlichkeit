@@ -1,0 +1,142 @@
+ interface Stackholder {
+  id: number;
+  text: string;
+  description: string;
+  classification?: number;
+}
+
+interface Cell {
+  clientStakeholderId: number;
+  clientSubGroupId: number;
+  id: number;
+  message: {
+    title: string;
+    text: string;
+  };
+}
+
+interface SubGroup {
+  id: number;
+  text: string;
+  description: string;
+}
+
+
+
+interface Group{
+    id: number,
+    clientId: number,
+    name: string,
+}
+
+interface Client{
+    id: number,
+    name: string
+}
+
+
+Client:{
+    name: string,
+    Cell[           
+        {
+            IDStackholder: number,
+            IDSubGroup: number,
+            message: {
+                title: string;
+                text: string;
+            }
+        };
+        {
+            IDStackholder: number,
+            IDSubGroup: number,
+            message: {
+                title: string;
+                text: string;
+            }
+        };
+        {
+            IDStackholder: number,
+            IDSubGroup: number,
+            message: {
+                title: string;
+                text: string;
+            }
+        };
+    ]
+    Group: [ 
+        {
+        SubGroup: [
+            {
+                name: string,
+                description: string
+            }
+            {
+                name: string,
+                description: string
+            }
+            {
+                name: string,
+                description: string
+            }
+        ],
+    },
+    {
+
+    },
+    {
+
+    },...
+    ]
+    Stackholder:[
+        {
+            name: string, 
+            description: string,
+            classification?: number;
+        },
+        {
+            name: string, 
+            description: string,
+            classification?: number;
+        },
+        {
+            name: string, 
+            description: string,
+            classification?: number;
+        }
+    ]
+}
+
+
+
+Client
+------
+ClientId (PK)
+Name
+
+Group
+-----
+GroupId (PK)
+ClientId (FK)
+Name
+
+SubGroup
+--------
+SubGroupId (PK)
+GroupId (FK)
+Text
+Description
+
+Stackholder
+-----------
+StackholderId (PK)
+Text
+Description
+Classification
+
+Cell
+----
+CellId (PK)
+ClientStakeholderId (FK)
+ClientSubGroupId (FK)
+Title
+Text
