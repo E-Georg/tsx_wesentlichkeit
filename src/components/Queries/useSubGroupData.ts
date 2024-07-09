@@ -6,8 +6,10 @@ import {
   fetchDataQuery,
   UpdateDataToDatabaseQuery,
 } from '../../services/ApiService';
+import { useStore } from '../../store';
 
-const useSubGroupData = (ClientID = 2, GroupID = 1) => {
+const useSubGroupData = () => {
+  const { ClientID, GroupID } = useStore();
   const queryClient = useQueryClient();
 
   // Fetch SubGroup data
@@ -19,8 +21,8 @@ const useSubGroupData = (ClientID = 2, GroupID = 1) => {
 
   // Add SubGroup mutation
   const { mutateAsync: addSubGroupMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter, clientID, groupID }: any) =>
-      AddDataToDataBaseQuery({ matrixObject, typeParameter, clientID, groupID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) =>
+      AddDataToDataBaseQuery({ matrixObject, typeParameter, ClientID, GroupID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['SubGroup'] });
     },
@@ -36,8 +38,8 @@ const useSubGroupData = (ClientID = 2, GroupID = 1) => {
 
   // Update SubGroup mutation
   const { mutateAsync: updateSubGroupMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter, clientID, groupID }: any) =>
-      UpdateDataToDatabaseQuery({ matrixObject, typeParameter, clientID, groupID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) =>
+      UpdateDataToDatabaseQuery({ matrixObject, typeParameter, ClientID, GroupID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['SubGroup'] });
     },

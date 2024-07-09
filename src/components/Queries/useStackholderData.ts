@@ -6,8 +6,10 @@ import {
   fetchDataQuery,
   UpdateDataToDatabaseQuery,
 } from '../../services/ApiService';
+import { useStore } from '../../store';
 
-const useStackholderData = (ClientID = 2) => {
+const useStackholderData = () => {
+  const { ClientID } = useStore();
   const queryClient = useQueryClient();
 
   // Fetch Stackholder data
@@ -19,8 +21,8 @@ const useStackholderData = (ClientID = 2) => {
 
   // Add Stackholder mutation
   const { mutateAsync: addStackholderMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter, clientID }: any) =>
-      AddDataToDataBaseQuery({ matrixObject, typeParameter, clientID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) =>
+      AddDataToDataBaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Stackholder'] });
     },
@@ -36,8 +38,8 @@ const useStackholderData = (ClientID = 2) => {
 
   //   // Update Stackholder mutation
   const { mutateAsync: updateStackholderMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter, clientID }: any) =>
-      UpdateDataToDatabaseQuery({ matrixObject, typeParameter, clientID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) =>
+      UpdateDataToDatabaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Stackholder'] });
     },

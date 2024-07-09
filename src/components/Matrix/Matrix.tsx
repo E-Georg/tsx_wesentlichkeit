@@ -14,20 +14,7 @@ interface Props {
 }
 
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Props) => {
-  const {
-    setShowModal,
-    setColumn,
-    setRow,
-    setCell,
-    setOnUpdateRow,
-    setOnUpdateColumn,
-    cellID,
-    setCellID,
-    setOnUpdateCell,
-    setOnChangeSubGroup,
-    setOnChangeStackholder,
-    setOnChangeCells,
-  } = useStore();
+  const { setShowModal, cellID, setCellID, setOnChangeSubGroup, setOnChangeStackholder, setOnChangeCells } = useStore();
 
   return (
     <>
@@ -60,23 +47,24 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
         <thead>
           <tr>
             <th></th>
-            {columns.map((column: any) => (
-              <th
-                onClick={() => {
-                  setText(column.description);
-                  setTitle(column.text);
-                  setOnChangeStackholder(HttpAction.UPDATE, column.id);
-                  setShowModal();
-                }}
-                style={{
-                  border: '1px solid green',
-                  fontSize: '1rem',
-                }}
-                key={column.id}
-              >
-                {column.text}
-              </th>
-            ))}
+            {columns &&
+              columns.map((column: any) => (
+                <th
+                  onClick={() => {
+                    setText(column.description);
+                    setTitle(column.text);
+                    setOnChangeStackholder(HttpAction.UPDATE, column.id);
+                    setShowModal();
+                  }}
+                  style={{
+                    border: '1px solid green',
+                    fontSize: '1rem',
+                  }}
+                  key={column.id}
+                >
+                  {column.text}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
@@ -88,49 +76,45 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                   fontSize: '1rem',
                 }}
                 key={row.id}
-                // Delete und Update
-                // Update => id, oldTitle, odlDescription, new One in Modal
-                // Delete => id
                 onClick={() => {
                   setText(row.description);
                   setTitle(row.text);
-                  setOnChangeSubGroup(HttpAction.UPDATE, row.id);
-                  // setOnUpdateRow(true, row.id);
+                  setOnChangeSubGroup(HttpAction.DELETE, row.id);
                   setShowModal();
                 }}
               >
                 {row.text}
               </td>
-              {columns.map((column: any) => (
-                <td
-                  style={{ border: '1px solid red' }}
-                  key={column.id + row.id}
-                  onClick={() => {
-                    const foundCell: Cell | undefined = cells.find(
-                      (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
-                    );
-                    const idOfCell = foundCell === undefined ? 0 : foundCell.id;
-                    setCellID([row.id, column.id, idOfCell]);
+              {columns &&
+                columns.map((column: any) => (
+                  <td
+                    style={{ border: '1px solid red' }}
+                    key={column.id + row.id}
+                    onClick={() => {
+                      const foundCell: Cell | undefined = cells.find(
+                        (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
+                      );
+                      const idOfCell = foundCell === undefined ? 0 : foundCell.id;
+                      setCellID([row.id, column.id, idOfCell]);
 
-                    if (!foundCell) {
-                      setShowModal();
-                      setCell();
-                    } else {
-                      setTitle(foundCell.message.title);
-                      setText(foundCell.message.text);
-                      setShowModal();
-                      // setOnUpdateCell(true, foundCell.id);
-                      setOnChangeCells(HttpAction.DELETE, foundCell.id);
-                    }
-                    console.log(cellID);
-                  }}
-                >
-                  {(cells &&
-                    cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                      ?.message.text) ||
-                    ''}
-                </td>
-              ))}
+                      if (!foundCell) {
+                        setShowModal();
+                        setOnChangeCells(HttpAction.POST, idOfCell);
+                      } else {
+                        setTitle(foundCell.message.title);
+                        setText(foundCell.message.text);
+                        setShowModal();
+                        setOnChangeCells(HttpAction.UPDATE, idOfCell);
+                      }
+                      console.log(cellID);
+                    }}
+                  >
+                    {(cells &&
+                      cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                        ?.message.title) ||
+                      ''}
+                  </td>
+                ))}
             </tr>
           ))}
         </tbody>

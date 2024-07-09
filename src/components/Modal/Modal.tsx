@@ -6,6 +6,8 @@ import { ClientTypes, HttpAction } from '../../utils/data.interfaces';
 import useSubGroupData from '../Queries/useSubGroupData';
 import useStackholderData from '../Queries/useStackholderData';
 import useCellData from '../Queries/useCellData';
+import Editor from '../Editor/Editor';
+import FileUpload from '../FileUpload/FileUpload';
 
 interface Props {
   title: string;
@@ -15,35 +17,11 @@ interface Props {
 }
 
 const Modal = ({ title, text, setTitle, setText }: Props) => {
-  const {
-    rows,
-    columns,
-    cells,
-    setRows,
-    setColumns,
-    setCells,
-    showModal,
-    column,
-    setColumn,
-    row,
-    setRow,
-    cell,
-    setCell,
-    onUpdateRow,
-    setOnUpdateRow,
-    onUpdateCell,
-    onUpdateColumn,
-    setOnUpdateColumn,
-    cellID,
-    reset,
-    onChangeSubGroup,
-    onChangeStackholder,
-    onChangeCells,
-  } = useStore();
+  const { showModal, cellID, reset, onChangeSubGroup, onChangeStackholder, onChangeCells, ClientID } = useStore();
 
   const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
   const { addStackholderMutation, deleteStackholderMutation, updateStackholderMutation } = useStackholderData();
-  const { deleteCellsMutation } = useCellData();
+  const { deleteCellsMutation, updateCellsMutation, addCellsMutation } = useCellData();
 
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -55,12 +33,11 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
     }
   }, [text]);
 
-  // TODO: FIX the boolean in every if clause
-  // TODO: onUpdateRow {mode: 'enum.Delete/Update/Post' id: } and others
   const handleModalData = async () => {
     console.log('in in ModalData');
     console.log(onChangeStackholder);
     console.log(onChangeSubGroup);
+    console.log(onChangeCells);
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
@@ -119,71 +96,25 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
         });
     }
 
-    // ============================================================CELLS )============================================================================
+    // ============================================================CELLS============================================================================
     if (onChangeCells.mode !== HttpAction.DEFAULT) {
       if (onChangeCells.mode === HttpAction.DELETE) {
         await deleteCellsMutation({ ID: cellID[2] });
+      } else if (onChangeCells.mode === HttpAction.UPDATE) {
+        await updateCellsMutation({ cell: { id: cellID[2], message: { text: text, title: title } } });
+      } else if (onChangeCells.mode === HttpAction.POST) {
+        await addCellsMutation({
+          cell: {
+            id: cellID[2],
+            clientSubGroupId: cellID[0],
+            clientStakeholderId: cellID[1],
+            message: { text: text, title: title },
+          },
+          clientID: ClientID,
+        });
       }
     }
-    // if (column) {
-    //   AddStackholder(title, text, columns, setColumns, 2);
-    //   setColumn();
-    // } else if (row) {
-    //   await addToMutation({ id: 0, text: text, description: title });
-    //   setRow();
-    // } else if (cell) {
-    //   AddCell(cellID[0], cellID[1], title, text, 2, cells, setCells);
-    //   setCell();
-    // } else if (onChangeSubGroup.mode === HttpAction.DELETE) {
-    //   await deleteSubGroup({ id: onUpdateRow.clickedRowId, text: title, description: text });
-    //   //await updateSubGroup({ id: onUpdateRow.clickedRowId, text: title, description: text });
-    //   setOnUpdateRow(false, 0);
-    // } else if (onUpdateColumn.show) {
-    //   DeleteStackholder(setColumns, columns, onUpdateColumn.clickedColId);
-    //   setOnUpdateColumn(false, 0);
-    // } else if (onUpdateCell.show) {
-    //   console.log('UPDATE CELL');
-    //   //DeleteCell(cellID[2] ? cellID[2] : 1, setCells, cells);
-    //   UpdateCell(setCells, cells, cellID, title, text);
-    // }
-
     reset();
-  };
-
-  const handleFormat = (command: string, value?: string) => {
-    if (!editorRef.current) return;
-
-    const selection = window.getSelection();
-    if (!selection) return;
-
-    const range = selection.getRangeAt(0);
-
-    switch (command) {
-      case 'bold':
-        document.execCommand('bold');
-        break;
-      case 'italic':
-        document.execCommand('italic');
-        break;
-      case 'underline':
-        document.execCommand('underline');
-        break;
-      case 'insertList':
-        document.execCommand(value || 'insertUnorderedList');
-        break;
-      case 'insertOrderedList':
-        document.execCommand('insertOrderedList');
-        break;
-      case 'insertHorizontalLine':
-        const hr = document.createElement('hr');
-        range.insertNode(hr);
-        break;
-      default:
-        break;
-    }
-
-    // Update state with new HTML content
-    setText(editorRef.current.innerHTML);
   };
 
   return (
@@ -193,73 +124,56 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
           &times;
         </span>
         <h2 style={{ textAlign: 'center' }}>Modal</h2>
-
         <input
           type="text"
           placeholder="Enter the Title of ..."
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          style={{ width: '100%', marginBottom: '1rem' }}
+          style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
         />
-
-        <div
-          contentEditable
-          ref={editorRef}
-          id="editor"
-          data-placeholder="I'm a placeholder"
-          style={{
-            width: '100%',
-            height: '200px',
-            border: '1px solid #ccc',
-            padding: '0.5rem',
-            marginBottom: '1rem',
-            overflow: 'auto',
-            position: 'relative',
-          }}
-          onBlur={() => isEditorReady && editorRef.current && setText(editorRef.current.innerHTML)}
-        />
+        {/* =====================================================================================EDITOR====================================================================================== */}
+        {onChangeCells.mode === HttpAction.DEFAULT && (
+          <div
+            contentEditable
+            ref={editorRef}
+            id="editor"
+            defaultValue={text}
+            data-placeholder="I'm a placeholder"
+            style={{
+              width: '100%',
+              height: '200px',
+              border: '1px solid #ccc',
+              padding: '0.5rem',
+              marginBottom: '1rem',
+              overflow: 'auto',
+              position: 'relative',
+            }}
+            onBlur={() => isEditorReady && editorRef.current && setText(editorRef.current.innerHTML)}
+          />
+        )}
+        {onChangeCells.mode != HttpAction.DEFAULT ? <Editor /> : <></>}
 
         <input
           type="text"
           placeholder="Enter the Description of ..."
           value={''}
           onChange={(event) => setText(event.target.value)}
-          style={{ width: '100%', marginBottom: '1rem' }}
+          style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
         />
-
-        {(column || onUpdateColumn.show) && (
+        {onChangeStackholder.mode != HttpAction.DEFAULT && (
           <input
             type="text"
             placeholder="Enter the Classification of ..."
             value={''}
             onChange={(event) => setText(event.target.value)}
-            style={{ width: '100%', marginBottom: '1rem' }}
+            style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
           />
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-          <button onClick={() => handleFormat('bold')} style={{ width: '19%' }}>
-            Bold
-          </button>
-          <button onClick={() => handleFormat('italic')} style={{ width: '19%' }}>
-            Italic
-          </button>
-          <button onClick={() => handleFormat('underline')} style={{ width: '19%' }}>
-            Underline
-          </button>
-          <button onClick={() => handleFormat('insertList')} style={{ width: '19%' }}>
-            Bulleted List
-          </button>
-          <button onClick={() => handleFormat('insertOrderedList')} style={{ width: '19%' }}>
-            Numbered List
-          </button>
-          <button onClick={() => handleFormat('insertHorizontalLine')} style={{ width: '19%' }}>
-            Horizontal Line
-          </button>
-        </div>
+        {onChangeCells.mode != HttpAction.DEFAULT ? <FileUpload /> : <></>}
 
         <button onClick={handleModalData} style={{ width: '100%' }}>
-          Display Data
+          SAVE DATA
         </button>
       </div>
     </div>

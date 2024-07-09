@@ -17,11 +17,12 @@
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; 
-  padding: 20px;
+  margin: 5% auto; 
+  padding: 2rem;
   border: 1px solid #888;
-  width: 80%; 
-  max-width: 500px;
+  width: 100%; 
+  max-width: 50rem;
+  min-height: calc(100vh - 8rem - 7.2rem);
 }
 
 .close {

@@ -6,17 +6,11 @@ import useStackholderData from '../components/Queries/useStackholderData';
 import useCellData from '../components/Queries/useCellData';
 
 const MatrixContainer = () => {
-  const { title, setTitle, text, setText, ClientID, GroupID } = useStore();
+  const { title, setTitle, text, setText } = useStore();
 
-  // useEffect(() => {
-  //   fetchData(ClientTypes.Stakeholders, setColumns, ClientID);
-  //   fetchData(ClientTypes.SubGroups, setRows, ClientID, GroupID);
-  //   fetchCells(ClientTypes.Cells, ClientID, GroupID, setCells);
-  // }, []);
-
-  const { SubGroup, isLoading } = useSubGroupData(ClientID, GroupID);
-  const { Stackholder } = useStackholderData(ClientID);
-  const { Cells } = useCellData(ClientID, GroupID);
+  const { SubGroup, isLoading } = useSubGroupData();
+  const { Stackholder } = useStackholderData();
+  const { Cells } = useCellData();
 
   if (isLoading) {
     //|| isLoadingStack || isLoadingCells) {
