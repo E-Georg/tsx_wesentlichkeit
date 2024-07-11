@@ -1,8 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './App.css';
-import Editor from './components/Editor/Editor';
-import MatrixContainer from './containers/MatrixContainer';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LoginPage from './components/Pages/LoginPages/LoginPages';
+import RegisterPage from './components/Pages/RegisterPage/RegisterPage';
+import MatrixPage from './components/Pages/MatrixPages/MatrixPage';
+import { tokenLoader } from './utils/auth';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,16 +16,30 @@ const queryClient = new QueryClient({
   },
 });
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    // element: <RootLayout />,
+    // error: <ErrorPage/>
+    loader: tokenLoader,
+    children: [
+      {
+        path: '/',
+        element: <MatrixPage />,
+        // loader: checkAuthLoader
+      },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register ', element: <RegisterPage /> },
+    ],
+  },
+]);
+
 function App() {
   return (
-    <Router>
-      <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route path="/Home" element={<MatrixContainer />}></Route>
-          <Route path="/" element={<Editor />}></Route>
-        </Routes>
-      </QueryClientProvider>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </QueryClientProvider>
   );
 }
 

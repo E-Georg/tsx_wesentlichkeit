@@ -14,17 +14,30 @@ interface Props {
 }
 
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Props) => {
-  const { setShowModal, cellID, setCellID, setOnChangeSubGroup, setOnChangeStackholder, setOnChangeCells } = useStore();
+  const {
+    setShowModal,
+    cellID,
+    setCellID,
+    setOnChangeSubGroup,
+    setOnChangeStackholder,
+    setOnChangeCells,
+    setClassification,
+    DELETE,
+    SetDELETE,
+  } = useStore();
 
   return (
     <>
+      <div>
+        <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
+        <label htmlFor="setDELETE">Löschen aktivieren</label>
+      </div>
       {showAddToMatrix ? (
         <div>
           <button
             onClick={() => {
               setShowModal();
               setOnChangeStackholder(HttpAction.POST, 0);
-              //setColumn();
             }}
           >
             Add Stackholder
@@ -34,7 +47,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
             onClick={() => {
               setShowModal();
               setOnChangeSubGroup(HttpAction.POST, 0);
-              // setRow();
             }}
           >
             Add SubGroup
@@ -53,7 +65,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                   onClick={() => {
                     setText(column.description);
                     setTitle(column.text);
-                    setOnChangeStackholder(HttpAction.UPDATE, column.id);
+                    setClassification(column.classification);
+                    // TEMPORÄR
+                    if (DELETE) setOnChangeStackholder(HttpAction.DELETE, column.id);
+                    else setOnChangeStackholder(HttpAction.UPDATE, column.id);
                     setShowModal();
                   }}
                   style={{
@@ -79,7 +94,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                 onClick={() => {
                   setText(row.description);
                   setTitle(row.text);
-                  setOnChangeSubGroup(HttpAction.DELETE, row.id);
+                  // TEMPORÄR
+                  if (DELETE) setOnChangeSubGroup(HttpAction.DELETE, row.id);
+                  else setOnChangeSubGroup(HttpAction.UPDATE, row.id);
                   setShowModal();
                 }}
               >
@@ -104,7 +121,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                         setTitle(foundCell.message.title);
                         setText(foundCell.message.text);
                         setShowModal();
-                        setOnChangeCells(HttpAction.UPDATE, idOfCell);
+                        // TEMPORÄR
+                        if (DELETE) setOnChangeCells(HttpAction.DELETE, idOfCell);
+                        else setOnChangeCells(HttpAction.UPDATE, idOfCell);
                       }
                       console.log(cellID);
                     }}

@@ -34,3 +34,8 @@ export enum HttpAction {
   POST = 'i',
   DEFAULT = '',
 }
+
+export interface Classification {
+  value: number;
+  label: string;
+}

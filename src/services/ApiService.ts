@@ -77,11 +77,11 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
   let url;
 
   if (GroupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"i","clientId":${ClientID},"text":"${matrixObject.text}","description":"${matrixObject.description}","classification":2}`;
+    url = `${API}${typeParameter}${phpExtension}{"action":"i","clientId":${ClientID},"text":"${matrixObject.text}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "text":"${matrixObject.text}", "description":"${matrixObject.description}" } `;
   }
-
+  console.log(url);
   try {
     const res = await axios.post(url);
     if (res.status === 200) {

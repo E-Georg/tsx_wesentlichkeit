@@ -8,6 +8,7 @@ import useStackholderData from '../Queries/useStackholderData';
 import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
 import FileUpload from '../FileUpload/FileUpload';
+import { options } from '../../utils/constants';
 
 interface Props {
   title: string;
@@ -17,7 +18,16 @@ interface Props {
 }
 
 const Modal = ({ title, text, setTitle, setText }: Props) => {
-  const { showModal, cellID, reset, onChangeSubGroup, onChangeStackholder, onChangeCells, ClientID } = useStore();
+  const {
+    showModal,
+    cellID,
+    reset,
+    onChangeSubGroup,
+    onChangeStackholder,
+    onChangeCells,
+    classification,
+    setClassification,
+  } = useStore();
 
   const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
   const { addStackholderMutation, deleteStackholderMutation, updateStackholderMutation } = useStackholderData();
@@ -35,9 +45,9 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
 
   const handleModalData = async () => {
     console.log('in in ModalData');
-    console.log(onChangeStackholder);
-    console.log(onChangeSubGroup);
-    console.log(onChangeCells);
+    console.log(onChangeStackholder.mode);
+    console.log(onChangeSubGroup.mode);
+    console.log(onChangeCells.mode);
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
@@ -64,8 +74,6 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
         await addSubGroupMutation({
           matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
           typeParameter: ClientTypes.SubGroups,
-          clientID: 2,
-          groupID: 1,
         });
     }
     //==========================================================STACKHOLDER========================================================================
@@ -75,24 +83,27 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
       // DELETE
       if (onChangeStackholder.mode === HttpAction.DELETE)
         await deleteStackholderMutation({
-          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          matrixObject: { id: onChangeStackholder.ID },
           typeParameter: ClientTypes.Stakeholders,
         });
       //
       // UPDATE
       else if (onChangeStackholder.mode === HttpAction.UPDATE)
         await updateStackholderMutation({
-          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          matrixObject: {
+            id: onChangeStackholder.ID,
+            text: text,
+            description: title,
+            classification: classification,
+          },
           typeParameter: ClientTypes.Stakeholders,
-          clientID: 2,
         });
       //
       // POST
       else if (onChangeStackholder.mode === HttpAction.POST)
         await addStackholderMutation({
-          matrixObject: { id: onChangeStackholder.ID, text: text, description: title },
+          matrixObject: { id: onChangeStackholder.ID, text: text, description: title, classification: classification },
           typeParameter: ClientTypes.Stakeholders,
-          clientID: 2,
         });
     }
 
@@ -110,7 +121,6 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
             clientStakeholderId: cellID[1],
             message: { text: text, title: title },
           },
-          clientID: ClientID,
         });
       }
     }
@@ -129,7 +139,7 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
           placeholder="Enter the Title of ..."
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
+          style={{ width: '100%', height: '2rem', marginBottom: '2rem', textAlign: 'center', fontSize: '18px' }}
         />
         {/* =====================================================================================EDITOR====================================================================================== */}
         {onChangeCells.mode === HttpAction.DEFAULT && (
@@ -138,9 +148,9 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
             ref={editorRef}
             id="editor"
             defaultValue={text}
-            data-placeholder="I'm a placeholder"
+            data-placeholder="Description"
             style={{
-              width: '100%',
+              width: '98.5%',
               height: '200px',
               border: '1px solid #ccc',
               padding: '0.5rem',
@@ -152,27 +162,35 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
           />
         )}
         {onChangeCells.mode != HttpAction.DEFAULT ? <Editor /> : <></>}
-
-        <input
-          type="text"
-          placeholder="Enter the Description of ..."
-          value={''}
-          onChange={(event) => setText(event.target.value)}
-          style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
-        />
         {onChangeStackholder.mode != HttpAction.DEFAULT && (
-          <input
-            type="text"
-            placeholder="Enter the Classification of ..."
-            value={''}
-            onChange={(event) => setText(event.target.value)}
-            style={{ width: '100%', height: '2rem', marginBottom: '1rem' }}
-          />
+          <select
+            value={classification}
+            onChange={(e) =>
+              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0)
+            }
+            style={{
+              width: '100%',
+              height: '2rem',
+              marginBottom: '1rem',
+              textAlign: 'center',
+            }}
+          >
+            {classification === 0 || classification === undefined ? (
+              <option value={0}>Wähle die Stackholder-Klassifizierung</option>
+            ) : (
+              <option value={classification}>{options[classification]?.label}</option>
+            )}
+            {options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         )}
 
         {onChangeCells.mode != HttpAction.DEFAULT ? <FileUpload /> : <></>}
 
-        <button onClick={handleModalData} style={{ width: '100%' }}>
+        <button onClick={handleModalData} style={{ width: '100%', backgroundColor: 'green', color: 'white' }}>
           SAVE DATA
         </button>
       </div>

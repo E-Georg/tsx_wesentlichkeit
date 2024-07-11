@@ -5,8 +5,10 @@ import { devtools } from 'zustand/middleware';
 /// ================================================
 
 interface State {
+  DELETE: boolean;
   title: string;
   text: string;
+  classification: number;
   showModal: boolean;
   onChangeSubGroup: { mode: HttpAction; ID: number };
   onChangeStackholder: { mode: HttpAction; ID: number };
@@ -17,8 +19,10 @@ interface State {
 }
 
 interface Action {
+  SetDELETE: () => void;
   setTitle: (title: string) => void;
   setText: (text: string) => void;
+  setClassification: (num: number) => void;
   setShowModal: () => void;
   setOnChangeSubGroup: (mode: HttpAction, ID: number) => void;
   setOnChangeStackholder: (mode: HttpAction, ID: number) => void;
@@ -31,10 +35,14 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
+    DELETE: false,
+    SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
     title: '',
     setTitle: (title: string) => set(() => ({ title: title })),
     text: '',
     setText: (text: string) => set(() => ({ text: text })),
+    classification: 0,
+    setClassification: (num: number) => set(() => ({ classification: num })),
     showModal: false,
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
     onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
@@ -50,6 +58,7 @@ export const useStore = create<State & Action>()(
       set((state) => ({
         title: '',
         text: '',
+        classification: 0,
         showModal: false,
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStackholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStackholder.ID },

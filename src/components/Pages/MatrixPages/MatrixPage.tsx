@@ -1,11 +1,11 @@
-import Matrix from '../components/Matrix/Matrix';
-import { useStore } from '../store';
-import Modal from '../components/Modal/Modal';
-import useSubGroupData from '../components/Queries/useSubGroupData';
-import useStackholderData from '../components/Queries/useStackholderData';
-import useCellData from '../components/Queries/useCellData';
+import Matrix from '../../Matrix/Matrix';
+import { useStore } from '../../../store';
+import Modal from '../../Modal/Modal';
+import useSubGroupData from '../../Queries/useSubGroupData';
+import useStackholderData from '../../Queries/useStackholderData';
+import useCellData from '../../Queries/useCellData';
 
-const MatrixContainer = () => {
+const MatrixPage = () => {
   const { title, setTitle, text, setText } = useStore();
 
   const { SubGroup, isLoading } = useSubGroupData();
@@ -33,4 +33,4 @@ const MatrixContainer = () => {
   );
 };
 
-export default MatrixContainer;
+export default MatrixPage;
