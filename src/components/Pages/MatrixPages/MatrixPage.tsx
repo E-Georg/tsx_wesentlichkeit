@@ -9,25 +9,25 @@ const MatrixPage = () => {
   const { title, setTitle, description, setDescription } = useStore();
 
   const { SubGroup, isLoading } = useSubGroupData();
-  const { Stackholder } = useStackholderData();
-  const { Cells } = useCellData();
+  const { Stackholder, isLoadingStack } = useStackholderData();
+  const { Cells, isLoadingCells } = useCellData();
 
-  if (isLoading) {
-    //|| isLoadingStack || isLoadingCells) {
+  if (isLoading || isLoadingStack || isLoadingCells) {
     return <div>Loading...</div>;
   }
 
   return (
     <>
-      <Matrix
-        rows={SubGroup}
-        columns={Stackholder}
-        cells={Cells}
-        showAddToMatrix={true}
-        setTitle={setTitle}
-        setDescription={setDescription}
-      />
-
+      {Cells && Stackholder && SubGroup && (
+        <Matrix
+          rows={SubGroup}
+          columns={Stackholder}
+          cells={Cells}
+          showAddToMatrix={true}
+          setTitle={setTitle}
+          setDescription={setDescription}
+        />
+      )}
       <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />
     </>
   );

@@ -17,7 +17,7 @@ export interface Cell {
 
 export interface SubGroup {
   id: number;
-  titel: string;
+  title: string;
   description: string;
 }
 

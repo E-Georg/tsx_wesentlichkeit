@@ -4,7 +4,7 @@ import { useStore } from '../../store';
 interface Props {
   rows: SubGroup[];
   columns: Stackholder[];
-  cells: any; //Cell[];
+  cells: Cell[];
   showAddToMatrix: boolean;
   setTitle: (name: string) => void;
   setDescription: (name: string) => void;
