@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Fragment } from 'react';
 import './modal.style.css';
 import { useStore } from '../../store';
 
@@ -9,6 +9,7 @@ import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
 import FileUpload from '../FileUpload/FileUpload';
 import { options } from '../../utils/constants';
+import Dropdown from '../Dropdown/Dropdown';
 
 interface Props {
   title: string;
@@ -32,6 +33,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
   const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
   const { addStackholderMutation, deleteStackholderMutation, updateStackholderMutation } = useStackholderData();
   const { deleteCellsMutation, updateCellsMutation, addCellsMutation } = useCellData();
+  const [count, setCount] = useState<number>(1);
 
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -137,35 +139,47 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
           &times;
         </span>
         <h2 style={{ textAlign: 'center' }}>Modal</h2>
-        <input
-          type="text"
-          placeholder="Enter the Title of ..."
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          style={{ width: '100%', height: '2rem', marginBottom: '2rem', textAlign: 'center', fontSize: '18px' }}
-        />
-        {/* =====================================================================================EDITOR====================================================================================== */}
-        {onChangeCells.mode === HttpAction.DEFAULT && (
-          <div
-            contentEditable
-            ref={editorRef}
-            id="editor"
-            defaultValue={description}
-            data-placeholder="Description"
-            style={{
-              width: '98.5%',
-              height: '200px',
-              border: '1px solid #ccc',
-              padding: '0.5rem',
-              marginBottom: '1rem',
-              overflow: 'auto',
-              position: 'relative',
-              color: 'black',
-            }}
-            onBlur={() => isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML)}
-          />
-        )}
-        {onChangeCells.mode != HttpAction.DEFAULT ? <Editor /> : <></>}
+
+        {[...Array(count)].map((_, index) => (
+          <Fragment key={index}>
+            <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center' }}>
+              {/* <button style={{ flex: 1, maxWidth: '4rem', marginRight: '5rem' }} onClick={() => setCount(count + 1)}>
+                Add
+              </button> */}
+              <Dropdown />
+            </div>
+
+            <input
+              type="text"
+              placeholder="Enter the Title of ..."
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              style={{ width: '100%', height: '2rem', marginBottom: '2rem', textAlign: 'center', fontSize: '18px' }}
+            />
+            {/* =====================================================================================EDITOR====================================================================================== */}
+            {onChangeCells.mode === HttpAction.DEFAULT && (
+              <div
+                contentEditable
+                ref={editorRef}
+                id="editor"
+                defaultValue={description}
+                data-placeholder="Description"
+                style={{
+                  width: '98.5%',
+                  height: '200px',
+                  border: '1px solid #ccc',
+                  padding: '0.5rem',
+                  marginBottom: '1rem',
+                  overflow: 'auto',
+                  position: 'relative',
+                  color: 'black',
+                }}
+                onBlur={() => isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML)}
+              />
+            )}
+            {onChangeCells.mode !== HttpAction.DEFAULT ? <Editor /> : null}
+          </Fragment>
+        ))}
         {onChangeStackholder.mode != HttpAction.DEFAULT && (
           <select
             value={classification}

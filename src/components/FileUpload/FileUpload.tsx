@@ -5,30 +5,44 @@ const FileUpload = () => {
   const [selectedFile] = useState<any>();
   const [selectedFileData, setSelectedFileData] = useState<any>();
 
-  const handleFileChangeData = (event: any) => {
-    const file = event.target.files[0];
-    setSelectedFileData(file);
+  const handleFileChange = (e: any) => {
+    console.log(e);
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFileData(e.target.files[0]);
+
+      console.log(selectedFileData.name);
+      console.log(selectedFileData.type);
+      console.log((selectedFileData.size / 1024).toFixed(2));
+    }
   };
 
-  const handleUpload = async () => {
-    try {
-      const formData = new FormData();
-      if (selectedFileData) formData.append('fileData', selectedFileData);
-      if (selectedFile) {
-        // Prepare form data for file upload
-        formData.append('file', selectedFile);
-
-        const res = await axios.post('https://example.com/api/upload', formData);
-        console.log(res);
-      }
-    } catch (error: any) {
-      console.error('Error sending data:', error.message);
+  // Add to  Modal Button!
+  const handleFileUpload = () => {
+    if (!selectedFile) {
+      alert('Please select a file.');
+      return;
     }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    axios
+      .post('http://localhost:8000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        console.log('File uploaded successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error);
+      });
   };
 
   return (
     <>
-      <div className="main-container">
+      <div style={{ marginBottom: '2rem', marginLeft: '4rem', display: 'flex' }}>
         <div
           style={{
             display: 'flex',
@@ -40,12 +54,9 @@ const FileUpload = () => {
           }}
         >
           <div>
-            <h4>Upload a File</h4>
-            <input type="file" onChange={handleFileChangeData} />
+            <h5>Upload a File</h5>
+            <input type="file" onChange={handleFileChange} />
           </div>
-        </div>
-        <div style={{ padding: '2rem' }}>
-          <button onClick={handleUpload}>Speichern</button>
         </div>
       </div>
     </>
