@@ -9,7 +9,7 @@ import { useStore } from '../../store';
 import { editorConfig } from './configEditor';
 
 const Editor = () => {
-  const { text, setText } = useStore();
+  const { description, setDescription } = useStore();
 
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
@@ -40,8 +40,8 @@ const Editor = () => {
             <div ref={editorRef}>
               {isLayoutReady && (
                 <CKEditor
-                  onChange={(_, editor) => setText(editor.getData())}
-                  data={text}
+                  onChange={(_, editor) => setDescription(editor.getData())}
+                  data={description}
                   editor={ClassicEditor}
                   config={editorConfig}
                 />

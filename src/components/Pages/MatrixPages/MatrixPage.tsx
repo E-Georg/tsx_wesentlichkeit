@@ -6,7 +6,7 @@ import useStackholderData from '../../Queries/useStackholderData';
 import useCellData from '../../Queries/useCellData';
 
 const MatrixPage = () => {
-  const { title, setTitle, text, setText } = useStore();
+  const { title, setTitle, description, setDescription } = useStore();
 
   const { SubGroup, isLoading } = useSubGroupData();
   const { Stackholder } = useStackholderData();
@@ -25,10 +25,10 @@ const MatrixPage = () => {
         cells={Cells}
         showAddToMatrix={true}
         setTitle={setTitle}
-        setText={setText}
+        setDescription={setDescription}
       />
 
-      <Modal title={title} text={text} setTitle={setTitle} setText={setText} />
+      <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />
     </>
   );
 };

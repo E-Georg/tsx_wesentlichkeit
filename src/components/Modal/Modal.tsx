@@ -12,12 +12,12 @@ import { options } from '../../utils/constants';
 
 interface Props {
   title: string;
-  text: string;
+  description: string;
   setTitle: (title: string) => void;
-  setText: (text: string) => void;
+  setDescription: (text: string) => void;
 }
 
-const Modal = ({ title, text, setTitle, setText }: Props) => {
+const Modal = ({ title, description, setTitle, setDescription }: Props) => {
   const {
     showModal,
     cellID,
@@ -38,10 +38,10 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
 
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.innerHTML = text; // Initialize editor content
+      editorRef.current.innerHTML = description; // Initialize editor content
       setIsEditorReady(true);
     }
-  }, [text]);
+  }, [description]);
 
   const handleModalData = async () => {
     console.log('in in ModalData');
@@ -56,23 +56,21 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
       // DELETE
       if (onChangeSubGroup.mode === HttpAction.DELETE) {
         await deleteSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
           typeParameter: ClientTypes.SubGroups,
         });
         //
         // UPDATE
       } else if (onChangeSubGroup.mode === HttpAction.UPDATE)
         await updateSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
           typeParameter: ClientTypes.SubGroups,
-          clientID: 2,
-          groupID: 1,
         });
       //
       // POST
       else if (onChangeSubGroup.mode === HttpAction.POST)
         await addSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, text: text, description: title },
+          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
           typeParameter: ClientTypes.SubGroups,
         });
     }
@@ -92,8 +90,8 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
         await updateStackholderMutation({
           matrixObject: {
             id: onChangeStackholder.ID,
-            text: text,
-            description: title,
+            title: title,
+            description: description,
             classification: classification,
           },
           typeParameter: ClientTypes.Stakeholders,
@@ -102,7 +100,12 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
       // POST
       else if (onChangeStackholder.mode === HttpAction.POST)
         await addStackholderMutation({
-          matrixObject: { id: onChangeStackholder.ID, text: text, description: title, classification: classification },
+          matrixObject: {
+            id: onChangeStackholder.ID,
+            title: title,
+            description: description,
+            classification: classification,
+          },
           typeParameter: ClientTypes.Stakeholders,
         });
     }
@@ -112,14 +115,14 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
       if (onChangeCells.mode === HttpAction.DELETE) {
         await deleteCellsMutation({ ID: cellID[2] });
       } else if (onChangeCells.mode === HttpAction.UPDATE) {
-        await updateCellsMutation({ cell: { id: cellID[2], message: { text: text, title: title } } });
+        await updateCellsMutation({ cell: { id: cellID[2], message: { title: title, description: description } } });
       } else if (onChangeCells.mode === HttpAction.POST) {
         await addCellsMutation({
           cell: {
             id: cellID[2],
             clientSubGroupId: cellID[0],
             clientStakeholderId: cellID[1],
-            message: { text: text, title: title },
+            message: { title: title, description: description },
           },
         });
       }
@@ -147,7 +150,7 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
             contentEditable
             ref={editorRef}
             id="editor"
-            defaultValue={text}
+            defaultValue={description}
             data-placeholder="Description"
             style={{
               width: '98.5%',
@@ -157,8 +160,9 @@ const Modal = ({ title, text, setTitle, setText }: Props) => {
               marginBottom: '1rem',
               overflow: 'auto',
               position: 'relative',
+              color: 'black',
             }}
-            onBlur={() => isEditorReady && editorRef.current && setText(editorRef.current.innerHTML)}
+            onBlur={() => isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML)}
           />
         )}
         {onChangeCells.mode != HttpAction.DEFAULT ? <Editor /> : <></>}

@@ -108,6 +108,34 @@ export const editorConfig: any = {
     options: [10, 12, 14, 'default', 18, 20, 22],
     supportAllValues: true,
   },
+  fontColor: {
+    columns: 5,
+    documentColors: 10,
+    colors: [
+      {
+        color: 'hsl(0, 0%, 0%)',
+        label: 'Black',
+      },
+      {
+        color: 'hsl(0, 0%, 30%)',
+        label: 'Dim grey',
+      },
+      {
+        color: 'hsl(0, 0%, 60%)',
+        label: 'Grey',
+      },
+      {
+        color: 'hsl(0, 0%, 90%)',
+        label: 'Light grey',
+      },
+      {
+        color: 'hsl(0, 0%, 100%)',
+        label: 'White',
+        hasBorder: true,
+      },
+      // Add more colors if needed
+    ],
+  },
   heading: {
     options: [
       {

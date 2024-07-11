@@ -1,19 +1,16 @@
-import { Cell, HttpAction } from '../../utils/data.interfaces';
+import { Cell, HttpAction, Stackholder, SubGroup } from '../../utils/data.interfaces';
 import { useStore } from '../../store';
 
-// Wie kann ich den Datanbank aufruf so schaffen, dass die Rows aktualisert werden
-// React Query
-
 interface Props {
-  rows: any; //SubGroup[];
-  columns: any; //Stackholder[];
+  rows: SubGroup[];
+  columns: Stackholder[];
   cells: any; //Cell[];
   showAddToMatrix: boolean;
   setTitle: (name: string) => void;
-  setText: (name: string) => void;
+  setDescription: (name: string) => void;
 }
 
-const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Props) => {
+const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
   const {
     setShowModal,
     cellID,
@@ -63,7 +60,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
               columns.map((column: any) => (
                 <th
                   onClick={() => {
-                    setText(column.description);
+                    setDescription(column.description);
                     setTitle(column.text);
                     setClassification(column.classification);
                     // TEMPORÄR
@@ -92,7 +89,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                 }}
                 key={row.id}
                 onClick={() => {
-                  setText(row.description);
+                  setDescription(row.description);
                   setTitle(row.text);
                   // TEMPORÄR
                   if (DELETE) setOnChangeSubGroup(HttpAction.DELETE, row.id);
@@ -119,7 +116,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setText }: Pr
                         setOnChangeCells(HttpAction.POST, idOfCell);
                       } else {
                         setTitle(foundCell.message.title);
-                        setText(foundCell.message.text);
+                        setDescription(foundCell.message.description);
                         setShowModal();
                         // TEMPORÄR
                         if (DELETE) setOnChangeCells(HttpAction.DELETE, idOfCell);

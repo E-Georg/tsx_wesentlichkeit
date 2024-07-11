@@ -1,6 +1,6 @@
 export interface Stackholder {
   id: number;
-  text: string;
+  title: string;
   description: string;
   classification?: number;
 }
@@ -11,13 +11,13 @@ export interface Cell {
   id: number;
   message: {
     title: string;
-    text: string;
+    description: string;
   };
 }
 
 export interface SubGroup {
   id: number;
-  text: string;
+  titel: string;
   description: string;
 }
 
