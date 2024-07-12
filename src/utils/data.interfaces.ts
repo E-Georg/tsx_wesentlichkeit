@@ -1,9 +1,9 @@
-export interface Stackholder {
+export type Stackholder = {
   id: number;
   title: string;
   description: string;
   classification?: number;
-}
+};
 
 export interface Cell {
   clientStakeholderId: number;

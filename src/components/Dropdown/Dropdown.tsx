@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Dropdown = () => {
   // State to manage options in the dropdown

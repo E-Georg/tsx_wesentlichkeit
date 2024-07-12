@@ -13,7 +13,11 @@ const useStackholderData = () => {
   const queryClient = useQueryClient();
 
   // Fetch Stackholder data
-  const { data: Stackholder, isLoading: isLoadingStack } = useQuery({
+  const {
+    data: Stackholder,
+    status,
+    isLoading: isLoadingStack,
+  } = useQuery({
     queryKey: ['Stackholder'],
     queryFn: () => fetchDataQuery(ClientTypes.Stakeholders, ClientID),
     staleTime: Infinity,
@@ -47,6 +51,7 @@ const useStackholderData = () => {
 
   return {
     Stackholder,
+    status,
     isLoadingStack,
     addStackholderMutation,
     deleteStackholderMutation,

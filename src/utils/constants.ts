@@ -11,7 +11,8 @@ export const BUTTONS = {
 };
 
 export const options: Classification[] = [
-  { value: 1, label: 'Interner Stackholder' },
-  { value: 2, label: 'Externer Stackholder' },
-  { value: 3, label: 'Stiller Stackholder' },
+  { value: 9, label: 'All' },
+  { value: 0, label: 'Interner Stackholder' },
+  { value: 1, label: 'Externer Stackholder' },
+  { value: 2, label: 'Stiller Stackholder' },
 ];

@@ -29,6 +29,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
         <label htmlFor="setDELETE">Löschen aktivieren</label>
       </div>
+
       {showAddToMatrix ? (
         <div>
           <button
@@ -115,8 +116,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         setShowModal();
                         setOnChangeCells(HttpAction.POST, idOfCell);
                       } else {
+                        console.log(foundCell);
                         setTitle(foundCell.message.title);
-                        setDescription(foundCell.message.description);
+                        setDescription(foundCell.message.text);
+                        setClassification(column.classification);
                         setShowModal();
                         // TEMPORÄR
                         if (DELETE) setOnChangeCells(HttpAction.DELETE, idOfCell);
@@ -127,7 +130,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   >
                     {(cells &&
                       cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                        ?.message.title) ||
+                        ?.message.title.length) ||
                       ''}
                   </td>
                 ))}

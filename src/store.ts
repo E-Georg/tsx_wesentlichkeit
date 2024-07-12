@@ -8,7 +8,7 @@ interface State {
   DELETE: boolean;
   title: string;
   description: string;
-  classification: number;
+  classification: number | null;
   showModal: boolean;
   onChangeSubGroup: { mode: HttpAction; ID: number };
   onChangeStackholder: { mode: HttpAction; ID: number };
@@ -41,7 +41,7 @@ export const useStore = create<State & Action>()(
     setTitle: (title: string) => set(() => ({ title: title })),
     description: '',
     setDescription: (text: string) => set(() => ({ description: text })),
-    classification: 0,
+    classification: null,
     setClassification: (num: number) => set(() => ({ classification: num })),
     showModal: false,
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
@@ -58,7 +58,7 @@ export const useStore = create<State & Action>()(
       set((state) => ({
         title: '',
         description: '',
-        classification: 0,
+        classification: null,
         showModal: false,
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStackholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStackholder.ID },

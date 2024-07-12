@@ -7,9 +7,7 @@ import useSubGroupData from '../Queries/useSubGroupData';
 import useStackholderData from '../Queries/useStackholderData';
 import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
-import FileUpload from '../FileUpload/FileUpload';
 import { options } from '../../utils/constants';
-import Dropdown from '../Dropdown/Dropdown';
 
 interface Props {
   title: string;
@@ -140,15 +138,31 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
         </span>
         <h2 style={{ textAlign: 'center' }}>Modal</h2>
 
-        {[...Array(count)].map((_, index) => (
-          <Fragment key={index}>
-            <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center' }}>
-              {/* <button style={{ flex: 1, maxWidth: '4rem', marginRight: '5rem' }} onClick={() => setCount(count + 1)}>
-                Add
-              </button> */}
-              <Dropdown />
-            </div>
+        {onChangeCells.mode !== HttpAction.DEFAULT &&
+          [...Array(count)].map((_, index) => (
+            <Fragment key={index}>
+              <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center' }}>
+                <button style={{ flex: 1, maxWidth: '4rem', marginRight: '5rem' }} onClick={() => setCount(count + 1)}>
+                  Add
+                </button>
+                {/* <Dropdown /> */}
+              </div>
 
+              <input
+                type="text"
+                placeholder="Enter the Title of ..."
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                style={{ width: '100%', height: '2rem', marginBottom: '2rem', textAlign: 'center', fontSize: '18px' }}
+              />
+              {/* =====================================================================================EDITOR====================================================================================== */}
+
+              {onChangeCells.mode !== HttpAction.DEFAULT ? <Editor /> : null}
+            </Fragment>
+          ))}
+
+        {onChangeCells.mode === HttpAction.DEFAULT && (
+          <div>
             <input
               type="text"
               placeholder="Enter the Title of ..."
@@ -156,35 +170,32 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
               onChange={(event) => setTitle(event.target.value)}
               style={{ width: '100%', height: '2rem', marginBottom: '2rem', textAlign: 'center', fontSize: '18px' }}
             />
-            {/* =====================================================================================EDITOR====================================================================================== */}
-            {onChangeCells.mode === HttpAction.DEFAULT && (
-              <div
-                contentEditable
-                ref={editorRef}
-                id="editor"
-                defaultValue={description}
-                data-placeholder="Description"
-                style={{
-                  width: '98.5%',
-                  height: '200px',
-                  border: '1px solid #ccc',
-                  padding: '0.5rem',
-                  marginBottom: '1rem',
-                  overflow: 'auto',
-                  position: 'relative',
-                  color: 'black',
-                }}
-                onBlur={() => isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML)}
-              />
-            )}
-            {onChangeCells.mode !== HttpAction.DEFAULT ? <Editor /> : null}
-          </Fragment>
-        ))}
+
+            <div
+              contentEditable
+              ref={editorRef}
+              id="editor"
+              defaultValue={description}
+              data-placeholder="Description"
+              style={{
+                width: '98.5%',
+                height: '200px',
+                border: '1px solid #ccc',
+                padding: '0.5rem',
+                marginBottom: '1rem',
+                overflow: 'auto',
+                position: 'relative',
+                color: 'black',
+              }}
+              onBlur={() => isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML)}
+            />
+          </div>
+        )}
         {onChangeStackholder.mode != HttpAction.DEFAULT && (
           <select
-            value={classification}
+            value={classification!!}
             onChange={(e) =>
-              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0)
+              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 1)
             }
             style={{
               width: '100%',
@@ -193,7 +204,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
               textAlign: 'center',
             }}
           >
-            {classification === 0 || classification === undefined ? (
+            {classification === null ? (
               <option value={0}>Wähle die Stackholder-Klassifizierung</option>
             ) : (
               <option value={classification}>{options[classification]?.label}</option>
@@ -206,7 +217,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
           </select>
         )}
 
-        {onChangeCells.mode != HttpAction.DEFAULT ? <FileUpload /> : <></>}
+        {/* {onChangeCells.mode != HttpAction.DEFAULT ? <FileUpload /> : <></>} */}
 
         <button onClick={handleModalData} style={{ width: '100%', backgroundColor: 'green', color: 'white' }}>
           SAVE DATA
