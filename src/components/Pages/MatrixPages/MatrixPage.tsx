@@ -4,69 +4,60 @@ import Modal from '../../Modal/Modal';
 import useSubGroupData from '../../Queries/useSubGroupData';
 import useStackholderData from '../../Queries/useStackholderData';
 import useCellData from '../../Queries/useCellData';
+import { Stackholder } from '../../../utils/data.interfaces';
+import { useEffect, useState } from 'react';
+import { options } from '../../../utils/constants';
 
 const MatrixPage = () => {
   const { title, setTitle, description, setDescription } = useStore();
 
   const { SubGroup, isLoading } = useSubGroupData();
-  let { Stackholder, isLoadingStack } = useStackholderData();
+  let { Stackholder, status, isLoadingStack } = useStackholderData();
   const { Cells, isLoadingCells } = useCellData();
 
-  // const [temp, setTemp] = useState<any>([]);
-  // const [selectedOption, setSelectedOption] = useState(options[0].value);
+  const [temp, setTemp] = useState<any>([]);
+  const [selectedOption, setSelectedOption] = useState(options[0].value);
 
-  // useEffect((): any => {
-  //   if (status === 'success' && Stackholder && Array.isArray(Stackholder)) {
-  //     setTemp(
-  //       Stackholder.filter((item: Stackholder) => {
-  //         if (item.classification != null) item.classification !== options[1].value;
-  //       })
-  //     );
-  //   }
-  if (isLoading || isLoadingStack || isLoadingCells) {
-    return <div>Loading...</div>;
-  }
-  //   console.log('DRINNEN');
-  // }, [status, Stackholder]);
+  useEffect((): any => {
+    if (status === 'success' && Stackholder) {
+      setTemp(Stackholder);
+    }
+    if (isLoading || isLoadingStack || isLoadingCells) {
+      <div>Loading...</div>;
+    }
+  }, [status, Stackholder]);
 
-  // const handleSelectChange = (event: any) => {
-  //   const value = event.target.value;
-  //   setSelectedOption(value);
-  //   console.log(Stackholder);
+  const handleSelectChange = (event: any) => {
+    const value = Number(event.target.value);
+    setSelectedOption(value);
 
-  //   console.log(value);
-
-  //   if (value === 9) {
-  //     setTemp(Stackholder);
-  //   } else {
-  //     console.log(value);
-  //     console.log(Stackholder);
-  //     console.log(temp);
-  //     setTemp(
-  //       Stackholder?.filter((item: Stackholder) => {
-  //         console.log(item), item.classification != null && item.classification === value;
-  //       })
-  //     );
-  //     console.log(temp);
-  //     console.log(Stackholder);
-  //   }
-  // };
+    if (value === 9) {
+      setTemp(Stackholder);
+    } else {
+      setTemp(
+        Stackholder?.filter((item: Stackholder) => {
+          if (item.classification === null) return;
+          return item.classification === value;
+        })
+      );
+    }
+  };
 
   return (
     <>
-      {Cells && Stackholder && SubGroup && (
+      {Cells && Stackholder && SubGroup && temp && (
         <div>
-          {/* <select value={selectedOption} onChange={async (e) => handleSelectChange(e)}>
+          <select value={selectedOption} onChange={handleSelectChange}>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
-          </select> */}
+          </select>
 
           <Matrix
             rows={SubGroup}
-            columns={Stackholder}
+            columns={temp}
             cells={Cells}
             showAddToMatrix={true}
             setTitle={setTitle}
