@@ -1,4 +1,4 @@
-// import { Cell, ClientTypes, Stackholder, SubGroup } from '../../utils/data.interfaces';
+// import { Cell, ClientTypes, Stakeholder, SubGroup } from '../../utils/data.interfaces';
 // import { Zellen } from '../../utils/data.api';
 // import {
 //   AddCellToDatabase,
@@ -10,23 +10,23 @@
 //   UpdateDataToDatabase,
 // } from '../../services/ApiService';
 
-// export const AddStackholder = async (
+// export const AddStakeholder = async (
 //   title: string,
 //   description: string,
-//   columns: Stackholder[],
-//   setColumns: (column: Stackholder[]) => void,
+//   columns: Stakeholder[],
+//   setColumns: (column: Stakeholder[]) => void,
 //   clientID: number
 // ) => {
-//   const stackholder: Stackholder = {
+//   const stakeholder: Stakeholder = {
 //     id: columns.length + 1,
 //     title: title,
 //     description: description,
 //     classification: 1,
 //   };
-//   if (stackholder.title !== '') {
-//     const res = await AddDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID);
+//   if (stakeholder.title !== '') {
+//     const res = await AddDataToDatabase(stakeholder, ClientTypes.Stakeholders, clientID);
 
-//     if (res === 200) fetchData(ClientTypes.Stakeholders, setColumns, 2); // setColumns([...columns, stackholder]);
+//     if (res === 200) fetchData(ClientTypes.Stakeholders, setColumns, 2); // setColumns([...columns, stakeholder]);
 //   }
 //   // Fehlermeldung => gebe Text ein
 // };
@@ -111,22 +111,22 @@
 //   }
 // };
 
-// export const UpdateStackholder = async (
-//   setColumns: (row: Stackholder[]) => void,
-//   column: Stackholder[],
+// export const UpdateStakeholder = async (
+//   setColumns: (row: Stakeholder[]) => void,
+//   column: Stakeholder[],
 //   id: number,
 //   title: string,
 //   description: string,
 //   clientID: number,
 //   groupID: number
 // ) => {
-//   const stackholder: Stackholder = {
+//   const stakeholder: Stakeholder = {
 //     id: id,
 //     title: title,
 //     description: description,
 //   };
 
-//   const res = await UpdateDataToDatabase(stackholder, ClientTypes.Stakeholders, clientID, groupID);
+//   const res = await UpdateDataToDatabase(stakeholder, ClientTypes.Stakeholders, clientID, groupID);
 
 //   if (res.return == 1) {
 //     // TEMPORÄR
@@ -179,9 +179,9 @@
 //   if (res === 200) setRows(rows.filter((item) => item.id !== id)); // FetchData(...)
 // };
 
-// export const DeleteStackholder = async (
-//   setColumns: (row: Stackholder[]) => void,
-//   columns: Stackholder[],
+// export const DeleteStakeholder = async (
+//   setColumns: (row: Stakeholder[]) => void,
+//   columns: Stakeholder[],
 //   id: number
 // ) => {
 //   const res = await DeleteDataFromDatabase(id, ClientTypes.Stakeholders);
@@ -205,5 +205,5 @@
 // //    <<<<<<<<<< =============== >>>>>>>>>>
 // //    <<<<<<<<<< =============== >>>>>>>>>>
 // // RELEVANT FÜR DELETE
-// // const newColumns = columns.filter(stackholder => stackholder.id !== stackholderId);
+// // const newColumns = columns.filter(stakeholder => stakeholder.id !== stakeholderId);
 // // setColumns(newColumns);

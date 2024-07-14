@@ -1,4 +1,4 @@
-export type Stackholder = {
+export type Stakeholder = {
   id: number;
   title: string;
   description: string;

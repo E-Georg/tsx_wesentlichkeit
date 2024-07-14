@@ -1,9 +1,9 @@
-import { Cell, HttpAction, Stackholder, SubGroup } from '../../utils/data.interfaces';
+import { Cell, HttpAction, Stakeholder, SubGroup } from '../../utils/data.interfaces';
 import { useStore } from '../../store';
 
 interface Props {
   rows: SubGroup[];
-  columns: Stackholder[];
+  columns: Stakeholder[];
   cells: Cell[];
   showAddToMatrix: boolean;
   setTitle: (name: string) => void;
@@ -16,7 +16,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     cellID,
     setCellID,
     setOnChangeSubGroup,
-    setOnChangeStackholder,
+    setOnChangeStakeholder,
     setOnChangeCells,
     setClassification,
     DELETE,
@@ -35,10 +35,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <button
             onClick={() => {
               setShowModal();
-              setOnChangeStackholder(HttpAction.POST, 0);
+              setOnChangeStakeholder(HttpAction.POST, 0);
             }}
           >
-            Add Stackholder
+            Add Stakeholder
           </button>
 
           <button
@@ -65,8 +65,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                     setTitle(column.text);
                     setClassification(column.classification);
                     // TEMPORÄR
-                    if (DELETE) setOnChangeStackholder(HttpAction.DELETE, column.id);
-                    else setOnChangeStackholder(HttpAction.UPDATE, column.id);
+                    if (DELETE) setOnChangeStakeholder(HttpAction.DELETE, column.id);
+                    else setOnChangeStakeholder(HttpAction.UPDATE, column.id);
                     setShowModal();
                   }}
                   style={{

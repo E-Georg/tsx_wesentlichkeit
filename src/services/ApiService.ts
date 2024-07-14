@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Cell, ClientTypes, Stackholder, SubGroup } from '../utils/data.interfaces';
+import { Cell, ClientTypes, Stakeholder, SubGroup } from '../utils/data.interfaces';
 import { axiosInstance } from './Axios';
 
 const API = 'http://192.168.20.53/wa/api/';
@@ -15,7 +15,7 @@ export const fetchCellsQuery = async (ClientID: number, GroupID: number): Promis
 
     if (response.status === 200) return response.data;
   } catch (error) {
-    console.error('Error fetching stackholders:', error);
+    console.error('Error fetching stakeholders:', error);
   }
 
   return [];
@@ -25,7 +25,7 @@ export const fetchDataQuery = async (
   typeParameter: string,
   ClientID: number,
   GroupID?: number
-): Promise<Stackholder[] | SubGroup[]> => {
+): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
 
   if (GroupID === undefined) {
@@ -36,7 +36,7 @@ export const fetchDataQuery = async (
 
   try {
     const response = await axios.get(url);
-    const fetchedData: Stackholder[] | SubGroup[] = response.data;
+    const fetchedData: Stakeholder[] | SubGroup[] = response.data;
 
     if (response.status === 200) return fetchedData;
   } catch (error) {
@@ -65,7 +65,7 @@ export const UpdateDataToDatabaseQuery = async ({
   typeParameter,
   ClientID,
   GroupID = undefined,
-}: any): Promise<Stackholder[] | SubGroup[]> => {
+}: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
   if (typeParameter === ClientTypes.Stakeholders) {
     url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}"}`;
@@ -87,7 +87,7 @@ export const AddDataToDataBaseQuery = async ({
   typeParameter,
   ClientID,
   GroupID = undefined,
-}: any): Promise<Stackholder[] | SubGroup[]> => {
+}: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
 
   if (GroupID === undefined) {
@@ -139,7 +139,7 @@ export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> 
 export const DeleteDataFromDatabaseQuery = async ({
   matrixObject,
   typeParameter,
-}: any): Promise<Stackholder[] | SubGroup[]> => {
+}: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
 
   if (typeParameter === ClientTypes.Stakeholders) {

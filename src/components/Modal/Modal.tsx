@@ -4,7 +4,7 @@ import { useStore } from '../../store';
 
 import { ClientTypes, HttpAction } from '../../utils/data.interfaces';
 import useSubGroupData from '../Queries/useSubGroupData';
-import useStackholderData from '../Queries/useStackholderData';
+import useStakeholderData from '../Queries/useStakeholderData';
 import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
 import { options } from '../../utils/constants';
@@ -22,14 +22,14 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
     cellID,
     reset,
     onChangeSubGroup,
-    onChangeStackholder,
+    onChangeStakeholder,
     onChangeCells,
     classification,
     setClassification,
   } = useStore();
 
   const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
-  const { addStackholderMutation, deleteStackholderMutation, updateStackholderMutation } = useStackholderData();
+  const { addStakeholderMutation, deleteStakeholderMutation, updateStakeholderMutation } = useStakeholderData();
   const { deleteCellsMutation, updateCellsMutation, addCellsMutation } = useCellData();
   const [count, setCount] = useState<number>(1);
 
@@ -45,7 +45,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
   const handleModalData = async () => {
     console.log('in in ModalData');
-    console.log(onChangeStackholder.mode);
+    console.log(onChangeStakeholder.mode);
     console.log(onChangeSubGroup.mode);
     console.log(onChangeCells.mode);
 
@@ -74,22 +74,22 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
           typeParameter: ClientTypes.SubGroups,
         });
     }
-    //==========================================================STACKHOLDER========================================================================
-    if (onChangeStackholder.mode !== HttpAction.DEFAULT) {
+    //==========================================================STAKEHOLDER========================================================================
+    if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {
       // 3 Fälle
       //
       // DELETE
-      if (onChangeStackholder.mode === HttpAction.DELETE)
-        await deleteStackholderMutation({
-          matrixObject: { id: onChangeStackholder.ID },
+      if (onChangeStakeholder.mode === HttpAction.DELETE)
+        await deleteStakeholderMutation({
+          matrixObject: { id: onChangeStakeholder.ID },
           typeParameter: ClientTypes.Stakeholders,
         });
       //
       // UPDATE
-      else if (onChangeStackholder.mode === HttpAction.UPDATE)
-        await updateStackholderMutation({
+      else if (onChangeStakeholder.mode === HttpAction.UPDATE)
+        await updateStakeholderMutation({
           matrixObject: {
-            id: onChangeStackholder.ID,
+            id: onChangeStakeholder.ID,
             title: title,
             description: description,
             classification: classification,
@@ -98,10 +98,10 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
         });
       //
       // POST
-      else if (onChangeStackholder.mode === HttpAction.POST)
-        await addStackholderMutation({
+      else if (onChangeStakeholder.mode === HttpAction.POST)
+        await addStakeholderMutation({
           matrixObject: {
-            id: onChangeStackholder.ID,
+            id: onChangeStakeholder.ID,
             title: title,
             description: description,
             classification: classification,
@@ -191,7 +191,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
             />
           </div>
         )}
-        {onChangeStackholder.mode != HttpAction.DEFAULT && (
+        {onChangeStakeholder.mode != HttpAction.DEFAULT && (
           <select
             value={classification!!}
             onChange={(e) =>
@@ -205,7 +205,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
             }}
           >
             {classification === null ? (
-              <option value={0}>Wähle die Stackholder-Klassifizierung</option>
+              <option value={0}>Wähle die Stakeholder-Klassifizierung</option>
             ) : (
               <option value={classification}>{options[classification]?.label}</option>
             )}

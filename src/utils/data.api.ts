@@ -1,34 +1,34 @@
-import { Cell, SubGroup, Stackholder } from "./data.interfaces";
+import { Cell, SubGroup, Stakeholder } from './data.interfaces';
 
 export const Zellen: Cell[] = [
   {
     clientStakeholderId: 1,
     clientSubGroupId: 1,
     id: 1,
-    message: { text: "", title: "2023-01-05" },
+    message: { title: '', description: '2023-01-05' },
   },
   {
     clientStakeholderId: 1,
     clientSubGroupId: 2,
     id: 2,
-    message: { text: "Hello", title: "2023-01-05" },
+    message: { title: 'Hello', description: '2023-01-05' },
   },
   {
     clientStakeholderId: 2,
     clientSubGroupId: 1,
     id: 3,
-    message: { text: "World", title: "2023-01-05" },
+    message: { title: 'World', description: '2023-01-05' },
   },
 ];
 
 export const initialRows: SubGroup[] = [
-  { id: 1, text: "Row 1", description: "BeispiuelText1" },
-  { id: 2, text: "Row 2", description: "BeispiuelText2" },
+  { id: 1, title: 'Row 1', description: 'Beispiueltitle1' },
+  { id: 2, title: 'Row 2', description: 'Beispiueltitle2' },
   // Add more rows as needed
 ];
 
-export const initialColumns: Stackholder[] = [
-  { id: 1, text: "COLUMN 1", description: "BeispiuelText1", classification: 1 },
-  { id: 2, text: "Column 2", description: "BeispiuelText2", classification: 1 },
+export const initialColumns: Stakeholder[] = [
+  { id: 1, title: 'COLUMN 1', description: 'Beispiueltitle1', classification: 1 },
+  { id: 2, title: 'Column 2', description: 'Beispiueltitle2', classification: 1 },
   // Add more columns as needed
 ];

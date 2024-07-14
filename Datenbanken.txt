@@ -1,4 +1,4 @@
- interface Stackholder {
+ interface Stakeholder {
   id: number;
   text: string;
   description: string;
@@ -39,7 +39,7 @@ Client:{
     name: string,
     Cell[           
         {
-            IDStackholder: number,
+            IDStakeholder: number,
             IDSubGroup: number,
             message: {
                 title: string;
@@ -47,7 +47,7 @@ Client:{
             }
         };
         {
-            IDStackholder: number,
+            IDStakeholder: number,
             IDSubGroup: number,
             message: {
                 title: string;
@@ -55,7 +55,7 @@ Client:{
             }
         };
         {
-            IDStackholder: number,
+            IDStakeholder: number,
             IDSubGroup: number,
             message: {
                 title: string;
@@ -87,7 +87,7 @@ Client:{
 
     },...
     ]
-    Stackholder:[
+    Stakeholder:[
         {
             name: string, 
             description: string,
@@ -126,9 +126,9 @@ GroupId (FK)
 Text
 Description
 
-Stackholder
+Stakeholder
 -----------
-StackholderId (PK)
+StakeholderId (PK)
 Text
 Description
 Classification

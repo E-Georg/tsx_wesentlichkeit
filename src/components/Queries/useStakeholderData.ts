@@ -8,55 +8,56 @@ import {
 } from '../../services/ApiService';
 import { useStore } from '../../store';
 
-const useStackholderData = () => {
+const useStakeholderData = () => {
   const { ClientID } = useStore();
   const queryClient = useQueryClient();
 
-  // Fetch Stackholder data
+  // Fetch Stakeholder data
   const {
-    data: Stackholder,
+    data: Stakeholder,
     status,
     isLoading: isLoadingStack,
   } = useQuery({
-    queryKey: ['Stackholder'],
+    queryKey: ['Stakeholder'],
     queryFn: () => fetchDataQuery(ClientTypes.Stakeholders, ClientID),
     staleTime: Infinity,
+    // select: (data) => setColumns(data),
   });
 
-  // Add Stackholder mutation
-  const { mutateAsync: addStackholderMutation } = useMutation({
+  // Add Stakeholder mutation
+  const { mutateAsync: addStakeholderMutation } = useMutation({
     mutationFn: ({ matrixObject, typeParameter }: any) =>
       AddDataToDataBaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Stackholder'] });
+      queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
     },
   });
 
-  //   // Delete Stackholder mutation
-  const { mutateAsync: deleteStackholderMutation } = useMutation({
+  //   // Delete Stakeholder mutation
+  const { mutateAsync: deleteStakeholderMutation } = useMutation({
     mutationFn: ({ matrixObject, typeParameter }: any) => DeleteDataFromDatabaseQuery({ matrixObject, typeParameter }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Stackholder'] });
+      queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
     },
   });
 
-  //   // Update Stackholder mutation
-  const { mutateAsync: updateStackholderMutation } = useMutation({
+  //   // Update Stakeholder mutation
+  const { mutateAsync: updateStakeholderMutation } = useMutation({
     mutationFn: ({ matrixObject, typeParameter }: any) =>
       UpdateDataToDatabaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Stackholder'] });
+      queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
     },
   });
 
   return {
-    Stackholder,
+    Stakeholder,
     status,
     isLoadingStack,
-    addStackholderMutation,
-    deleteStackholderMutation,
-    updateStackholderMutation,
+    addStakeholderMutation,
+    deleteStakeholderMutation,
+    updateStakeholderMutation,
   };
 };
 
-export default useStackholderData;
+export default useStakeholderData;
