@@ -1,15 +1,16 @@
-import Matrix from '../../Matrix/Matrix';
-import { useStore } from '../../../store';
-import Modal from '../../Modal/Modal';
-import useSubGroupData from '../../Queries/useSubGroupData';
-import useStakeholderData from '../../Queries/useStakeholderData';
-import useCellData from '../../Queries/useCellData';
+import Matrix from "../../Matrix/Matrix";
+import { useStore } from "../../../store";
+import Modal from "../../Modal/Modal";
+import useSubGroupData from "../../Queries/useSubGroupData";
+import useStakeholderData from "../../Queries/useStakeholderData";
+import useCellData from "../../Queries/useCellData";
+import "./MartrixPage.css";
 
 const MatrixPage = () => {
   const { title, setTitle, description, setDescription } = useStore();
 
   const { SubGroup, isLoading } = useSubGroupData();
-  let { Stakeholder, isLoadingStack } = useStakeholderData();
+  const { Stakeholder, isLoadingStack } = useStakeholderData();
   const { Cells, isLoadingCells } = useCellData();
 
   if (isLoading || isLoadingStack || isLoadingCells) {
@@ -20,7 +21,7 @@ const MatrixPage = () => {
     <>
       {Cells && Stakeholder && SubGroup && (
         // in Matrix verschieben und dann direkt beim eingang prüfen welcher mode vorhanden ist
-        <div>
+        <div className="matrixContainer">
           <Matrix
             rows={SubGroup}
             columns={Stakeholder}
@@ -31,7 +32,12 @@ const MatrixPage = () => {
           />
         </div>
       )}
-      <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />
+      <Modal
+        title={title}
+        description={description}
+        setTitle={setTitle}
+        setDescription={setDescription}
+      />
     </>
   );
 };

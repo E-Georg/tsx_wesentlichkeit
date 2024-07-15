@@ -1,0 +1,20 @@
+.nav {
+  background-color: black;
+}
+
+.nav_list {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+}
+
+.nav_listitem {
+  padding: 0.5rem 1rem;
+}
+
+.nav_link {
+}
+
+.nav_link:hover {
+}

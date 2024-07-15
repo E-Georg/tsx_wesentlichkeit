@@ -1,7 +1,13 @@
-import { Cell, HttpAction, Stakeholder, SubGroup } from '../../utils/data.interfaces';
-import { useStore } from '../../store';
-import { options } from '../../utils/constants';
-import { useEffect, useState } from 'react';
+import {
+  Cell,
+  HttpAction,
+  Stakeholder,
+  SubGroup,
+} from "../../utils/data.interfaces";
+import "./Matrix.css";
+import { useStore } from "../../store";
+import { options } from "../../utils/constants";
+import { useEffect, useState } from "react";
 
 interface Props {
   rows: SubGroup[];
@@ -12,7 +18,14 @@ interface Props {
   setDescription: (name: string) => void;
 }
 
-const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
+const Matrix = ({
+  rows,
+  columns,
+  cells,
+  showAddToMatrix,
+  setTitle,
+  setDescription,
+}: Props) => {
   const {
     setShowModal,
     cellID,
@@ -56,21 +69,40 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
   };
   return (
     <>
-      <div>
-        <select value={selectedOption} onChange={handleSelectChange}>
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-
-        <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
-        <label htmlFor="setDELETE">Löschen aktivieren</label>
+      {/* STAKEHOLDER PRIO MENU */}
+      <div className="input-container">
+        <div className="select-wrapper">
+          <label className="label" htmlFor="stakeholderArt">
+            Stakeholder Art auswählen:
+          </label>
+          <select
+            id="stakeholderArt"
+            value={selectedOption}
+            onChange={handleSelectChange}
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="checkbox-wrapper">
+          <label className="label" htmlFor="setDELETE">
+            Löschen aktivieren:
+          </label>
+          <input
+            type="checkbox"
+            id="setDELETE"
+            name="setDELETE"
+            onChange={() => SetDELETE()}
+          />
+        </div>
       </div>
 
+      {/* ADD BUTTON CONTAINER */}
       {showAddToMatrix ? (
-        <div>
+        <div className="btn_group">
           <button
             onClick={() => {
               setShowModal();
@@ -92,7 +124,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
       ) : (
         <></>
       )}
-      <table>
+
+      {/* TABLE */}
+      <table className="table">
         <thead>
           <tr>
             <th></th>
@@ -104,13 +138,14 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                     setTitle(column.text);
                     setClassification(column.classification);
                     // TEMPORÄR
-                    if (DELETE) setOnChangeStakeholder(HttpAction.DELETE, column.id);
+                    if (DELETE)
+                      setOnChangeStakeholder(HttpAction.DELETE, column.id);
                     else setOnChangeStakeholder(HttpAction.UPDATE, column.id);
                     setShowModal();
                   }}
                   style={{
-                    border: '1px solid green',
-                    fontSize: '1rem',
+                    border: "1px solid green",
+                    fontSize: "1rem",
                   }}
                   key={column.id}
                 >
@@ -124,8 +159,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <tr key={row.id}>
               <td
                 style={{
-                  border: '1px solid black',
-                  fontSize: '1rem',
+                  border: "1px solid black",
+                  fontSize: "1rem",
                 }}
                 key={row.id}
                 onClick={() => {
@@ -142,13 +177,16 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
               {columns &&
                 copyColumns.map((column: any) => (
                   <td
-                    style={{ border: '1px solid red' }}
+                    style={{ border: "1px solid red" }}
                     key={column.id + row.id}
                     onClick={() => {
                       const foundCell: Cell | undefined = cells.find(
-                        (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
+                        (c: Cell) =>
+                          c.clientStakeholderId === column.id &&
+                          c.clientSubGroupId === row.id
                       );
-                      const idOfCell = foundCell === undefined ? 0 : foundCell.id;
+                      const idOfCell =
+                        foundCell === undefined ? 0 : foundCell.id;
                       setCellID([row.id, column.id, idOfCell]);
 
                       if (!foundCell) {
@@ -161,15 +199,19 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         setClassification(column.classification);
                         setShowModal();
                         // TEMPORÄR
-                        if (DELETE) setOnChangeCells(HttpAction.DELETE, idOfCell);
+                        if (DELETE)
+                          setOnChangeCells(HttpAction.DELETE, idOfCell);
                         else setOnChangeCells(HttpAction.UPDATE, idOfCell);
                       }
                       console.log(cellID);
                     }}
                   >
                     {cells &&
-                      cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                        ?.message.title.length}
+                      cells.find(
+                        (c: Cell) =>
+                          c.clientStakeholderId === column.id &&
+                          c.clientSubGroupId === row.id
+                      )?.message.title.length}
                   </td>
                 ))}
             </tr>

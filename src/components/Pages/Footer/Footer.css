@@ -1,0 +1,21 @@
+.footer {
+  background-color: black;
+}
+
+.footer_list {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+}
+.footer_listitem {
+  padding: 0.5rem 1rem;
+}
+.footer_link {
+}
+
+.footer_link:hover {
+}
