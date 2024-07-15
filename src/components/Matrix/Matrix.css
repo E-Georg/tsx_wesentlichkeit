@@ -32,16 +32,28 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: orangered;
+  background-color: royalblue;
+  text-shadow: 1px 1px 1px black;
 }
 
 .table tbody tr td:first-child {
   padding: 0.25rem 0.5rem;
   width: 15rem;
-  white-space-collapse: collapse;
+  height: 2rem;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   background-color: brown;
+  border: none;
+}
+
+.table tbody tr td {
+  border: 1px solid lightgray;
+  cursor: pointer;
+}
+
+.table tbody tr td:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .btn_group {

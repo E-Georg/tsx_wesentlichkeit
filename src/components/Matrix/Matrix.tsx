@@ -143,10 +143,6 @@ const Matrix = ({
                     else setOnChangeStakeholder(HttpAction.UPDATE, column.id);
                     setShowModal();
                   }}
-                  style={{
-                    border: "1px solid green",
-                    fontSize: "1rem",
-                  }}
                   key={column.id}
                 >
                   {column.text}
@@ -158,10 +154,6 @@ const Matrix = ({
           {rows.map((row: any) => (
             <tr key={row.id}>
               <td
-                style={{
-                  border: "1px solid black",
-                  fontSize: "1rem",
-                }}
                 key={row.id}
                 onClick={() => {
                   setDescription(row.description);
@@ -177,7 +169,6 @@ const Matrix = ({
               {columns &&
                 copyColumns.map((column: any) => (
                   <td
-                    style={{ border: "1px solid red" }}
                     key={column.id + row.id}
                     onClick={() => {
                       const foundCell: Cell | undefined = cells.find(
