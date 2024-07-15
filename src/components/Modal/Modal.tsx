@@ -209,11 +209,13 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
             ) : (
               <option value={classification}>{options[classification]?.label}</option>
             )}
-            {options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
+            {options
+              .filter((opt) => opt.value !== classification && opt.value !== 9) // Filter out "All"
+              .map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
           </select>
         )}
 

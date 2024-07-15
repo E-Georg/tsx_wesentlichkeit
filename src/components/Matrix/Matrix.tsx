@@ -1,5 +1,7 @@
 import { Cell, HttpAction, Stakeholder, SubGroup } from '../../utils/data.interfaces';
 import { useStore } from '../../store';
+import { options } from '../../utils/constants';
+import { useEffect, useState } from 'react';
 
 interface Props {
   rows: SubGroup[];
@@ -22,10 +24,46 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     DELETE,
     SetDELETE,
   } = useStore();
+  const [selectedOption, setSelectedOption] = useState(options[0].value);
+  const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
 
+  useEffect(() => {
+    if (selectedOption != 9) {
+      setCopyColums(
+        columns.filter((item: Stakeholder) => {
+          if (item.classification === null) return;
+          return item.classification === selectedOption;
+        })
+      );
+    }
+  }, [columns]);
+
+  const handleSelectChange = (event: any) => {
+    const value = Number(event.target.value);
+    setSelectedOption(value);
+
+    if (value === 9) {
+      setCopyColums(columns);
+    } else {
+      setCopyColums(
+        columns.filter((item: Stakeholder) => {
+          if (item.classification === null) return;
+          return item.classification === value;
+        })
+      );
+    }
+  };
   return (
     <>
       <div>
+        <select value={selectedOption} onChange={handleSelectChange}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+
         <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
         <label htmlFor="setDELETE">Löschen aktivieren</label>
       </div>
@@ -58,7 +96,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <tr>
             <th></th>
             {columns &&
-              columns.map((column: any) => (
+              copyColumns.map((column: any) => (
                 <th
                   onClick={() => {
                     setDescription(column.description);
@@ -101,7 +139,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                 {row.text}
               </td>
               {columns &&
-                columns.map((column: any) => (
+                copyColumns.map((column: any) => (
                   <td
                     style={{ border: '1px solid red' }}
                     key={column.id + row.id}
@@ -128,10 +166,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       console.log(cellID);
                     }}
                   >
-                    {(cells &&
+                    {cells &&
                       cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                        ?.message.title.length) ||
-                      ''}
+                        ?.message.title.length}
                   </td>
                 ))}
             </tr>
