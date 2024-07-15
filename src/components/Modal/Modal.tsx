@@ -193,9 +193,9 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
         )}
         {onChangeStakeholder.mode != HttpAction.DEFAULT && (
           <select
-            value={classification!!}
+            value={classification ?? ''}
             onChange={(e) =>
-              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 1)
+              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 9)
             }
             style={{
               width: '100%',
@@ -204,7 +204,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
               textAlign: 'center',
             }}
           >
-            {classification === null ? (
+            {classification === 9 ? (
               <option value={0}>Wähle die Stakeholder-Klassifizierung</option>
             ) : (
               <option value={classification}>{options[classification]?.label}</option>

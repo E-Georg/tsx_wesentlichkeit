@@ -28,6 +28,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
   const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
 
   useEffect(() => {
+    setCopyColums(columns);
     if (selectedOption != 9) {
       setCopyColums(
         columns.filter((item: Stakeholder) => {

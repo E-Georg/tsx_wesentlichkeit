@@ -9,7 +9,7 @@ interface State {
   columns: Stakeholder[];
   title: string;
   description: string;
-  classification: number | null;
+  classification: number;
   showModal: boolean;
   onChangeSubGroup: { mode: HttpAction; ID: number };
   onChangeStakeholder: { mode: HttpAction; ID: number };
@@ -45,7 +45,7 @@ export const useStore = create<State & Action>()(
     setTitle: (title: string) => set(() => ({ title: title })),
     description: '',
     setDescription: (text: string) => set(() => ({ description: text })),
-    classification: null,
+    classification: 9,
     setClassification: (num: number) => set(() => ({ classification: num })),
     showModal: false,
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
@@ -62,7 +62,7 @@ export const useStore = create<State & Action>()(
       set((state) => ({
         title: '',
         description: '',
-        classification: null,
+        classification: 9,
         showModal: false,
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
