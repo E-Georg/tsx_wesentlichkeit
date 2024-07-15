@@ -8,7 +8,7 @@ import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
 import { options } from '../../utils/constants';
 import Dropdown from '../Dropdown/Dropdown';
-import { CellFunction, StakeholderFunction, SubgroupFunction } from './Modal';
+import { CellFunction, StakeholderFunction, SubgroupFunction } from './ModalFunction';
 
 interface Props {
   title: string;
