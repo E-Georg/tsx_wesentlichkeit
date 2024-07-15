@@ -191,7 +191,7 @@
 // export const handleCellClick = (rowId: number, columnId: number) => {
 //   const zelle = Zellen.find((c) => c.clientStakeholderId === columnId && c.clientSubGroupId === rowId);
 
-//   if (zelle?.message.description) console.log('zelle: ', zelle.message.description);
+//   if (zelle?.message.description) console.log('zelle: ', zelle.message.text);
 //   else console.log({ columnId }, { rowId });
 // };
 

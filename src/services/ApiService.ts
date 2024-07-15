@@ -47,11 +47,10 @@ export const fetchDataQuery = async (
 
 // [POST]
 export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]> => {
-  const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.description}"}`;
+  const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.text}"}`;
   console.log(url);
   try {
     const response = await axios.put(url);
-    console.log(response);
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -110,7 +109,7 @@ export const AddDataToDataBaseQuery = async ({
 
 // [PUT]
 export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
-  let url = `${API}${ClientTypes.Cell}${phpExtension}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.description}"}`;
+  let url = `${API}${ClientTypes.Cell}${phpExtension}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
   console.log(url);
   try {
     console.log(url);
@@ -125,7 +124,8 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
 // [DELETE]
 export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> => {
   const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"d", "clientStakeholderSignificanceId":${ID}}`;
-  console.log(ID);
+  console.log(url);
+  console.log('DRINNEN');
   try {
     const response = await axios.delete(url);
     if (response.status === 200) return response.data;

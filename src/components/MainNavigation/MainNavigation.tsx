@@ -12,12 +12,12 @@ const MainNavigation = () => {
               Home
             </NavLink>
           </li>
-          {/*<li>
-            <NavLink to="/events" className={({ isActive }) => (isActive ? classes.active : undefined)}>
-              Events
+          <li>
+            <NavLink to="/stakeholderlist" className={({ isActive }) => (isActive ? classes.active : undefined)}>
+              Stakeholder List
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink to="/newsletter" className={({ isActive }) => (isActive ? classes.active : undefined)}>
               Newsletter
             </NavLink>

@@ -1,28 +1,28 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../store';
 
-const Dropdown = () => {
-  // State to manage options in the dropdown
-  const [options, setOptions] = useState(['Stakeholder 1', 'Stakeholder 2', 'Stakeholder 3']);
-
-  // Function to add a new option
-  const addOption = () => {
-    const newOption = `Stakeholder ${options.length + 1}`;
-    setOptions([...options, newOption]);
-  };
+interface Props {
+  stakeholderID: number;
+}
+const Dropdown = ({ stakeholderID }: Props) => {
+  const { SubStakeholder } = useStore();
+  const navigate = useNavigate();
 
   return (
     <div style={{ marginBottom: '1rem' }}>
-      {/* Dropdown menu */}
-      <select style={{ marginRight: '1rem' }}>
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
+      <select style={{ marginRight: '1rem', height: '2rem', width: '7rem' }}>
+        {SubStakeholder.map((option: any, index: any) => {
+          console.log(stakeholderID);
+          // show option.name if option.id is the same as stakeholderID
+          return (
+            <option key={index} value={option.name}>
+              {option.name}
+            </option>
+          );
+        })}
       </select>
 
-      {/* Button to add more options */}
-      <button onClick={addOption}>Add</button>
+      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Go to Stakeholder List</button>
     </div>
   );
 };

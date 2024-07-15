@@ -19,17 +19,14 @@ const MatrixPage = () => {
   return (
     <>
       {Cells && Stakeholder && SubGroup && (
-        // in Matrix verschieben und dann direkt beim eingang prüfen welcher mode vorhanden ist
-        <div>
-          <Matrix
-            rows={SubGroup}
-            columns={Stakeholder}
-            cells={Cells}
-            showAddToMatrix={true}
-            setTitle={setTitle}
-            setDescription={setDescription}
-          />
-        </div>
+        <Matrix
+          rows={SubGroup}
+          columns={Stakeholder}
+          cells={Cells}
+          showAddToMatrix={true}
+          setTitle={setTitle}
+          setDescription={setDescription}
+        />
       )}
       <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />
     </>

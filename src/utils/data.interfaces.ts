@@ -11,7 +11,7 @@ export interface Cell {
   id: number;
   message: {
     title: string;
-    description: string;
+    text: string;
   };
 }
 

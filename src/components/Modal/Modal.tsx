@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, Fragment } from 'react';
 import './modal.style.css';
 import { useStore } from '../../store';
-
-import { ClientTypes, HttpAction } from '../../utils/data.interfaces';
+import { HttpAction } from '../../utils/data.interfaces';
 import useSubGroupData from '../Queries/useSubGroupData';
 import useStakeholderData from '../Queries/useStakeholderData';
 import useCellData from '../Queries/useCellData';
 import Editor from '../Editor/Editor';
 import { options } from '../../utils/constants';
+import Dropdown from '../Dropdown/Dropdown';
+import { CellFunction, StakeholderFunction, SubgroupFunction } from './Modal';
 
 interface Props {
   title: string;
@@ -51,84 +52,47 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
-      // 3 Fälle
-
-      // DELETE
-      if (onChangeSubGroup.mode === HttpAction.DELETE) {
-        await deleteSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
-          typeParameter: ClientTypes.SubGroups,
-        });
-        //
-        // UPDATE
-      } else if (onChangeSubGroup.mode === HttpAction.UPDATE)
-        await updateSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
-          typeParameter: ClientTypes.SubGroups,
-        });
-      //
-      // POST
-      else if (onChangeSubGroup.mode === HttpAction.POST)
-        await addSubGroupMutation({
-          matrixObject: { id: onChangeSubGroup.ID, title: title, description: description },
-          typeParameter: ClientTypes.SubGroups,
-        });
+      SubgroupFunction(
+        deleteSubGroupMutation,
+        updateSubGroupMutation,
+        addSubGroupMutation,
+        onChangeSubGroup,
+        title,
+        description
+      );
     }
     //==========================================================STAKEHOLDER========================================================================
     if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {
-      // 3 Fälle
-      //
-      // DELETE
-      if (onChangeStakeholder.mode === HttpAction.DELETE)
-        await deleteStakeholderMutation({
-          matrixObject: { id: onChangeStakeholder.ID },
-          typeParameter: ClientTypes.Stakeholders,
-        });
-      //
-      // UPDATE
-      else if (onChangeStakeholder.mode === HttpAction.UPDATE)
-        await updateStakeholderMutation({
-          matrixObject: {
-            id: onChangeStakeholder.ID,
-            title: title,
-            description: description,
-            classification: classification,
-          },
-          typeParameter: ClientTypes.Stakeholders,
-        });
-      //
-      // POST
-      else if (onChangeStakeholder.mode === HttpAction.POST)
-        await addStakeholderMutation({
-          matrixObject: {
-            id: onChangeStakeholder.ID,
-            title: title,
-            description: description,
-            classification: classification,
-          },
-          typeParameter: ClientTypes.Stakeholders,
-        });
+      StakeholderFunction(
+        deleteStakeholderMutation,
+        updateStakeholderMutation,
+        addStakeholderMutation,
+        onChangeStakeholder,
+        title,
+        description,
+        classification
+      );
     }
 
     // ============================================================CELLS============================================================================
     if (onChangeCells.mode !== HttpAction.DEFAULT) {
-      if (onChangeCells.mode === HttpAction.DELETE) {
-        await deleteCellsMutation({ ID: cellID[2] });
-      } else if (onChangeCells.mode === HttpAction.UPDATE) {
-        await updateCellsMutation({ cell: { id: cellID[2], message: { title: title, description: description } } });
-      } else if (onChangeCells.mode === HttpAction.POST) {
-        await addCellsMutation({
-          cell: {
-            id: cellID[2],
-            clientSubGroupId: cellID[0],
-            clientStakeholderId: cellID[1],
-            message: { title: title, description: description },
-          },
-        });
-      }
+      CellFunction(
+        deleteCellsMutation,
+        updateCellsMutation,
+        addCellsMutation,
+        onChangeCells,
+        title,
+        description,
+        cellID
+      );
     }
     reset();
   };
+
+  // Save Data with connection to stakeholder
+  // Get Stakeholder from React Query
+  // Get (SubStakeholderID, SubStakeholderName, stakeholderID)
+  // Modal: Does the cell know the Stakeholder? => yes have id, compare id if true show, else not
 
   return (
     <div className={`modal ${showModal ? 'show' : ''}`}>
@@ -145,7 +109,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
                 <button style={{ flex: 1, maxWidth: '4rem', marginRight: '5rem' }} onClick={() => setCount(count + 1)}>
                   Add
                 </button>
-                {/* <Dropdown /> */}
+                <Dropdown stakeholderID={cellID.coolumnID} />
               </div>
 
               <input

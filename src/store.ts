@@ -1,35 +1,46 @@
 import { create } from 'zustand';
-import { HttpAction, Stakeholder } from './utils/data.interfaces';
+import { HttpAction } from './utils/data.interfaces';
 import { devtools } from 'zustand/middleware';
+import { subStakeholderList } from './utils/data.api';
 
 /// ================================================
+// setCellID([row.id, column.id, idOfCell]);
+export type CellID = {
+  rowID: number;
+  coolumnID: number;
+  cellID: number;
+};
 
+export type ChangeObject = {
+  mode: HttpAction;
+  ID: number;
+};
 interface State {
+  SubStakeholder: any[];
   DELETE: boolean;
-  columns: Stakeholder[];
   title: string;
   description: string;
   classification: number;
   showModal: boolean;
-  onChangeSubGroup: { mode: HttpAction; ID: number };
-  onChangeStakeholder: { mode: HttpAction; ID: number };
-  onChangeCells: { mode: HttpAction; ID: number };
-  cellID: [number, number, number];
+  onChangeSubGroup: ChangeObject;
+  onChangeStakeholder: ChangeObject;
+  onChangeCells: ChangeObject;
+  cellID: CellID;
   ClientID: number;
   GroupID: number;
 }
 
 interface Action {
-  setColumns: (columns: Stakeholder[]) => void;
+  setSubStakeholder: (data: any) => void;
   SetDELETE: () => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
   setClassification: (num: number) => void;
   setShowModal: () => void;
-  setOnChangeSubGroup: (mode: HttpAction, ID: number) => void;
-  setOnChangeStakeholder: (mode: HttpAction, ID: number) => void;
-  setOnChangeCells: (mode: HttpAction, ID: number) => void;
-  setCellID: (cellID: [number, number, number]) => void;
+  setOnChangeSubGroup: (obj: ChangeObject) => void;
+  setOnChangeStakeholder: (obj: ChangeObject) => void;
+  setOnChangeCells: (obj: ChangeObject) => void;
+  setCellID: (cellID: CellID) => void;
   setClientID: (id: number) => void;
   setGroupID: (id: number) => void;
   reset: () => void;
@@ -37,10 +48,10 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
+    SubStakeholder: subStakeholderList,
+    setSubStakeholder: (data: any) => set((state) => ({ SubStakeholder: [...state.SubStakeholder, data] })),
     DELETE: false,
     SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
-    columns: [],
-    setColumns: (columns: Stakeholder[]) => set(() => ({ columns: columns })),
     title: '',
     setTitle: (title: string) => set(() => ({ title: title })),
     description: '',
@@ -50,14 +61,13 @@ export const useStore = create<State & Action>()(
     showModal: false,
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
     onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeSubGroup: (mode: HttpAction, ID: number) => set(() => ({ onChangeSubGroup: { mode: mode, ID: ID } })),
+    setOnChangeSubGroup: (obj: ChangeObject) => set(() => ({ onChangeSubGroup: obj })),
     onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeStakeholder: (mode: HttpAction, ID: number) =>
-      set(() => ({ onChangeStakeholder: { mode: mode, ID: ID } })),
+    setOnChangeStakeholder: (obj: ChangeObject) => set(() => ({ onChangeStakeholder: obj })),
     onChangeCells: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeCells: (mode: HttpAction, ID: number) => set(() => ({ onChangeCells: { mode: mode, ID: ID } })),
-    cellID: [0, 0, 0],
-    setCellID: (cellID: [number, number, number]) => set(() => ({ cellID: cellID })),
+    setOnChangeCells: (obj: ChangeObject) => set(() => ({ onChangeCells: obj })),
+    cellID: { rowID: 0, coolumnID: 0, cellID: 0 },
+    setCellID: (cellID: CellID) => set(() => ({ cellID: cellID })),
     reset: () =>
       set((state) => ({
         title: '',

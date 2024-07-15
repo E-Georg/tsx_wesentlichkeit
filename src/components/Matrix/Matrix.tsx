@@ -15,7 +15,6 @@ interface Props {
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
   const {
     setShowModal,
-    cellID,
     setCellID,
     setOnChangeSubGroup,
     setOnChangeStakeholder,
@@ -74,7 +73,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <button
             onClick={() => {
               setShowModal();
-              setOnChangeStakeholder(HttpAction.POST, 0);
+              setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
             }}
           >
             Add Stakeholder
@@ -83,7 +82,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <button
             onClick={() => {
               setShowModal();
-              setOnChangeSubGroup(HttpAction.POST, 0);
+              setOnChangeSubGroup({ mode: HttpAction.POST, ID: 0 });
             }}
           >
             Add SubGroup
@@ -104,8 +103,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                     setTitle(column.text);
                     setClassification(column.classification);
                     // TEMPORÄR
-                    if (DELETE) setOnChangeStakeholder(HttpAction.DELETE, column.id);
-                    else setOnChangeStakeholder(HttpAction.UPDATE, column.id);
+                    if (DELETE) setOnChangeStakeholder({ mode: HttpAction.DELETE, ID: column.id });
+                    else setOnChangeStakeholder({ mode: HttpAction.UPDATE, ID: column.id });
                     setShowModal();
                   }}
                   style={{
@@ -132,8 +131,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   setDescription(row.description);
                   setTitle(row.text);
                   // TEMPORÄR
-                  if (DELETE) setOnChangeSubGroup(HttpAction.DELETE, row.id);
-                  else setOnChangeSubGroup(HttpAction.UPDATE, row.id);
+                  if (DELETE) setOnChangeSubGroup({ mode: HttpAction.DELETE, ID: row.id });
+                  else setOnChangeSubGroup({ mode: HttpAction.UPDATE, ID: row.id });
                   setShowModal();
                 }}
               >
@@ -149,22 +148,20 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
                       );
                       const idOfCell = foundCell === undefined ? 0 : foundCell.id;
-                      setCellID([row.id, column.id, idOfCell]);
+                      setCellID({ rowID: row.id, coolumnID: column.id, cellID: idOfCell });
 
                       if (!foundCell) {
                         setShowModal();
-                        setOnChangeCells(HttpAction.POST, idOfCell);
+                        setOnChangeCells({ mode: HttpAction.POST, ID: idOfCell });
                       } else {
-                        console.log(foundCell);
                         setTitle(foundCell.message.title);
                         setDescription(foundCell.message.text);
                         setClassification(column.classification);
                         setShowModal();
                         // TEMPORÄR
-                        if (DELETE) setOnChangeCells(HttpAction.DELETE, idOfCell);
-                        else setOnChangeCells(HttpAction.UPDATE, idOfCell);
+                        if (DELETE) setOnChangeCells({ mode: HttpAction.DELETE, ID: idOfCell });
+                        else setOnChangeCells({ mode: HttpAction.UPDATE, ID: idOfCell });
                       }
-                      console.log(cellID);
                     }}
                   >
                     {cells &&
