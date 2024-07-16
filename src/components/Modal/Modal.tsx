@@ -159,7 +159,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
           <select
             value={classification ?? ''}
             onChange={(e) =>
-              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 9)
+              setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0)
             }
             style={{
               width: '100%',
@@ -168,13 +168,13 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
               textAlign: 'center',
             }}
           >
-            {classification === 9 ? (
+            {classification === 0 ? (
               <option value={0}>Wähle die Stakeholder-Klassifizierung</option>
             ) : (
               <option value={classification}>{options[classification]?.label}</option>
             )}
             {options
-              .filter((opt) => opt.value !== classification && opt.value !== 9) // Filter out "All"
+              .filter((opt) => opt.value !== classification && opt.value !== 0) // Filter out "All"
               .map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}

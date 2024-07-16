@@ -4,6 +4,7 @@ import {
   Autosave,
   Bold,
   Code,
+  EditorConfig,
   Essentials,
   FindAndReplace,
   FontBackgroundColor,
@@ -35,7 +36,7 @@ import {
   Undo,
 } from 'ckeditor5';
 
-export const editorConfig: any = {
+export const editorConfig: EditorConfig = {
   toolbar: {
     items: [
       'undo',
@@ -213,7 +214,7 @@ export const editorConfig: any = {
     contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'],
   },
   simpleUpload: {
-    uploadUrl: `http://192.168.20.53/wa/api/clientStakeholderSignificance.php?param={%20%22action%22:%22i%22,%22clientId%22:2,%20%22clientSubGroupId%22:23,%20%22clientStakeholderId%22:38,%22title%22:"aa",%20%22text%22:"aa"}`,
+    uploadUrl: `http://192.168.20.53/test/upload.php`,
     withCredentials: true,
   },
 };

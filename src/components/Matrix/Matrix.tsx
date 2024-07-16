@@ -28,7 +28,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
 
   useEffect(() => {
     setCopyColums(columns);
-    if (selectedOption != 9) {
+    if (selectedOption != 0) {
       setCopyColums(
         columns.filter((item: Stakeholder) => {
           if (item.classification === null) return;
@@ -38,11 +38,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     }
   }, [columns]);
 
-  const handleSelectChange = (event: any) => {
+  // TODO:
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
     setSelectedOption(value);
 
-    if (value === 9) {
+    if (value === 0) {
       setCopyColums(columns);
     } else {
       setCopyColums(
@@ -96,12 +97,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <tr>
             <th></th>
             {columns &&
-              copyColumns.map((column: any) => (
+              copyColumns.map((column: Stakeholder) => (
                 <th
                   onClick={() => {
                     setDescription(column.description);
                     setTitle(column.text);
-                    setClassification(column.classification);
+                    setClassification(column.classification!!);
                     // TEMPORÄR
                     if (DELETE) setOnChangeStakeholder({ mode: HttpAction.DELETE, ID: column.id });
                     else setOnChangeStakeholder({ mode: HttpAction.UPDATE, ID: column.id });
@@ -119,7 +120,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           </tr>
         </thead>
         <tbody>
-          {rows.map((row: any) => (
+          {rows.map((row: Stakeholder) => (
             <tr key={row.id}>
               <td
                 style={{
@@ -139,7 +140,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                 {row.text}
               </td>
               {columns &&
-                copyColumns.map((column: any) => (
+                copyColumns.map((column: Stakeholder) => (
                   <td
                     style={{ border: '1px solid red' }}
                     key={column.id + row.id}
@@ -156,7 +157,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       } else {
                         setTitle(foundCell.message.title);
                         setDescription(foundCell.message.text);
-                        setClassification(column.classification);
+                        setClassification(column.classification!!);
                         setShowModal();
                         // TEMPORÄR
                         if (DELETE) setOnChangeCells({ mode: HttpAction.DELETE, ID: idOfCell });

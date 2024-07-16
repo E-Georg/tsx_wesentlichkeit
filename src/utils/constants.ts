@@ -11,7 +11,7 @@ export const BUTTONS = {
 };
 
 export const options: Classification[] = [
-  { value: 9, label: 'All' },
+  { value: 0, label: 'All' },
   { value: 1, label: 'Interner Stakeholder' },
   { value: 2, label: 'Externer Stakeholder' },
   { value: 3, label: 'Stiller Stakeholder' },
