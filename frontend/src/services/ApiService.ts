@@ -67,7 +67,7 @@ export const UpdateDataToDatabaseQuery = async ({
 }: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
   if (typeParameter === ClientTypes.Stakeholders) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}"}`;
+    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
   } else {
     url = `${API}${typeParameter}${phpExtension}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
   }
