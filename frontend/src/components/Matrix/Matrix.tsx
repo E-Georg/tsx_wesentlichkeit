@@ -1,13 +1,8 @@
-import {
-  Cell,
-  HttpAction,
-  Stakeholder,
-  SubGroup,
-} from "../Models/data.interfaces";
-import { useStore } from "../../store";
-import { options } from "../../utils/constants";
-import { useEffect, useState } from "react";
-import "./Martix.css";
+import { Cell, HttpAction, Stakeholder, SubGroup } from '../Models/data.interfaces';
+import { useStore } from '../../store';
+import { options } from '../../utils/constants';
+import { useEffect, useState } from 'react';
+import './Martix.css';
 
 interface Props {
   rows: SubGroup[];
@@ -18,14 +13,7 @@ interface Props {
   setDescription: (name: string) => void;
 }
 
-const Matrix = ({
-  rows,
-  columns,
-  cells,
-  showAddToMatrix,
-  setTitle,
-  setDescription,
-}: Props) => {
+const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
   const {
     setShowModal,
     setCellID,
@@ -76,11 +64,7 @@ const Matrix = ({
             <label className="label" htmlFor="stakeholderArt">
               Stakeholder Art auswählen:
             </label>
-            <select
-              id="stakeholderArt"
-              value={selectedOption}
-              onChange={handleSelectChange}
-            >
+            <select id="stakeholderArt" value={selectedOption} onChange={handleSelectChange}>
               {options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -92,12 +76,7 @@ const Matrix = ({
             <label className="label" htmlFor="setDELETE">
               Löschen aktivieren:
             </label>
-            <input
-              type="checkbox"
-              id="setDELETE"
-              name="setDELETE"
-              onChange={() => SetDELETE()}
-            />
+            <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
           </div>
         </div>
         {/* ADD BUTTON CONTAINER */}
@@ -106,7 +85,7 @@ const Matrix = ({
             <button
               onClick={() => {
                 setShowModal();
-                setOnChangeStakeholder(HttpAction.POST, 0);
+                setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
               }}
             >
               Add Stakeholder
@@ -115,7 +94,7 @@ const Matrix = ({
             <button
               onClick={() => {
                 setShowModal();
-                setOnChangeSubGroup(HttpAction.POST, 0);
+                setOnChangeSubGroup({ mode: HttpAction.POST, ID: 0 });
               }}
             >
               Add SubGroup
@@ -135,7 +114,7 @@ const Matrix = ({
                     <th
                       onClick={() => {
                         setDescription(column.description);
-                        setTitle(column.text);
+                        setTitle(column.title);
                         setClassification(column.classification!!);
                         // TEMPORÄR
                         if (DELETE)
@@ -152,7 +131,7 @@ const Matrix = ({
                       }}
                       key={column.id}
                     >
-                      {column.text}
+                      {column.title}
                     </th>
                   ))}
               </tr>
@@ -164,7 +143,7 @@ const Matrix = ({
                     key={row.id}
                     onClick={() => {
                       setDescription(row.description);
-                      setTitle(row.text);
+                      setTitle(row.title);
                       // TEMPORÄR
                       if (DELETE)
                         setOnChangeSubGroup({
@@ -179,7 +158,7 @@ const Matrix = ({
                       setShowModal();
                     }}
                   >
-                    {row.text}
+                    {row.title}
                   </td>
                   {columns &&
                     copyColumns.map((column: Stakeholder) => (
@@ -187,12 +166,9 @@ const Matrix = ({
                         key={column.id + row.id}
                         onClick={() => {
                           const foundCell: Cell | undefined = cells.find(
-                            (c: Cell) =>
-                              c.clientStakeholderId === column.id &&
-                              c.clientSubGroupId === row.id
+                            (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
                           );
-                          const idOfCell =
-                            foundCell === undefined ? 0 : foundCell.id;
+                          const idOfCell = foundCell === undefined ? 0 : foundCell.id;
                           setCellID({
                             rowID: row.id,
                             coolumnID: column.id,
@@ -225,11 +201,8 @@ const Matrix = ({
                         }}
                       >
                         {cells &&
-                          cells.find(
-                            (c: Cell) =>
-                              c.clientStakeholderId === column.id &&
-                              c.clientSubGroupId === row.id
-                          )?.message.title.length}
+                          cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
+                            ?.message.title.length}
                       </td>
                     ))}
                 </tr>
