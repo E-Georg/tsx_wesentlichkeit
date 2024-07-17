@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { HttpAction, SubStakeholder } from './components/Models/data.interfaces';
+import { HttpAction } from './components/Models/data.interfaces';
 import { devtools } from 'zustand/middleware';
-import { subStakeholderList } from './utils/data.api';
 
 /// ================================================
 // setCellID([row.id, column.id, idOfCell]);
@@ -16,7 +15,6 @@ export type ChangeObject = {
   ID: number;
 };
 interface State {
-  SubStakeholder: SubStakeholder[];
   DELETE: boolean;
   title: string;
   description: string;
@@ -32,7 +30,6 @@ interface State {
 }
 
 interface Action {
-  setSubStakeholder: (data: SubStakeholder) => void;
   SetDELETE: () => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
@@ -50,8 +47,6 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
-    SubStakeholder: subStakeholderList,
-    setSubStakeholder: (data: SubStakeholder) => set((state) => ({ SubStakeholder: [...state.SubStakeholder, data] })),
     DELETE: false,
     SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
     title: '',

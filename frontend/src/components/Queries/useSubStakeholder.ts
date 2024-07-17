@@ -5,10 +5,8 @@ import {
   fetchDataQuerySubStakeholder,
   UpdateSubStakeholderToDatabaseQuery,
 } from '../../services/ApiService';
-import { useStore } from '../../store';
 
 const useSubStakeholderData = () => {
-  const { ClientID } = useStore();
   const queryClient = useQueryClient();
 
   // Fetch Stakeholder data
@@ -24,7 +22,7 @@ const useSubStakeholderData = () => {
 
   // Add Stakeholder mutation
   const { mutateAsync: addSubStakeholderMutation } = useMutation({
-    mutationFn: ({ subStakeholder }: any) => AddSubStakeholderToDataBaseQuery({ subStakeholder, ClientID }),
+    mutationFn: ({ newStakeholder }: any) => AddSubStakeholderToDataBaseQuery({ newStakeholder }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['SubStakeholder'] });
     },
@@ -32,7 +30,7 @@ const useSubStakeholderData = () => {
 
   //   // Delete Stakeholder mutation
   const { mutateAsync: deleteSubStakeholderMutation } = useMutation({
-    mutationFn: ({ subStakeholder }: any) => DeleteSubStakeholderFromDatabaseQuery({ subStakeholder }),
+    mutationFn: (ID: any) => DeleteSubStakeholderFromDatabaseQuery(ID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['SubStakeholder'] });
     },
@@ -40,9 +38,9 @@ const useSubStakeholderData = () => {
 
   // Update Stakeholder mutation
   const { mutateAsync: updateStakeholderMutation } = useMutation({
-    mutationFn: ({ subStakeholder }: any) => UpdateSubStakeholderToDatabaseQuery({ subStakeholder, ClientID }),
+    mutationFn: ({ newStakeholder }: any) => UpdateSubStakeholderToDatabaseQuery({ newStakeholder }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
+      queryClient.invalidateQueries({ queryKey: ['SubStakeholder'] });
     },
   });
 

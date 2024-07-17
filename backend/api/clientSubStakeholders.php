@@ -51,60 +51,79 @@ switch ( $action ) {
         }
         break;
 
-    case "rid":                                                                                                                                       // readonlywithstakeholderID
-            $clientId = $param->clientId;
-            $stakeholderId = $param->stakeholderId;
-
-        $cols = array('clientId' => $clientId);
-        $cols = array('stakeholderId' => $stakeholderId);
-        $query = 'SELECT * FROM `wa_clientSubStakeholders` WHERE active = 1 AND clientId = :clientId AND stakeholderId = :stakeholderId order by sort asc';
-        $clientStakeholders = dbSelect($db, $query, $cols);
-
-        if( count( $clientStakeholders ) > 0 ) {
-            $jsonArray = array();
-            $pointer = 0;
-            foreach( $clientStakeholders as $clientStakeholder ) {
-                $jsonArray[ $pointer ][ 'id' ] = $clientStakeholder[ 'id' ];
-                $jsonArray[ $pointer ][ 'name' ] = $clientStakeholder[ 'name' ];
-                $jsonArray[ $pointer ][ 'email' ] = $clientStakeholder[ 'email' ];
-                $jsonArray[ $pointer ][ 'stakeholderName' ] = $clientStakeholder[ 'stakeholderName' ];
-                $jsonArray[ $pointer ][ 'stakeholderID' ] = $clientStakeholder[ 'stakeholderID' ];
-                $pointer++;
-            }
-        }
-        else {
-            $jsonArray = array();
-            $jsonArray[ 'errorNo' ] = 1;
-            $jsonArray[ 'errorMessage' ] = 'nicht gefunden';
-        }
-        break;
 
     case "i":                                                                                                                                       // insert
-        $clientId = $param->clientId;
         $name = $param->name;
         $email = $param->email;
         $stakeholderId =  $param->stakeholderId;
         
 ;
-        $cols = array('clientId' => $clientId);
-        $query = 'SELECT id,sort FROM `wa_clientStakeholders` WHERE active = 1 AND clientId = :clientId order by sort DESC';
-        $clientStakeholders = dbSelect($db, $query, $cols);
-        $lastSort = $clientStakeholders[ 0 ][ 'sort' ];
+        $cols = array( 'active' => 1 );
+        $query = 'SELECT id FROM `wa_subStakeholder` WHERE active = :active';
+        $clientSubStakeholders = dbSelect($db, $query, $cols);
+        
 
         $cols = array();
-        $cols[ 'clientId' ] = $clientId;
         $cols[ 'name' ] = $name;
         $cols[ 'email' ] = $email;
         $cols[ 'stakeholderID' ] = $stakeholderId;
-        $cols[ 'sort' ] = $lastSort + 10; 
         $cols[ 'active' ] = 1;
 
-        $lastId = dbInsert($db, 'wa_clientSubStakeholders', $cols);
+        $lastId = dbInsert($db, 'wa_subStakeholder', $cols);
         $jsonArray = array();
-        $jsonArray[ 'lastId' ] = $lastId;       
+        $jsonArray[ 'lastId' ] = $lastId;   
         break;
    
-   
+    
+    case "e":                                                                                                                                           // edit
+        $clientSubStakeholderId = $param->clientSubStakeholderId;
+        $name = $param->name;
+        $email = $param->email;
+        $stakeholderId =  $param->stakeholderId;
+        
+        $cols = array( 'active' => 1 );
+        $query = 'SELECT id FROM `wa_subStakeholder` WHERE active = :active';
+        $clientSubStakeholders = dbSelect($db, $query, $cols);
+
+        $jsonArray = array();
+        if( count(  $clientSubStakeholders ) > 0 ) {
+            $cols = array();
+            $cols[ 'name' ] = $name;
+            $cols[ 'email' ] = $email;
+            $cols[ 'stakeholderId' ] = $stakeholderId;
+            $cols[ 'active' ] = 1;
+    
+            $query = 'update `wa_subStakeholder` set active = :active, name = :name, email = :email, stakeholderId = :stakeholderId where id = ' . $clientSubStakeholderId; 
+            dbSelect( $db, $query, $cols );
+            
+            $jsonArray[ 'return' ] = 1;   
+        }
+        else {
+            $jsonArray[ 'return' ] = 0;   
+        }
+        break;
+    
+    case "d":                                                                                                                                         // delete
+        $clientSubStakeholderId = $param->clientSubStakeholderId;
+        
+
+        $cols = array('id' => $clientSubStakeholderId );
+        $query = 'SELECT id FROM `wa_subStakeholder` WHERE active = 1 AND id = :id';
+        $clientSubStakeholders = dbSelect($db, $query, $cols);
+
+        $jsonArray = array();
+        if( count(  $clientSubStakeholders ) > 0 ) {
+            $cols = array();
+            $cols[ 'active' ] = 0; 
+            
+            $query = 'update `wa_subStakeholder` set active = :active where id = ' . $clientSubStakeholderId;       
+            dbSelect($db, $query, $cols);
+            $jsonArray[ 'return' ] = 1;   
+        }
+        else {
+            $jsonArray[ 'return' ] = 0;   
+        }            
+        break;
 
     default:
         $jsonArray = array();

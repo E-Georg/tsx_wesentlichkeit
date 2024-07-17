@@ -99,14 +99,15 @@ export const UpdateDataToDatabaseQuery = async ({
 };
 
 // [POST]
-export const UpdateSubStakeholderToDatabaseQuery = async ({ subStakeholder, CLientID }: any) => {
+export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: any) => {
   let url;
-  url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${subStakeholder.id}, "text":"${subStakeholder.title}", "description":"${subStakeholder.description}" }`;
+  console.log(newStakeholder);
+  url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"e", "clientSubStakeholderId": ${newStakeholder.id},"name": "${newStakeholder.name}", "email": "${newStakeholder.email}", "stakeholderId": ${newStakeholder.stakeholderId}}`;
 
   console.log(url);
   try {
     const response = await axios.put(url);
-    if (response.status === 200) return subStakeholder;
+    if (response.status === 200) return newStakeholder;
   } catch (error) {
     console.error(`Error: ${error}`);
   }
@@ -114,18 +115,13 @@ export const UpdateSubStakeholderToDatabaseQuery = async ({ subStakeholder, CLie
 };
 
 // [PUT]
-export const AddSubStakeholderToDataBaseQuery = async ({
-  substakeholder,
-  ClientID,
-}: any): Promise<SubStakeholder[] | any> => {
+export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any): Promise<SubStakeholder[] | any> => {
   let url;
-
-  url = `diesdas${ClientID}`;
-  console.log(url);
+  url = `http://localhost/wesentlichkeit/backend/api/clientSubStakeholders.php?param={"action":"i", "name": "${newStakeholder.name}", "email": "${newStakeholder.email}", "stakeholderId": ${newStakeholder.stakeholderId}}`;
   try {
     const res = await axios.post(url);
     if (res.status === 200) {
-      const newSub = { ...substakeholder, id: res.data.lastId };
+      const newSub = { ...newStakeholder, id: res.data.lastId };
       return newSub;
     }
   } catch (error) {
@@ -163,9 +159,7 @@ export const AddDataToDataBaseQuery = async ({
 // [PUT]
 export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
   let url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
-  console.log(url);
   try {
-    console.log(url);
     const response = await axios.post(url);
     if (response.status === 2000) return response.data;
   } catch (error) {
@@ -175,10 +169,10 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
 };
 
 // [DELETE]
-export const DeleteSubStakeholderFromDatabaseQuery = async ({ ID }: any) => {
-  const url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"d", "clientSubStakeholders":${ID}}`;
+export const DeleteSubStakeholderFromDatabaseQuery = async (ID: any) => {
+  const url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"d", "clientSubStakeholderId":${ID}}`;
   try {
-    const response = await axiosInstance.delete(url);
+    const response = await axios.delete(url);
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);

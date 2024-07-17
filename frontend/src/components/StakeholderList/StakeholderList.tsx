@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
 import useStakeholderData from '../Queries/useStakeholderData';
@@ -18,9 +18,9 @@ const StakeholderList = () => {
     SubStakeholder: SubStakeholderQuery,
     addSubStakeholderMutation,
     deleteSubStakeholderMutation,
+    updateStakeholderMutation,
   } = useSubStakeholderData();
-  const { setSubStakeholder, SubStakeholder, onChangeSubStakeholder, setOnChangeSubStakeholder, DELETE, SetDELETE } =
-    useStore();
+  const { onChangeSubStakeholder, setOnChangeSubStakeholder, DELETE, SetDELETE } = useStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [newStakeholder, setNewStakeholder] = useState<SubStakeholder>({
@@ -36,17 +36,24 @@ const StakeholderList = () => {
     <div> ...LOADING</div>;
   }
 
-  const addStakeholder = () => {
+  const addStakeholder = async () => {
     // Post to Database
     // need more checking?
     if (!/\S+@\S+\.\S+/.test(newStakeholder.email)) {
       setError('Email must contain an "@" and a "."');
       return;
     }
+    console.log(newStakeholder);
 
     // post
-    setSubStakeholder(newStakeholder);
-    setNewStakeholder({ id: 0, name: '', email: '', stakeholderId: 0 });
+    addSubStakeholderMutation({
+      newStakeholder: {
+        name: newStakeholder.name,
+        email: newStakeholder.email,
+        stakeholderId: newStakeholder.stakeholderId,
+      },
+    });
+    reset();
     setError(null);
 
     if (location.state?.from === 'modal') {
@@ -54,19 +61,31 @@ const StakeholderList = () => {
     }
   };
 
-  const updateDataOrDelete = () => {
+  const updateDataOrDelete = async () => {
     // Update logic
-    console.log(newStakeholder);
     if (onChangeSubStakeholder.mode === HttpAction.DELETE) {
-      deleteSubStakeholderMutation(newStakeholder);
+      await deleteSubStakeholderMutation(newStakeholder.id);
     } else if (onChangeSubStakeholder.mode === HttpAction.POST) {
-      addSubStakeholderMutation(newStakeholder);
+      await updateStakeholderMutation({
+        newStakeholder: {
+          id: newStakeholder.id,
+          name: newStakeholder.name,
+          email: newStakeholder.email,
+          stakeholderId: newStakeholder.stakeholderId,
+        },
+      });
     }
+    reset();
   };
-  console.log(SubStakeholderQuery);
+
+  const reset = () => {
+    setOnChangeSubStakeholder({ mode: HttpAction.DEFAULT, ID: 0 });
+    setNewStakeholder({ id: 0, name: '', email: '', stakeholderId: 0 });
+  };
 
   return (
     <div style={{ margin: '20px' }}>
+      <button onClick={reset}>Clear</button>
       <div className="checkbox-wrapper">
         <label className="label" htmlFor="setDELETE">
           Löschen aktivieren:
@@ -91,14 +110,15 @@ const StakeholderList = () => {
 
       <select
         value={newStakeholder.stakeholderId}
-        onChange={(e) =>
+        onChange={(e) => {
           setNewStakeholder({
             ...newStakeholder,
             stakeholderId: Number(e.target.value),
-          })
-        }
+          });
+        }}
         style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px' }}
       >
+        {newStakeholder.stakeholderId === 0 && <option value={0}>Choose SubStakeholder</option>}
         {Stakeholder?.map((stakeholder, index) => (
           <option key={index} value={stakeholder.id}>
             {stakeholder.title}
@@ -106,12 +126,19 @@ const StakeholderList = () => {
         ))}
       </select>
 
-      <button onClick={addStakeholder} style={{ padding: '5px 10px', margin: '10px 0' }}>
-        Add Stakeholder
-      </button>
+      {onChangeSubStakeholder.mode != HttpAction.POST && onChangeSubStakeholder.mode != HttpAction.DELETE ? (
+        <button onClick={addStakeholder} style={{ padding: '5px 10px', margin: '10px 0' }}>
+          Add Stakeholder
+        </button>
+      ) : (
+        <button onClick={updateDataOrDelete} style={{ padding: '5px 10px', margin: '10px 0' }}>
+          Update / Delete Data
+        </button>
+      )}
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {SubStakeholder && (
+      {SubStakeholderQuery && (
         <div>
           <h2>Stakeholders</h2>
           <table style={{ margin: '20px 0', width: '100%' }}>
@@ -132,7 +159,7 @@ const StakeholderList = () => {
                       email: stakeholder.email,
                       stakeholderId: stakeholder.stakeholderId,
                     });
-
+                    console.log(DELETE);
                     if (DELETE) setOnChangeSubStakeholder({ mode: HttpAction.DELETE, ID: stakeholder.id });
                     else setOnChangeSubStakeholder({ mode: HttpAction.POST, ID: stakeholder.id });
                   }}
@@ -147,9 +174,6 @@ const StakeholderList = () => {
           </table>
         </div>
       )}
-      <button onClick={updateDataOrDelete} style={{ padding: '5px 10px', margin: '10px 0' }}>
-        Update / Delete Data
-      </button>
     </div>
   );
 };
