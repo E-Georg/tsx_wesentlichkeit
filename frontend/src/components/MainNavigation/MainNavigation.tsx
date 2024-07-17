@@ -1,30 +1,36 @@
-import { NavLink } from 'react-router-dom';
-import classes from './MainNavigation.module.css';
+import { NavLink } from "react-router-dom";
+import "./MainNavigation.css";
 const MainNavigation = () => {
   //   const token = useRouteLoaderData('root');
 
   return (
-    <header className={classes.header}>
-      <nav>
-        <ul className={classes.list}>
-          <li>
-            <NavLink to="/" className={({ isActive }) => (isActive ? classes.active : undefined)} end>
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/stakeholderlist" className={({ isActive }) => (isActive ? classes.active : undefined)}>
-              Stakeholder List
-            </NavLink>
-          </li>
-          {/* <li>
-            <NavLink to="/newsletter" className={({ isActive }) => (isActive ? classes.active : undefined)}>
+    <nav className="nav">
+      <ul className="nav_list">
+        <li className="nav_listitem">
+          <NavLink
+            to="/"
+            className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}
+            end
+          >
+            Home
+          </NavLink>
+        </li>
+        <li className="nav_listitem">
+          <NavLink
+            to="/stakeholderlist"
+            className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}
+          >
+            Stakeholder List
+          </NavLink>
+        </li>
+        {/* <li>
+            <NavLink to="/newsletter" className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}>
               Newsletter
             </NavLink>
           </li>
           {!token && (
             <li>
-              <NavLink to="/auth?mode=login" className={({ isActive }) => (isActive ? classes.active : undefined)}>
+              <NavLink to="/auth?mode=login" className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}>
                 Authentication
               </NavLink>
             </li>
@@ -36,9 +42,8 @@ const MainNavigation = () => {
               </Form>
             </li>
           )} */}
-        </ul>
-      </nav>
-    </header>
+      </ul>
+    </nav>
   );
 };
 
