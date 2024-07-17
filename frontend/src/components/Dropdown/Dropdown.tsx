@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { useStore } from '../../store';
+import { useNavigate } from "react-router-dom";
+import { useStore } from "../../store";
+import "./Dropdown.css";
 
 interface Props {
   stakeholderID: number;
@@ -9,8 +10,8 @@ const Dropdown = ({ stakeholderID }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <select style={{ marginRight: '1rem', height: '2rem', width: '7rem' }}>
+    <div className="dropdown-container">
+      <select>
         {SubStakeholder.map((option: any, index: any) => {
           console.log(stakeholderID);
           // show option.name if option.id is the same as stakeholderID
@@ -22,7 +23,13 @@ const Dropdown = ({ stakeholderID }: Props) => {
         })}
       </select>
 
-      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Go to Stakeholder List</button>
+      <button
+        onClick={() =>
+          navigate("/stakeholderlist", { state: { from: "modal" } })
+        }
+      >
+        Go to Stakeholder List
+      </button>
     </div>
   );
 };

@@ -65,7 +65,7 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.btn_group {
+.btn-group {
   display: flex;
   gap: 1rem;
   margin-block: 1rem;
