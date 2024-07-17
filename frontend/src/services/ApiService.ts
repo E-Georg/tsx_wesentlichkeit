@@ -2,14 +2,13 @@ import axios from 'axios';
 import { Cell, ClientTypes, Stakeholder, SubGroup, SubStakeholder } from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
 
-// const API_ = 'http://192.168.20.53/wa/api/';
-const API = 'http://localhost/wesentlichkeit/backend/api/';
-const phpExtension = '.php?param=';
+const PHP_EXTENSION = import.meta.env.VITE_PHP_EXTENSION;
+const API_URL = import.meta.env.VITE_API_URL;
 
 // ========================================== REACT QUERY DATA ==========================================================
 // [GET]
 export const fetchCellsQuery = async (ClientID: number, GroupID: number): Promise<Cell[]> => {
-  let url = `${API}${ClientTypes.Cells}${phpExtension}{ "action":"r", "clientId":${ClientID}, "groupId":${GroupID} }`;
+  let url = `${API_URL}${ClientTypes.Cells}${PHP_EXTENSION}{ "action":"r", "clientId":${ClientID}, "groupId":${GroupID} }`;
   console.log(url);
   try {
     const response = await axiosInstance.get<Cell[]>(url);
@@ -30,9 +29,9 @@ export const fetchDataQuery = async (
   let url;
 
   if (GroupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{ "action":"r", "clientId":${ClientID}}`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"r", "clientId":${ClientID}}`;
   } else {
-    url = `${API}${typeParameter}${phpExtension} { "action":"r", "groupId": ${GroupID}, "clientId":${ClientID} }`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION} { "action":"r", "groupId": ${GroupID}, "clientId":${ClientID} }`;
   }
 
   try {
@@ -50,7 +49,7 @@ export const fetchDataQuery = async (
 export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> => {
   // get all SubStakeHolder
   let url;
-  url = `${API}${ClientTypes.SubStakeholder}${phpExtension}{"action":"r"}`;
+  url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"r"}`;
   console.log(url);
   try {
     const response = await axios.get(url);
@@ -65,7 +64,7 @@ export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> 
 
 // [POST]
 export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]> => {
-  const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.text}"}`;
+  const url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.text}"}`;
   console.log(url);
   try {
     const response = await axios.put(url);
@@ -85,9 +84,9 @@ export const UpdateDataToDatabaseQuery = async ({
 }: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
   if (typeParameter === ClientTypes.Stakeholders) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
   } else {
-    url = `${API}${typeParameter}${phpExtension}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
   }
   console.log(url);
   try {
@@ -102,7 +101,7 @@ export const UpdateDataToDatabaseQuery = async ({
 // [POST]
 export const UpdateSubStakeholderToDatabaseQuery = async ({ subStakeholder, CLientID }: any) => {
   let url;
-  url = `${API}${ClientTypes.SubStakeholder}${phpExtension}{"action":"e", "clientStakeholderId":${subStakeholder.id}, "text":"${subStakeholder.title}", "description":"${subStakeholder.description}" }`;
+  url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${subStakeholder.id}, "text":"${subStakeholder.title}", "description":"${subStakeholder.description}" }`;
 
   console.log(url);
   try {
@@ -144,9 +143,9 @@ export const AddDataToDataBaseQuery = async ({
   let url;
 
   if (GroupID === undefined) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"i","clientId":${ClientID},"text":"${matrixObject.title}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"i","clientId":${ClientID},"text":"${matrixObject.title}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
   } else {
-    url = `${API}${typeParameter}${phpExtension}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "text":"${matrixObject.title}", "description":"${matrixObject.description}" } `;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "text":"${matrixObject.title}", "description":"${matrixObject.description}" } `;
   }
   console.log(url);
   try {
@@ -163,7 +162,7 @@ export const AddDataToDataBaseQuery = async ({
 
 // [PUT]
 export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
-  let url = `${API}${ClientTypes.Cell}${phpExtension}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
+  let url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
   console.log(url);
   try {
     console.log(url);
@@ -177,7 +176,7 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
 
 // [DELETE]
 export const DeleteSubStakeholderFromDatabaseQuery = async ({ ID }: any) => {
-  const url = `${API}${ClientTypes.SubStakeholder}${phpExtension}{"action":"d", "clientSubStakeholders":${ID}}`;
+  const url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"d", "clientSubStakeholders":${ID}}`;
   try {
     const response = await axiosInstance.delete(url);
     if (response.status === 200) return response.data;
@@ -189,7 +188,7 @@ export const DeleteSubStakeholderFromDatabaseQuery = async ({ ID }: any) => {
 
 // [DELETE]
 export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> => {
-  const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"d", "clientStakeholderSignificanceId":${ID}}`;
+  const url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{"action":"d", "clientStakeholderSignificanceId":${ID}}`;
   try {
     const response = await axios.delete(url);
     if (response.status === 200) return response.data;
@@ -207,9 +206,9 @@ export const DeleteDataFromDatabaseQuery = async ({
   let url;
 
   if (typeParameter === ClientTypes.Stakeholders) {
-    url = `${API}${typeParameter}${phpExtension}{"action":"d","clientStakeholderId":${matrixObject.id}}`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"d","clientStakeholderId":${matrixObject.id}}`;
   } else {
-    url = `${API}${typeParameter}${phpExtension}{ "action":"d", "clientSubGroupId": ${matrixObject.id} }`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"d", "clientSubGroupId": ${matrixObject.id} }`;
   }
 
   try {

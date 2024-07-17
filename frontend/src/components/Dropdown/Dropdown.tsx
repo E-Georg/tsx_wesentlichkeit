@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
+import './Dropdown.css';
 
 interface Props {
   stakeholderID: number;
@@ -9,8 +10,8 @@ const Dropdown = ({ stakeholderID }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <select style={{ marginRight: '1rem', height: '2rem', width: '7rem' }}>
+    <div className="dropdown-container">
+      <select>
         {SubStakeholder.filter((option: any) => {
           return option.stakeholderId === stakeholderID;
         }).length > 0 ? (

@@ -39,7 +39,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     }
   }, [columns]);
 
-  // TODO:
+  // TODO: Adis
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
     setSelectedOption(value);
@@ -58,7 +58,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
   return (
     <>
       <section className="hero-container">
-        {/* STAKEHOLDER PRIO MENU */}
+        {/* STAKEHOLDER ART MENU */}
         <div className="input-container">
           <div className="select-wrapper">
             <label className="label" htmlFor="stakeholderArt">
@@ -81,7 +81,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         </div>
         {/* ADD BUTTON CONTAINER */}
         {showAddToMatrix ? (
-          <div className="btn_group">
+          <div className="btn-group">
             <button
               onClick={() => {
                 setShowModal();
