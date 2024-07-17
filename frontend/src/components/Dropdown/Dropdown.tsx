@@ -11,15 +11,19 @@ const Dropdown = ({ stakeholderID }: Props) => {
   return (
     <div style={{ marginBottom: '1rem' }}>
       <select style={{ marginRight: '1rem', height: '2rem', width: '7rem' }}>
-        {SubStakeholder.map((option: any, index: any) => {
-          console.log(stakeholderID);
-          // show option.name if option.id is the same as stakeholderID
-          return (
-            <option key={index} value={option.name}>
-              {option.name}
-            </option>
-          );
-        })}
+        {SubStakeholder.filter((option: any) => {
+          return option.stakeholderId === stakeholderID;
+        }).length > 0 ? (
+          SubStakeholder.filter((option: any) => option.stakeholderId === stakeholderID).map(
+            (option: any, index: any) => (
+              <option key={index} value={option.name}>
+                {option.name}
+              </option>
+            )
+          )
+        ) : (
+          <option value="add">Empty</option>
+        )}
       </select>
 
       <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Go to Stakeholder List</button>

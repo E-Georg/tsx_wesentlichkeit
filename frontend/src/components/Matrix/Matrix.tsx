@@ -113,6 +113,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   copyColumns.map((column: Stakeholder) => (
                     <th
                       onClick={() => {
+                        console.log(column.id);
                         setDescription(column.description);
                         setTitle(column.title);
                         setClassification(column.classification!!);

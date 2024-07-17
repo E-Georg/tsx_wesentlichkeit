@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { HttpAction } from './components/Models/data.interfaces';
+import { HttpAction, SubStakeholder } from './components/Models/data.interfaces';
 import { devtools } from 'zustand/middleware';
 import { subStakeholderList } from './utils/data.api';
 
@@ -16,7 +16,7 @@ export type ChangeObject = {
   ID: number;
 };
 interface State {
-  SubStakeholder: any[];
+  SubStakeholder: SubStakeholder[];
   DELETE: boolean;
   title: string;
   description: string;
@@ -24,6 +24,7 @@ interface State {
   showModal: boolean;
   onChangeSubGroup: ChangeObject;
   onChangeStakeholder: ChangeObject;
+  onChangeSubStakeholder: ChangeObject;
   onChangeCells: ChangeObject;
   cellID: CellID;
   ClientID: number;
@@ -31,7 +32,7 @@ interface State {
 }
 
 interface Action {
-  setSubStakeholder: (data: any) => void;
+  setSubStakeholder: (data: SubStakeholder) => void;
   SetDELETE: () => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
@@ -39,6 +40,7 @@ interface Action {
   setShowModal: () => void;
   setOnChangeSubGroup: (obj: ChangeObject) => void;
   setOnChangeStakeholder: (obj: ChangeObject) => void;
+  setOnChangeSubStakeholder: (obj: ChangeObject) => void;
   setOnChangeCells: (obj: ChangeObject) => void;
   setCellID: (cellID: CellID) => void;
   setClientID: (id: number) => void;
@@ -49,7 +51,7 @@ interface Action {
 export const useStore = create<State & Action>()(
   devtools((set) => ({
     SubStakeholder: subStakeholderList,
-    setSubStakeholder: (data: any) => set((state) => ({ SubStakeholder: [...state.SubStakeholder, data] })),
+    setSubStakeholder: (data: SubStakeholder) => set((state) => ({ SubStakeholder: [...state.SubStakeholder, data] })),
     DELETE: false,
     SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
     title: '',
@@ -62,6 +64,8 @@ export const useStore = create<State & Action>()(
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
     onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
     setOnChangeSubGroup: (obj: ChangeObject) => set(() => ({ onChangeSubGroup: obj })),
+    onChangeSubStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
+    setOnChangeSubStakeholder: (obj: ChangeObject) => set(() => ({ onChangeSubStakeholder: obj })),
     onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
     setOnChangeStakeholder: (obj: ChangeObject) => set(() => ({ onChangeStakeholder: obj })),
     onChangeCells: { mode: HttpAction.DEFAULT, ID: 0 },

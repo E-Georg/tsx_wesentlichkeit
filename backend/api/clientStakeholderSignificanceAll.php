@@ -78,9 +78,14 @@ if( count( $clientSubGroups ) > 0 ) {
                     $query = 'SELECT * FROM `wa_clientStakeholderSignificanceText` WHERE active = 1 AND clientStakeholderSignificanceId = :clientStakeholderSignificanceId';
                     $clientStakeholderSignificanceText = dbSelect($db, $query, $cols);
         
-                    $jsonArray[ $pointer ][ "message" ][ 'title' ] = $clientStakeholderSignificanceText[ 0 ][ 'title' ];
-                    $jsonArray[ $pointer ][ "message" ][ 'text' ] = $clientStakeholderSignificanceText[ 0 ][ 'text' ];
-                    $jsonArray[ $pointer ][ "message" ][ 'editDate' ] = $clientStakeholderSignificanceText[ 0 ][ 'editDate' ];
+                    $pointer2 = 0;
+                    foreach ($clientStakeholderSignificanceText as $client)
+                    {     
+                        $jsonArray[ $pointer ][ "message" ][ 'title' ] = $clientStakeholderSignificanceText[ $pointer2 ][ 'title' ];
+                        $jsonArray[ $pointer ][ "message" ][ 'text' ] = $clientStakeholderSignificanceText[ $pointer2 ][ 'text' ];
+                        $jsonArray[ $pointer ][ "message" ][ 'editDate' ] = $clientStakeholderSignificanceText[$pointer2 ][ 'editDate' ];
+                        $pointer2++;
+                    }
                     $pointer++;
                 }
             }
