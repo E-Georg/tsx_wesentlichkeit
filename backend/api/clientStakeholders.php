@@ -24,7 +24,7 @@ if( isset( $param->action ) )
 else
     $action = 'r';
 
-switch ( $action ) {
+switch ( $action ) { 
 
     case "r":                                                                                                                                       // read
         $clientId = $param->clientId;
@@ -38,7 +38,7 @@ switch ( $action ) {
             $pointer = 0;
             foreach( $clientStakeholders as $clientStakeholder ) {
                 $jsonArray[ $pointer ][ 'id' ] = $clientStakeholder[ 'id' ];
-                $jsonArray[ $pointer ][ 'text' ] = $clientStakeholder[ 'text' ];
+                $jsonArray[ $pointer ][ 'title' ] = $clientStakeholder[ 'text' ];
                 $jsonArray[ $pointer ][ 'description' ] = $clientStakeholder[ 'description' ];
                 $jsonArray[ $pointer ][ 'classification' ] = $clientStakeholder[ 'classification' ];
                 $pointer++;
@@ -127,7 +127,9 @@ switch ( $action ) {
         $jsonArray[ 'errorNo' ] = 2;
         $jsonArray[ 'errorMessage' ] = 'unbekannte Aktion';
     }        
-      
+    
+
+
     echo json_encode( $jsonArray );
 
 ?>

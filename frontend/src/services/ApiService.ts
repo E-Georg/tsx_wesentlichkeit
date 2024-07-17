@@ -2,7 +2,8 @@ import axios from 'axios';
 import { Cell, ClientTypes, Stakeholder, SubGroup } from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
 
-const API = 'http://192.168.20.53/wa/api/';
+const API_ = 'http://192.168.20.53/wa/api/';
+const API = 'http://localhost/wesentlichkeit/backend/api/';
 const phpExtension = '.php?param=';
 
 // ========================================== REACT QUERY DATA ==========================================================
