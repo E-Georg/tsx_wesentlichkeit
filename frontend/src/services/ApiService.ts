@@ -1,14 +1,22 @@
-import axios from 'axios';
-import { Cell, ClientTypes, Stakeholder, SubGroup } from '../components/Models/data.interfaces';
-import { axiosInstance } from './Axios';
+import axios from "axios";
+import {
+  Cell,
+  ClientTypes,
+  Stakeholder,
+  SubGroup,
+} from "../components/Models/data.interfaces";
+import { axiosInstance } from "./Axios";
 
-// const API_ = 'http://192.168.20.53/wa/api/';
-const API = 'http://localhost/wesentlichkeit/backend/api/';
-const phpExtension = '.php?param=';
+const API = "http://192.168.20.53/wa/api/";
+// const API = 'http://localhost/wesentlichkeit/backend/api/';
+const phpExtension = ".php?param=";
 
 // ========================================== REACT QUERY DATA ==========================================================
 // [GET]
-export const fetchCellsQuery = async (ClientID: number, GroupID: number): Promise<Cell[]> => {
+export const fetchCellsQuery = async (
+  ClientID: number,
+  GroupID: number
+): Promise<Cell[]> => {
   let url = `${ClientTypes.Cells}${phpExtension}{ "action":"r", "clientId":${ClientID}, "groupId":${GroupID} }`;
 
   try {
@@ -16,7 +24,7 @@ export const fetchCellsQuery = async (ClientID: number, GroupID: number): Promis
 
     if (response.status === 200) return response.data;
   } catch (error) {
-    console.error('Error fetching stakeholders:', error);
+    console.error("Error fetching stakeholders:", error);
   }
 
   return [];
@@ -47,7 +55,9 @@ export const fetchDataQuery = async (
 };
 
 // [POST]
-export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]> => {
+export const UpdateCellsToDatabaseQuery = async ({
+  cell,
+}: any): Promise<Cell[]> => {
   const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.text}"}`;
   console.log(url);
   try {
@@ -109,7 +119,10 @@ export const AddDataToDataBaseQuery = async ({
 };
 
 // [PUT]
-export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
+export const AddCellToDataBaseQuery = async ({
+  cell,
+  ClientID,
+}: any): Promise<Cell[]> => {
   let url = `${API}${ClientTypes.Cell}${phpExtension}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
   console.log(url);
   try {
@@ -123,10 +136,12 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
 };
 
 // [DELETE]
-export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> => {
+export const DeleteCellFromDatabaseQuery = async ({
+  ID,
+}: any): Promise<Cell[]> => {
   const url = `${API}${ClientTypes.Cell}${phpExtension}{"action":"d", "clientStakeholderSignificanceId":${ID}}`;
   console.log(url);
-  console.log('DRINNEN');
+  console.log("DRINNEN");
   try {
     const response = await axios.delete(url);
     if (response.status === 200) return response.data;
