@@ -51,7 +51,7 @@ switch ( $action ) {
             $clientStakeholderSignificanceText = dbSelect($db, $query, $cols);
 
             $jsonArray[ "message" ][ 'title' ] = $clientStakeholderSignificanceText[ 0 ][ 'title' ];
-            $jsonArray[ "message" ][ 'text' ] = $clientStakeholderSignificanceText[ 0 ][ 'text' ];
+            $jsonArray[ "message" ][ 'text' ] = "haus";//$clientStakeholderSignificanceText[ 0 ][ 'text' ];
             $jsonArray[ "message" ][ 'editDate' ] = $clientStakeholderSignificanceText[ 0 ][ 'editDate' ];
         }
         else {

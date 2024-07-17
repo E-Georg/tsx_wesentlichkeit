@@ -38,7 +38,7 @@ switch ( $action ) {
             $pointer = 0;
             foreach( $clientSubGroups as $clientSubGroup ) {
                 $jsonArray[ $pointer ][ 'id' ] = $clientSubGroup[ 'id' ];
-                $jsonArray[ $pointer ][ 'title' ] = $clientSubGroup[ 'text' ];
+                $jsonArray[ $pointer ][ 'title' ] = $clientSubGroup[ 'title' ];
                 $jsonArray[ $pointer ][ 'description' ] = $clientSubGroup[ 'description' ];
                 $pointer++;
             }

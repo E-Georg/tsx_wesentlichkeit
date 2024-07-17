@@ -20,12 +20,20 @@ export interface SubGroup {
   title: string;
   description: string;
 }
+export interface SubStakeholder {
+  id: number;
+  name: string;
+  email: string;
+  stakeholderId: number;
+  stakeholderName?: string;
+}
 
 export enum ClientTypes {
   Stakeholders = 'clientStakeholders',
   SubGroups = 'clientSubGroups',
   Cells = 'clientStakeholderSignificanceAll',
   Cell = 'clientStakeholderSignificance',
+  SubStakeholder = 'clientSubStakeholders',
 }
 
 export enum HttpAction {

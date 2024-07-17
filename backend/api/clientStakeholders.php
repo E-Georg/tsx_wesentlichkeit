@@ -38,7 +38,7 @@ switch ( $action ) {
             $pointer = 0;
             foreach( $clientStakeholders as $clientStakeholder ) {
                 $jsonArray[ $pointer ][ 'id' ] = $clientStakeholder[ 'id' ];
-                $jsonArray[ $pointer ][ 'title' ] = $clientStakeholder[ 'text' ];
+                $jsonArray[ $pointer ][ 'title' ] = $clientStakeholder[ 'title' ];
                 $jsonArray[ $pointer ][ 'description' ] = $clientStakeholder[ 'description' ];
                 $jsonArray[ $pointer ][ 'classification' ] = $clientStakeholder[ 'classification' ];
                 $pointer++;

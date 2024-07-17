@@ -1,4 +1,4 @@
-import { Cell, SubGroup, Stakeholder } from '../components/Models/data.interfaces';
+import { Cell, SubGroup, Stakeholder, SubStakeholder } from '../components/Models/data.interfaces';
 
 export const Zellen: Cell[] = [
   {
@@ -33,10 +33,10 @@ export const initialColumns: Stakeholder[] = [
   // Add more columns as needed
 ];
 
-export const subStakeholderList: any[] = [
-  { id: 1, name: 'Daimler', email: 'info@daimler.com', stakeholder: 'Verbände' },
-  { id: 2, name: 'Mahle', email: 'info@mahle.com', stakeholder: 'Verbände' },
-  { id: 3, name: 'E.Infra', email: 'info@e-infra.com', stakeholder: 'Verbände' },
-  { id: 4, name: 'Bosch', email: 'info@bosch.com', stakeholder: 'Verbände' },
-  { id: 5, name: 'Porsche', email: 'info@porsche.com', stakeholder: 'Verbände' },
+export const subStakeholderList: SubStakeholder[] = [
+  { id: 1, name: 'Daimler', email: 'info@daimler.com', stakeholderId: 17 },
+  { id: 2, name: 'Mahle', email: 'info@mahle.com', stakeholderId: 21 },
+  { id: 3, name: 'E.Infra', email: 'info@e-infra.com', stakeholderId: 21 },
+  { id: 4, name: 'Bosch', email: 'info@bosch.com', stakeholderId: 17 },
+  { id: 5, name: 'Porsche', email: 'info@porsche.com', stakeholderId: 17 },
 ];
