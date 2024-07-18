@@ -1,6 +1,6 @@
-import { MutationFunction } from "@tanstack/react-query";
-import { CellID, ChangeObject } from "../../store";
-import { ClientTypes, HttpAction } from "../Models/data.interfaces";
+import { MutationFunction } from '@tanstack/react-query';
+import { CellID, ChangeObject, messageValue } from '../../store';
+import { ClientTypes, HttpAction } from '../Models/data.interfaces';
 
 export const SubgroupFunction = async (
   deleteSubGroupMutation: MutationFunction,
@@ -90,15 +90,14 @@ export const CellFunction = async (
   updateCellsMutation: MutationFunction,
   addCellsMutation: MutationFunction,
   onChangeCells: ChangeObject,
-  title: string,
-  description: string,
+  messageValue: messageValue[],
   cellID: CellID
 ) => {
   if (onChangeCells.mode === HttpAction.DELETE) {
     await deleteCellsMutation({ ID: cellID.cellID });
   } else if (onChangeCells.mode === HttpAction.UPDATE) {
     await updateCellsMutation({
-      cell: { id: cellID.cellID, message: { title: title, text: description } },
+      cell: { id: cellID.cellID, message: messageValue },
     });
   } else if (onChangeCells.mode === HttpAction.POST) {
     await addCellsMutation({
@@ -106,7 +105,7 @@ export const CellFunction = async (
         id: cellID.cellID,
         clientSubGroupId: cellID.rowID,
         clientStakeholderId: cellID.coolumnID,
-        message: { title: title, text: description },
+        message: messageValue,
       },
     });
   }

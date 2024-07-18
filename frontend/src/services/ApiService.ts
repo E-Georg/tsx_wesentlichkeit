@@ -64,10 +64,17 @@ export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> 
 
 // [POST]
 export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]> => {
-  const url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{"action":"e","clientStakeholderSignificanceId":${cell.id}, "title":"${cell.message.title}","text":"${cell.message.text}"}`;
-  console.log(url);
+  const url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{"action":"e","clientStakeholderSignificanceId":${cell.id}}`;
+
+  const data = {
+    action: 'e',
+    clientStakeholderSignificanceId: cell.id,
+    messages: cell.message,
+  };
+
   try {
-    const response = await axios.put(url);
+    const response = await axios.put(url, data);
+    console.log(response);
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -158,9 +165,20 @@ export const AddDataToDataBaseQuery = async ({
 
 // [PUT]
 export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
-  let url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{ "action":"i","clientId":${ClientID}, "clientSubGroupId":${cell.clientSubGroupId}, "clientStakeholderId":${cell.clientStakeholderId},"title":"${cell.message.title}", "text":"${cell.message.text}"}`;
+  let url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}`;
+
+  const data = {
+    action: 'i',
+    clientId: ClientID,
+    clientSubGroupId: cell.clientSubGroupId,
+    clientStakeholderId: cell.clientStakeholderId,
+    messages: cell.message,
+  };
+
+  console.log(cell.message);
+
   try {
-    const response = await axios.post(url);
+    const response = await axios.post(url, data);
     if (response.status === 2000) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -169,7 +187,7 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
 };
 
 // [DELETE]
-export const DeleteSubStakeholderFromDatabaseQuery = async (ID: any) => {
+export const DeleteSubStakeholderFromDatabaseQuery = async (ID: number) => {
   const url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"d", "clientSubStakeholderId":${ID}}`;
   try {
     const response = await axios.delete(url);
@@ -181,10 +199,15 @@ export const DeleteSubStakeholderFromDatabaseQuery = async (ID: any) => {
 };
 
 // [DELETE]
-export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> => {
+export const DeleteCellFromDatabaseQuery = async ({ ID }: { ID: number }): Promise<Cell[]> => {
   const url = `${API_URL}${ClientTypes.Cell}${PHP_EXTENSION}{"action":"d", "clientStakeholderSignificanceId":${ID}}`;
+  const data = {
+    action: 'd',
+    clientStakeholderSignificanceId: ID,
+  };
+  console.log(data);
   try {
-    const response = await axios.delete(url);
+    const response = await axios.delete(url, { data });
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -196,7 +219,10 @@ export const DeleteCellFromDatabaseQuery = async ({ ID }: any): Promise<Cell[]> 
 export const DeleteDataFromDatabaseQuery = async ({
   matrixObject,
   typeParameter,
-}: any): Promise<Stakeholder[] | SubGroup[]> => {
+}: {
+  matrixObject: any;
+  typeParameter: ClientTypes;
+}): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
 
   if (typeParameter === ClientTypes.Stakeholders) {

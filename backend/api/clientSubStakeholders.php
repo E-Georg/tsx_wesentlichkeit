@@ -134,5 +134,3 @@ switch ( $action ) {
 
 
     echo json_encode( $jsonArray );
-
-?>

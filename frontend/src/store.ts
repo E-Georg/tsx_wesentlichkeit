@@ -14,10 +14,16 @@ export type ChangeObject = {
   mode: HttpAction;
   ID: number;
 };
+
+export type messageValue = {
+  title: string;
+  text: string;
+};
 interface State {
   DELETE: boolean;
   title: string;
   description: string;
+  messageValue: messageValue[];
   classification: number;
   showModal: boolean;
   onChangeSubGroup: ChangeObject;
@@ -33,6 +39,8 @@ interface Action {
   SetDELETE: () => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
+  setMessageValue: (value: messageValue) => void;
+  setMessageValueByIndex: (index: number, value: messageValue) => void;
   setClassification: (num: number) => void;
   setShowModal: () => void;
   setOnChangeSubGroup: (obj: ChangeObject) => void;
@@ -53,6 +61,28 @@ export const useStore = create<State & Action>()(
     setTitle: (title: string) => set(() => ({ title: title })),
     description: '',
     setDescription: (text: string) => set(() => ({ description: text })),
+
+    messageValue: [{ title: '', text: '' }],
+    setMessageValue: (value: messageValue) => set((state) => ({ messageValue: [...state.messageValue, value] })),
+    // setMessageValueByIndex: (index: number, value: messageValue) =>
+    //   set((state) => ({
+    //     messageValue: state.messageValue.map((msg, i) =>
+    //       i === index ? { ...msg, title: value.title, text: value.text } : msg
+    //     ),
+    //   })),
+    setMessageValueByIndex: (index: number, value: messageValue) =>
+      set((state) => {
+        const newMessageValue = [...state.messageValue];
+
+        while (newMessageValue.length <= index) {
+          newMessageValue.push({ title: '', text: '' });
+        }
+
+        newMessageValue[index] = { ...newMessageValue[index], title: value.title, text: value.text };
+
+        return { messageValue: newMessageValue };
+      }),
+
     classification: 0,
     setClassification: (num: number) => set(() => ({ classification: num })),
     showModal: false,
@@ -73,9 +103,11 @@ export const useStore = create<State & Action>()(
         description: '',
         classification: 0,
         showModal: false,
+        textsCell: [''],
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
         onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
+        messageValue: [{ title: '', text: '' }],
       })),
     ClientID: 2,
     GroupID: 1,

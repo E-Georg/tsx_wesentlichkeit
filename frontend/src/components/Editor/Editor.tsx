@@ -1,15 +1,21 @@
-import { useState } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { ClassicEditor } from "ckeditor5";
+import { useState } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { ClassicEditor } from 'ckeditor5';
 
-import "ckeditor5/ckeditor5.css";
-import "./Editor.css";
-import { useEffect } from "react";
-import { useStore } from "../../store";
-import { editorConfig } from "./configEditor";
+import 'ckeditor5/ckeditor5.css';
+import './Editor.css';
+import { useEffect } from 'react';
+import { editorConfig } from './configEditor';
+import { messageValue } from '../../store';
 
-const Editor = () => {
-  const { description, setDescription } = useStore();
+type Props = {
+  text: string;
+  setMessageValueByIndex: (index: number, value: messageValue) => void;
+  index: number;
+  messageValue: messageValue;
+};
+
+const Editor = ({ text, setMessageValueByIndex, index, messageValue }: Props) => {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
@@ -22,8 +28,8 @@ const Editor = () => {
     <>
       {isLayoutReady && (
         <CKEditor
-          onChange={(_, editor) => setDescription(editor.getData())}
-          data={description}
+          onChange={(_, editor) => setMessageValueByIndex(index, { title: messageValue.title, text: editor.getData() })}
+          data={text}
           editor={ClassicEditor}
           config={editorConfig}
         />

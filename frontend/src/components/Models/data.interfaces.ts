@@ -9,10 +9,12 @@ export interface Cell {
   clientStakeholderId: number;
   clientSubGroupId: number;
   id: number;
-  message: {
-    title: string;
-    text: string;
-  };
+  message: [
+    {
+      title: string;
+      text: string;
+    }
+  ];
 }
 
 export interface SubGroup {

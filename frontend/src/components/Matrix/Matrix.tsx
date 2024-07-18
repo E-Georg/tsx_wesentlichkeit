@@ -23,6 +23,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     setClassification,
     DELETE,
     SetDELETE,
+    setMessageValueByIndex,
   } = useStore();
   const [selectedOption, setSelectedOption] = useState(options[0].value);
   const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
@@ -175,6 +176,11 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                             coolumnID: column.id,
                             cellID: idOfCell,
                           });
+                          console.log({
+                            rowID: row.id,
+                            coolumnID: column.id,
+                            cellID: idOfCell,
+                          });
 
                           if (!foundCell) {
                             setShowModal();
@@ -183,9 +189,15 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                               ID: idOfCell,
                             });
                           } else {
-                            setTitle(foundCell.message.title);
-                            setDescription(foundCell.message.text);
-                            setClassification(column.classification!!);
+                            // iterate and fill the whole object
+                            foundCell.message.forEach((_, index: any) => {
+                              console.log(index);
+                              console.log(foundCell.message);
+                              setMessageValueByIndex(index, {
+                                title: foundCell.message[index].title,
+                                text: foundCell.message[index].text,
+                              });
+                            });
                             setShowModal();
                             // TEMPORÄR
                             if (DELETE)
@@ -203,7 +215,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       >
                         {cells &&
                           cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                            ?.message.title.length}
+                            ?.message?.length}
                       </td>
                     ))}
                 </tr>

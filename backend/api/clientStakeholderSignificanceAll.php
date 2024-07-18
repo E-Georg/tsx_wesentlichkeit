@@ -68,24 +68,24 @@ if( count( $clientSubGroups ) > 0 ) {
             $clientStakeholderSignificance = dbSelect($db, $query, $cols);
 
             if( count( $clientStakeholderSignificance ) > 0 ) {
-
                 foreach( $clientStakeholderSignificance as $clientStakeholderSignificanceItem ) {
                     $jsonArray[ $pointer ][ 'clientSubGroupId' ] = $clientSubGroup[ 'id' ];
                     $jsonArray[ $pointer ][ 'clientStakeholderId' ] = $clientStakeholder[ 'id' ];
                     $jsonArray[ $pointer ][ 'id' ] = $clientStakeholderSignificanceItem[ 'id' ];
-
+            
                     $cols = array('clientStakeholderSignificanceId' => $clientStakeholderSignificanceItem[ 'id' ] );
                     $query = 'SELECT * FROM `wa_clientStakeholderSignificanceText` WHERE active = 1 AND clientStakeholderSignificanceId = :clientStakeholderSignificanceId';
                     $clientStakeholderSignificanceText = dbSelect($db, $query, $cols);
-        
-                    $pointer2 = 0;
-                    foreach ($clientStakeholderSignificanceText as $client)
-                    {     
-                        $jsonArray[ $pointer ][ "message" ][ 'title' ] = $clientStakeholderSignificanceText[ $pointer2 ][ 'title' ];
-                        $jsonArray[ $pointer ][ "message" ][ 'text' ] = $clientStakeholderSignificanceText[ $pointer2 ][ 'text' ];
-                        $jsonArray[ $pointer ][ "message" ][ 'editDate' ] = $clientStakeholderSignificanceText[$pointer2 ][ 'editDate' ];
-                        $pointer2++;
+            
+                    $messages = []; // Temporäres Array für Nachrichten
+                    foreach ($clientStakeholderSignificanceText as $client) {     
+                        $messages[] = [
+                            'title' => $client[ 'title' ],
+                            'text' => $client[ 'text' ],
+                            'editDate' => $client[ 'editDate' ]
+                        ];
                     }
+                    $jsonArray[ $pointer ][ "message" ] = $messages; // Zuweisen des temporären Arrays zum Hauptarray
                     $pointer++;
                 }
             }
@@ -94,6 +94,7 @@ if( count( $clientSubGroups ) > 0 ) {
     }
 }
 
+
 echo json_encode( $jsonArray );
 
-?>
+

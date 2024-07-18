@@ -11,7 +11,7 @@ import useSubStakeholderData from '../Queries/useSubStakeholder';
 // 3. states alle hier lassen
 // 4. ein button für delete / update
 
-const StakeholderList = () => {
+const SubStakeholderList = () => {
   // GET Stakeholder from query
   const { Stakeholder, isLoadingStack } = useStakeholderData();
   const {
@@ -63,9 +63,9 @@ const StakeholderList = () => {
 
   const updateDataOrDelete = async () => {
     // Update logic
-    if (onChangeSubStakeholder.mode === HttpAction.DELETE) {
+    if (DELETE) {
       await deleteSubStakeholderMutation(newStakeholder.id);
-    } else if (onChangeSubStakeholder.mode === HttpAction.POST) {
+    } else {
       await updateStakeholderMutation({
         newStakeholder: {
           id: newStakeholder.id,
@@ -178,4 +178,4 @@ const StakeholderList = () => {
   );
 };
 
-export default StakeholderList;
+export default SubStakeholderList;
