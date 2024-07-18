@@ -13,9 +13,9 @@ $password = "georg";
 $database = "device-manager";
 */
 
-$servername = "192.168.20.53";
-$username = "root";
-$password = "dl3sdn";
+$servername = "192.168.20.61";
+$username = "team";
+$password = "sifi";
 $database = "quickcheck";
 
 
@@ -30,9 +30,3 @@ echo "Verbindung erfolgreich";
 
 // Verbindung schließen (optional)
 $conn->close();
-
-
-?>
-
-
-xxx

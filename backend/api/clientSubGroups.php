@@ -53,7 +53,7 @@ switch ( $action ) {
     case "i":                                                                                                                                       // insert
         $clientId = $param->clientId;
         $groupId = $param->groupId;
-        $text = $param->text;
+        $title = $param->title;
         $description = $param->description;
 
         $cols = array('groupId' => $groupId, 'clientId' => $clientId);
@@ -64,7 +64,7 @@ switch ( $action ) {
         $cols = array();
         $cols[ 'groupId' ] = $groupId;
         $cols[ 'clientId' ] = $clientId;
-        $cols[ 'text' ] = $text;
+        $cols[ 'title' ] = $title;
         $cols[ 'description' ] = $description;
         $cols[ 'sort' ] = $lastSort + 10; 
         $cols[ 'active' ] = 1;
@@ -98,7 +98,7 @@ switch ( $action ) {
             $clientSubGroupId = $param->clientSubGroupId;
             $clientId = $param->clientId;
             $groupId = $param->groupId;
-            $text = $param->text;
+            $title = $param->title;
             $description = $param->description;
                 
             $cols = array('id' => $clientSubGroupId );
@@ -110,10 +110,10 @@ switch ( $action ) {
                 $cols = array();
                 $cols[ 'clientId' ] = $clientId;
                 $cols[ 'groupId' ] = $groupId;
-                $cols[ 'text' ] = $text;
+                $cols[ 'title' ] = $title;
                 $cols[ 'description' ] = $description;
                 
-                $query = 'update `wa_clientSubGroups` set clientId = :clientId, groupId = :groupId, text = :text, description = :description where id = ' . $clientSubGroupId; 
+                $query = 'update `wa_clientSubGroups` set clientId = :clientId, groupId = :groupId, title = :title, description = :description where id = ' . $clientSubGroupId; 
                 dbSelect( $db, $query, $cols );
                 
                 $jsonArray[ 'return' ] = 1;   
@@ -133,4 +133,3 @@ switch ( $action ) {
       
     echo json_encode( $jsonArray );
 
-?>

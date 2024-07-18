@@ -53,7 +53,7 @@ switch ( $action ) {
 
     case "i":                                                                                                                                       // insert
         $clientId = $param->clientId;
-        $text = $param->text;
+        $title = $param->title;
         $description = $param->description;
         $classification = $param->classification;
 
@@ -64,7 +64,7 @@ switch ( $action ) {
 
         $cols = array();
         $cols[ 'clientId' ] = $clientId;
-        $cols[ 'text' ] = $text;
+        $cols[ 'title' ] = $title;
         $cols[ 'description' ] = $description;
         $cols[ 'classification' ] = $classification;
         $cols[ 'sort' ] = $lastSort + 10; 
@@ -96,7 +96,7 @@ switch ( $action ) {
         
     case "e":                                                                                                                                           // edit
             $clientStakeholderId = $param->clientStakeholderId;
-            $text = $param->text;
+            $title = $param->title;
             $description = $param->description;
             $classification = $param->classification;
                 
@@ -107,7 +107,7 @@ switch ( $action ) {
             $jsonArray = array();
             if( count(  $clientStakeholders ) > 0 ) {
                 $cols = array();
-                $cols[ 'text' ] = $text;
+                $cols[ 'title' ] = $title;
                 $cols[ 'description' ] = $description;
                 $cols[ 'classification' ] = $classification;
                 $cols[ 'active' ] = 1;
@@ -132,4 +132,3 @@ switch ( $action ) {
 
     echo json_encode( $jsonArray );
 
-?>

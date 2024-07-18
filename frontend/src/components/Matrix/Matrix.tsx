@@ -14,17 +14,8 @@ interface Props {
 }
 
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
-  const {
-    setShowModal,
-    setCellID,
-    setOnChangeSubGroup,
-    setOnChangeStakeholder,
-    setOnChangeCells,
-    setClassification,
-    DELETE,
-    SetDELETE,
-    setMessageValueByIndex,
-  } = useStore();
+  const { setShowModal, setCellID, setOnChangeSubGroup, setOnChangeStakeholder, setOnChangeCells, setClassification, DELETE, SetDELETE, setMessageValueByIndex } =
+    useStore();
   const [selectedOption, setSelectedOption] = useState(options[0].value);
   const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
 
@@ -167,9 +158,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       <td
                         key={column.id + row.id}
                         onClick={() => {
-                          const foundCell: Cell | undefined = cells.find(
-                            (c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id
-                          );
+                          const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id);
                           const idOfCell = foundCell === undefined ? 0 : foundCell.id;
                           setCellID({
                             rowID: row.id,
@@ -213,9 +202,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                           }
                         }}
                       >
-                        {cells &&
-                          cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)
-                            ?.message?.length}
+                        {cells && cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)?.message?.length}
                       </td>
                     ))}
                 </tr>

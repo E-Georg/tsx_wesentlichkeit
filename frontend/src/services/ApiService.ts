@@ -21,11 +21,7 @@ export const fetchCellsQuery = async (ClientID: number, GroupID: number): Promis
   return [];
 };
 // [GET]
-export const fetchDataQuery = async (
-  typeParameter: string,
-  ClientID: number,
-  GroupID?: number
-): Promise<Stakeholder[] | SubGroup[]> => {
+export const fetchDataQuery = async (typeParameter: string, ClientID: number, GroupID?: number): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
 
   if (GroupID === undefined) {
@@ -83,21 +79,17 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
 };
 
 // [POST]
-export const UpdateDataToDatabaseQuery = async ({
-  matrixObject,
-  typeParameter,
-  ClientID,
-  GroupID = undefined,
-}: any): Promise<Stakeholder[] | SubGroup[]> => {
+export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
   if (typeParameter === ClientTypes.Stakeholders) {
-    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${matrixObject.id}, "title":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
   } else {
-    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "text":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "title":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
   }
   console.log(url);
   try {
     const response = await axios.put(url);
+    console.log(response);
     if (response.status === 200) return matrixObject;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -114,6 +106,7 @@ export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: an
   console.log(url);
   try {
     const response = await axios.put(url);
+    console.log(response);
     if (response.status === 200) return newStakeholder;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -137,18 +130,14 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
 };
 
 // [PUT]
-export const AddDataToDataBaseQuery = async ({
-  matrixObject,
-  typeParameter,
-  ClientID,
-  GroupID = undefined,
-}: any): Promise<Stakeholder[] | SubGroup[]> => {
+export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   let url;
+  console.log(matrixObject);
 
   if (GroupID === undefined) {
-    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"i","clientId":${ClientID},"text":"${matrixObject.title}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"i","clientId":${ClientID},"title":"${matrixObject.title}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
   } else {
-    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "text":"${matrixObject.title}", "description":"${matrixObject.description}" } `;
+    url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "title":"${matrixObject.title}", "description":"${matrixObject.description}" } `;
   }
   console.log(url);
   try {
