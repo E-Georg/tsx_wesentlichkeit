@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import { options } from '../../utils/constants';
 import { useEffect, useState } from 'react';
 import './Martix.css';
+import useSubStakeholderData from '../Queries/useSubStakeholder';
 
 interface Props {
   rows: SubGroup[];
@@ -18,6 +19,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     useStore();
   const [selectedOption, setSelectedOption] = useState(options[0].value);
   const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
+  const { SubStakeholder, isLoadingStack } = useSubStakeholderData();
+  if (isLoadingStack) <div> Loading...</div>;
 
   useEffect(() => {
     setCopyColums(columns);
@@ -31,7 +34,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     }
   }, [columns]);
 
-  // TODO: Adis
+  // TODO:
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
     setSelectedOption(value);
@@ -124,6 +127,14 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       }}
                       key={column.id}
                     >
+                      {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length !== 0 && (
+                        <>
+                          Stakeholderanzahl:&nbsp;
+                          {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length}
+                          <br />
+                        </>
+                      )}
+
                       {column.title}
                     </th>
                   ))}
