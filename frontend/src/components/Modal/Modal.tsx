@@ -42,12 +42,10 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
-      console.log(description);
       SubgroupFunction(deleteSubGroupMutation, updateSubGroupMutation, addSubGroupMutation, onChangeSubGroup, title, description);
     }
     //==========================================================STAKEHOLDER========================================================================
     if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {
-      console.log(description);
       StakeholderFunction(deleteStakeholderMutation, updateStakeholderMutation, addStakeholderMutation, onChangeStakeholder, title, description, classification);
     }
 

@@ -14,12 +14,7 @@ import useSubStakeholderData from '../Queries/useSubStakeholder';
 const SubStakeholderList = () => {
   // GET Stakeholder from query
   const { Stakeholder, isLoadingStack } = useStakeholderData();
-  const {
-    SubStakeholder: SubStakeholderQuery,
-    addSubStakeholderMutation,
-    deleteSubStakeholderMutation,
-    updateStakeholderMutation,
-  } = useSubStakeholderData();
+  const { SubStakeholder: SubStakeholderQuery, addSubStakeholderMutation, deleteSubStakeholderMutation, updateStakeholderMutation } = useSubStakeholderData();
   const { onChangeSubStakeholder, setOnChangeSubStakeholder, DELETE, SetDELETE } = useStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -159,7 +154,8 @@ const SubStakeholderList = () => {
                       email: stakeholder.email,
                       stakeholderId: stakeholder.stakeholderId,
                     });
-                    console.log(DELETE);
+                    // nur um die Button zutauschen, da DELETE in der Function abgefragt wird!
+                    // TODO: Muss überdacht werden
                     if (DELETE) setOnChangeSubStakeholder({ mode: HttpAction.DELETE, ID: stakeholder.id });
                     else setOnChangeSubStakeholder({ mode: HttpAction.POST, ID: stakeholder.id });
                   }}

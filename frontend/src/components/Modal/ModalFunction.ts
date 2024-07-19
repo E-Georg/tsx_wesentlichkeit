@@ -10,7 +10,6 @@ export const SubgroupFunction = async (
   title: string,
   description: string
 ) => {
-  console.log(onChangeSubGroup);
   // DELETE
   if (onChangeSubGroup.mode === HttpAction.DELETE) {
     await deleteSubGroupMutation({

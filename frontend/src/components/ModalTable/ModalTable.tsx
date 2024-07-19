@@ -54,7 +54,7 @@ const ModalTable = ({ title, setTitle, description, setDescription, classificati
           color: 'black',
         }}
         onBlur={() => {
-          console.log(description), isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML);
+          isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML);
         }}
       />
 

@@ -108,7 +108,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   copyColumns.map((column: Stakeholder) => (
                     <th
                       onClick={() => {
-                        console.log(column.id);
                         setDescription(column.description);
                         setTitle(column.title);
                         setClassification(column.classification!!);
@@ -191,8 +190,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                           } else {
                             // iterate and fill the whole object
                             foundCell.message.forEach((_, index: any) => {
-                              console.log(index);
-                              console.log(foundCell.message);
                               setMessageValueByIndex(index, {
                                 title: foundCell.message[index].title,
                                 text: foundCell.message[index].text,
