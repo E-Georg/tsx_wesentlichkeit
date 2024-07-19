@@ -58,7 +58,7 @@ const ModalTable = ({ title, setTitle, description, setDescription, classificati
         }}
       />
 
-      {classification && setClassification && (
+      {classification != undefined && setClassification != undefined && (
         <div>
           <select
             value={classification ?? ''}

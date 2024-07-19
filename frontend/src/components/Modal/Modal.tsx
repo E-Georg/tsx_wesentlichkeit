@@ -65,10 +65,12 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
           <h2 className="modal-title">Modal-Title</h2>
           <img src="/src/assets/close.svg" alt="close" className="close" onClick={reset} />
         </div>
-        <button onClick={() => setMessageValue({ title: '', text: '' })}>Add</button>
 
         {onChangeCells.mode !== HttpAction.DEFAULT && (
-          <ModalCells cellID={cellID} messageValue={messageValue} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
+          <>
+            <button onClick={() => setMessageValue({ title: '', text: '' })}>Add</button>
+            <ModalCells cellID={cellID} messageValue={messageValue} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
+          </>
         )}
 
         {onChangeSubGroup.mode !== HttpAction.DEFAULT && <ModalTable description={description} setDescription={setDescription} setTitle={setTitle} title={title} />}

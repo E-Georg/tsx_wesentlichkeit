@@ -17,12 +17,20 @@ require_once __DIR__ . '/../inc/all.php';
 
 $param = json_decode( $_REQUEST[ 'param' ] );
 
+
+// for JSON DATA
+$rawPostData = file_get_contents('php://input');
+$data = json_decode($rawPostData, true);
+
 $jsonArray = array();
 
 if( isset( $param->action ) )
     $action = $param->action;
+else if (json_last_error() == JSON_ERROR_NONE )
+    $action = isset($data['action']) ? $data['action'] : null;
 else
     $action = 'r';
+
 
 switch ( $action ) { 
 
@@ -44,17 +52,18 @@ switch ( $action ) {
             }
         }
         else {
-            $jsonArray = array();
             $jsonArray[ 'errorNo' ] = 1;
-            $jsonArray[ 'errorMessage' ] = 'nicht gefunden';
+            $jsonArray[ 'errorMessage' ] = "nicht gefunden";
         }       
         break;
 
     case "i":                                                                                                                                       // insert
-        $clientId = $param->clientId;
-        $groupId = $param->groupId;
-        $title = $param->title;
-        $description = $param->description;
+
+        // new, but needed
+        $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+        $groupId = isset($data['groupId']) ? $data['groupId'] : null;
+        $title = isset($data['title']) ? $data['title'] : null;
+        $description = isset($data['description']) ? $data['description'] : null;
 
         $cols = array('groupId' => $groupId, 'clientId' => $clientId);
         $query = 'SELECT id,sort FROM `wa_clientSubGroups` WHERE active = 1 AND groupId = :groupId AND clientId = :clientId order by sort DESC';
@@ -95,11 +104,19 @@ switch ( $action ) {
         
 
     case "e":                                                                                                                                         // edit
-            $clientSubGroupId = $param->clientSubGroupId;
-            $clientId = $param->clientId;
-            $groupId = $param->groupId;
-            $title = $param->title;
-            $description = $param->description;
+
+            // new, but needed
+            $clientSubGroupId =  isset($data['clientSubGroupId']) ? $data['clientSubGroupId'] : null;
+            $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+            $groupId = isset($data['groupId']) ? $data['groupId'] : null;
+            $title = isset($data['title']) ? $data['title'] : null;
+            $description = isset($data['description']) ? $data['description'] : null;
+
+            // $clientSubGroupId = $param->clientSubGroupId;
+            // $clientId = $param->clientId;
+            // $groupId = $param->groupId;
+            // $title = $param->title;
+            // $description = $param->description;
                 
             $cols = array('id' => $clientSubGroupId );
             $query = 'SELECT id FROM `wa_clientSubGroups` WHERE active = 1 AND id = :id';

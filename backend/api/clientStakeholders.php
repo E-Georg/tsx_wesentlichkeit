@@ -17,10 +17,16 @@ require_once __DIR__ . '/../inc/all.php';
 
 $param = json_decode( $_REQUEST[ 'param' ] );
 
+// for JSON DATA
+$rawPostData = file_get_contents('php://input');
+$data = json_decode($rawPostData, true);
+
 $jsonArray = array();
 
 if( isset( $param->action ) )
     $action = $param->action;
+else if (json_last_error() == JSON_ERROR_NONE )
+    $action = isset($data['action']) ? $data['action'] : null;
 else
     $action = 'r';
 
@@ -52,10 +58,18 @@ switch ( $action ) {
         break;
 
     case "i":                                                                                                                                       // insert
-        $clientId = $param->clientId;
-        $title = $param->title;
-        $description = $param->description;
-        $classification = $param->classification;
+
+        // new, but needed
+        $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+        $classification = isset($data['classification']) ? $data['classification'] : null;
+        $title = isset($data['title']) ? $data['title'] : null;
+        $description = isset($data['description']) ? $data['description'] : null;
+
+
+        // $clientId = $param->clientId;
+        // $title = $param->title;
+        // $description = $param->description;
+        // $classification = $param->classification;
 
         $cols = array('clientId' => $clientId);
         $query = 'SELECT id,sort FROM `wa_clientStakeholders` WHERE active = 1 AND clientId = :clientId order by sort DESC';
@@ -95,10 +109,16 @@ switch ( $action ) {
         break;
         
     case "e":                                                                                                                                           // edit
-            $clientStakeholderId = $param->clientStakeholderId;
-            $title = $param->title;
-            $description = $param->description;
-            $classification = $param->classification;
+            // new, but needed
+            $clientStakeholderId =  isset($data['clientStakeholderId']) ? $data['clientStakeholderId'] : null;
+            $classification = isset($data['classification']) ? $data['classification'] : null;
+            $title = isset($data['title']) ? $data['title'] : null;
+            $description = isset($data['description']) ? $data['description'] : null;
+            
+            // $clientStakeholderId = $param->clientStakeholderId;
+            // $title = $param->title;
+            // $description = $param->description;
+            // $classification = $param->classification;
                 
             $cols = array('id' => $clientStakeholderId );
             $query = 'SELECT id FROM `wa_clientStakeholders` WHERE active = 1 AND id = :id';
@@ -112,7 +132,7 @@ switch ( $action ) {
                 $cols[ 'classification' ] = $classification;
                 $cols[ 'active' ] = 1;
         
-                $query = 'update `wa_clientStakeholders` set active = :active, text = :text, description = :description, classification = :classification where id = ' . $clientStakeholderId; 
+                $query = 'update `wa_clientStakeholders` set active = :active, title = :title, description = :description, classification = :classification where id = ' . $clientStakeholderId; 
                 dbSelect( $db, $query, $cols );
                 
                 $jsonArray[ 'return' ] = 1;   
