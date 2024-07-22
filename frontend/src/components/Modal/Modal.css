@@ -19,7 +19,8 @@
   padding: 1rem;
   border: 1px solid #888;
   width: min(62rem, 90%);
-  height: min(32rem, 90%);
+  /* height: min(32rem, 90%); */
+  margin-top: 15rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;

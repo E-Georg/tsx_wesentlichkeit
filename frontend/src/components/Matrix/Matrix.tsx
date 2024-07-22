@@ -1,9 +1,10 @@
-import { Cell, HttpAction, Stakeholder, SubGroup } from '../Models/data.interfaces';
+import { Cell, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
 import { useStore } from '../../store';
-import { options } from '../../utils/constants';
+import { options, relevances } from '../../utils/constants';
 import { useEffect, useState } from 'react';
 import './Martix.css';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
+import SelectDropdown from '../SelectDropdown/SelectDropdown';
 
 interface Props {
   rows: SubGroup[];
@@ -30,24 +31,42 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
 
   const { SubStakeholder, isLoadingStack } = useSubStakeholderData();
 
-  const [selectedOption, setSelectedOption] = useState<number>(options[0].value);
+  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [selectedRelevance, setSelectedRelevance] = useState<number>(0);
   const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
 
   if (isLoadingStack) <div> Loading...</div>;
 
   useEffect(() => {
     setCopyColums(columns);
-    if (selectedOption != 0) {
-      setCopyColums(
-        columns.filter((item: Stakeholder) => {
-          if (item.classification === null) return;
-          return item.classification === selectedOption;
-        })
-      );
+    if (selectedOption !== 0) {
+      if (selectedRelevance === 0) {
+        setCopyColums(
+          columns.filter((item: Stakeholder) => {
+            if (item.classification === null) return false;
+            return item.classification === selectedOption;
+          })
+        );
+      } else {
+        setCopyColums(
+          columns.filter((item: Stakeholder) => {
+            if (item.classification === null) return false;
+            return item.classification === selectedOption && item.relevance === selectedRelevance;
+          })
+        );
+      }
+    } else {
+      if (selectedRelevance != 0) {
+        setCopyColums(
+          columns.filter((item: Stakeholder) => {
+            if (item.classification === null) return false;
+            return item.relevance === selectedRelevance;
+          })
+        );
+      }
     }
-  }, [columns]);
+  }, [columns, selectedOption, selectedRelevance]);
 
-  // TODO:
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
     setSelectedOption(value);
@@ -57,12 +76,18 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     } else {
       setCopyColums(
         columns.filter((item: Stakeholder) => {
-          if (item.classification === null) return;
+          if (item.classification === null) return false;
           return item.classification === value;
         })
       );
     }
   };
+
+  const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = Number(event.target.value);
+    setSelectedRelevance(value);
+  };
+
   return (
     <>
       <section className="hero-container">
@@ -72,13 +97,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <label className="label" htmlFor="stakeholderArt">
               Stakeholder Art auswählen:
             </label>
-            <select id="stakeholderArt" value={selectedOption} onChange={handleSelectChange}>
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <SelectDropdown options={options} value={selectedOption} onChange={handleSelectChange} placeholder="All Stakeholders" style={{ width: '200px' }} />
+            <SelectDropdown options={relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="All Relevance" style={{ width: '200px' }} />
           </div>
           <div className="checkbox-wrapper">
             <label className="label" htmlFor="setDELETE">
@@ -108,9 +128,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
               Add SubGroup
             </button>
           </div>
-        ) : (
-          <></>
-        )}
+        ) : null}
         {/* TABELLE */}
         <div className="table-container">
           <table className="table">
@@ -124,6 +142,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         onClick={() => {
                           setDescription(column.description);
                           setTitle(column.title);
+                          // console.log(column.classification);
                           setClassification(column.classification!!);
                           setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
                           // TEMPORÄR
@@ -141,16 +160,15 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         }}
                         key={column.id}
                       >
-                        {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length !== 0 && (
+                        {SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length !== 0 && (
                           <>
-                            {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length}
+                            {SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length}
                             <br />
                           </>
                         )}
-
                         {column.title}
                       </div>
-                      {/* <RoundButton priority={prio} setPriority={setPrio} /> */}
+                      {/* <RoundButton priority={rele} setPriority={setPrio} /> */}
                     </th>
                   ))}
               </tr>
@@ -205,7 +223,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                             });
                           } else {
                             // iterate and fill the whole object
-                            foundCell.message.forEach((_, index: any) => {
+                            foundCell.message.forEach((_, index: number) => {
                               setMessageValueByIndex(index, {
                                 title: foundCell.message[index].title,
                                 text: foundCell.message[index].text,

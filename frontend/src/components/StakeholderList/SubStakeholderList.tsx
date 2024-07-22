@@ -41,15 +41,13 @@ const SubStakeholderList = () => {
     console.log(newStakeholder);
 
     // post
-    let res = await addSubStakeholderMutation({
+    await addSubStakeholderMutation({
       newStakeholder: {
         name: newStakeholder.name,
         email: newStakeholder.email,
         stakeholderId: newStakeholder.stakeholderId,
       },
     });
-
-    console.log(res);
     reset();
     setError(null);
 

@@ -70,7 +70,6 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
 
   try {
     const response = await axios.put(url, data);
-    console.log(response);
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -128,7 +127,6 @@ export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, C
   console.log(url);
   try {
     const response = await axios.put(url, JSON.stringify(params));
-    console.log(response);
     if (response.status === 200) return matrixObject;
   } catch (error) {
     console.error(`Error: ${error}`);
@@ -161,7 +159,6 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
   console.log(url);
   try {
     const res = await axios.post(url);
-    console.log(res);
     if (res.status === 200) {
       const newSub = { ...newStakeholder, id: res.data.lastId };
       return newSub;
@@ -224,7 +221,6 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
   // let stringiParam = JSON.stringify(params);
   try {
     const res = await axios.post(url, JSON.stringify(params));
-    console.log(res);
     if (res.status === 200) {
       const newSub = { ...matrixObject, id: res.data.lastId };
       return newSub;
@@ -246,8 +242,6 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
     clientStakeholderId: cell.clientStakeholderId,
     messages: cell.message,
   };
-
-  console.log(cell.message);
 
   try {
     const response = await axios.post(url, data);
@@ -277,7 +271,6 @@ export const DeleteCellFromDatabaseQuery = async ({ ID }: { ID: number }): Promi
     action: 'd',
     clientStakeholderSignificanceId: ID,
   };
-  console.log(data);
   try {
     const response = await axios.delete(url, { data });
     if (response.status === 200) return response.data;

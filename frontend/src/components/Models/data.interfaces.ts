@@ -53,7 +53,7 @@ export interface Classification {
   label: string;
 }
 
-export type Prio = {
+export type Relevance = {
   value: number;
   label: string;
 };

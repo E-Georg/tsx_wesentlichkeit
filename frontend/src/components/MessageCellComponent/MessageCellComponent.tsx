@@ -3,7 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ClassicEditor } from 'ckeditor5';
 
 import 'ckeditor5/ckeditor5.css';
-import './Editor.css';
+import './MessageCellComponent.css';
 import { useEffect } from 'react';
 import { editorConfig } from './configEditor';
 import { messageValue } from '../../store';
@@ -17,7 +17,7 @@ type Props = {
   columnID: number;
 };
 
-const Editor = ({ columnID, text, setMessageValueByIndex, index, messageValue }: Props) => {
+const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, messageValue }: Props) => {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
@@ -45,4 +45,4 @@ const Editor = ({ columnID, text, setMessageValueByIndex, index, messageValue }:
   );
 };
 
-export default Editor;
+export default MessageCellComponent;

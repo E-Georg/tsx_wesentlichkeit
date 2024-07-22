@@ -25,6 +25,11 @@ export type relevance = {
   text: string;
   value: number;
 };
+
+export type Option = {
+  value: number | string;
+  label: string;
+};
 // TODO: ein state für Stakeholder/ Subgroups usw.
 
 //stakeholder : {id, title, description, classification, }

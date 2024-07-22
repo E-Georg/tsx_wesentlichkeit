@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { options, prioritys } from '../../utils/constants';
+import { options, relevances } from '../../utils/constants';
 import { relevance } from '../../store';
+import SelectDropdown from '../SelectDropdown/SelectDropdown';
 
 type Props = {
   title: string;
@@ -25,6 +26,12 @@ const ModalTable = ({
 }: Props) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
+
+  // const filteredOptions = options.filter((opt) => opt.value !== classification && opt.value !== 0);
+
+  const handleSelectChange = (e: any) => {
+    setClassification!!(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0);
+  };
 
   const handleChange = (event: any) => {
     setRelevance!!({ text: relevance?.text!!, value: Number(event.target.value) });
@@ -81,7 +88,7 @@ const ModalTable = ({
 
       {classification != undefined && setClassification != undefined && (
         <div>
-          <select
+          {/* <select
             value={classification}
             onChange={(e) => setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0)}
             style={{
@@ -103,16 +110,29 @@ const ModalTable = ({
                   {opt.label}
                 </option>
               ))}
-          </select>
+          </select> */}
+          <SelectDropdown
+            options={options}
+            value={classification}
+            onChange={handleSelectChange}
+            placeholder={undefined}
+            style={{
+              width: '100%',
+              height: '2rem',
+              marginBottom: '1rem',
+              textAlign: 'center',
+            }}
+          />
 
-          <input placeholder="Why Prio or not" value={relevance?.text} onChange={handleInputChange} />
-          <select value={relevance?.value} onChange={handleChange} aria-placeholder={'Nulli'}>
+          <input style={{ width: '30rem', height: '2rem', marginRight: '2rem' }} placeholder="Why Prio or not" value={relevance?.text} onChange={handleInputChange} />
+          {/* <select value={relevance?.value} onChange={handleChange} aria-placeholder={'Nulli'}>
             {prioritys.map((priority, index) => (
               <option key={index} value={priority.value}>
                 {priority.label}
               </option>
             ))}
-          </select>
+          </select> */}
+          <SelectDropdown options={relevances} value={relevance!.value} onChange={handleChange} placeholder={undefined} />
         </div>
       )}
     </div>

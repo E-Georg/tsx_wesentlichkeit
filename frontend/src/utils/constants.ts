@@ -1,4 +1,4 @@
-import { Classification, Prio } from '../components/Models/data.interfaces';
+import { Classification, Relevance } from '../components/Models/data.interfaces';
 
 export const DEFAULT_TITLE = 'Default Title';
 export const DEFAULT_TEXT = 'Default Text';
@@ -11,14 +11,14 @@ export const BUTTONS = {
 };
 
 export const options: Classification[] = [
-  { value: 0, label: 'All' },
+  // { value: 0, label: 'All' },
   { value: 1, label: 'Interner Stakeholder' },
   { value: 2, label: 'Externer Stakeholder' },
   { value: 3, label: 'Stiller Stakeholder' },
 ];
 
-export const prioritys: Prio[] = [
-  { value: 0, label: 'null' },
+export const relevances: Relevance[] = [
+  // { value: 0, label: 'All' },
   { value: 1, label: 'Relevant' },
   { value: 2, label: 'Unrelevant' },
 ];

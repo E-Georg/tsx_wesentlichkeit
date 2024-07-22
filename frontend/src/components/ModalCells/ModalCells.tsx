@@ -1,7 +1,7 @@
 import { Fragment } from 'react/jsx-runtime';
 import { ChangeObject, messageValue, CellID } from '../../store';
 import { HttpAction } from '../Models/data.interfaces';
-import Editor from '../Editor/Editor';
+import MessageCellComponent from '../MessageCellComponent/MessageCellComponent';
 
 type Props = {
   onChangeCells: ChangeObject;
@@ -33,7 +33,7 @@ const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByInde
             </div>
 
             {/* CKEditor */}
-            <Editor
+            <MessageCellComponent
               columnID={cellID.coolumnID}
               text={messageValue[index].text}
               setMessageValueByIndex={setMessageValueByIndex}

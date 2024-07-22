@@ -6,7 +6,6 @@ const FileUpload = () => {
   const [selectedFileData, setSelectedFileData] = useState<any>();
 
   const handleFileChange = (e: any) => {
-    console.log(e);
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFileData(e.target.files[0]);
 
