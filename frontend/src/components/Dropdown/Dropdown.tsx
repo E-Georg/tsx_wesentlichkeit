@@ -20,7 +20,8 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
     return <div>Loading...</div>;
   }
 
-  const filteredSubStakeholders = SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID);
+  const filteredSubStakeholders =
+    SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];
 
   const handleSelectChange = (event: any) => {
     setMessageValueByIndex(index, {
