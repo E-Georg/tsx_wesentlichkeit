@@ -71,6 +71,10 @@ const SubStakeholderList = () => {
       });
     }
     reset();
+    // if succes testen
+    if (location.state?.from === 'modal') {
+      navigate('/');
+    }
   };
 
   const reset = () => {

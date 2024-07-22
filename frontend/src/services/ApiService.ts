@@ -155,7 +155,7 @@ export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: an
 export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any): Promise<SubStakeholder[] | any> => {
   let url;
   console.log(newStakeholder);
-  url = `http://localhost/wesentlichkeit/backend/api/clientSubStakeholders.php?param={"action":"i", "name": "${newStakeholder.name}", "email": "${newStakeholder.email}", "stakeholderId": ${newStakeholder.stakeholderId}}`;
+  url = `${API_URL}${ClientTypes.SubStakeholder}${PHP_EXTENSION}{"action":"i", "name": "${newStakeholder.name}", "email": "${newStakeholder.email}", "stakeholderId": ${newStakeholder.stakeholderId}}`;
   console.log(url);
   try {
     const res = await axios.post(url);
