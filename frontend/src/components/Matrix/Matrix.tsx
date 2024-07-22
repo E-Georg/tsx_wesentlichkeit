@@ -66,7 +66,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         );
       }
     }
-  }, [columns, selectedRelevance, selectedOption]); //, selectedOption, selectedRelevance]);
+  }, [columns, selectedRelevance, selectedOption]);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
@@ -135,6 +135,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                           // console.log(column.classification);
                           setClassification(column.classification!!);
                           setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
+                          console.log({ text: column.relevanceText!!, value: column.relevance!! });
                           // TEMPORÄR
                           if (DELETE)
                             setOnChangeStakeholder({
@@ -150,9 +151,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         }}
                         key={column.id}
                       >
-                        {SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length !== 0 && (
+                        {SubStakeholder?.length!! >= 1 && SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length !== 0 && (
                           <>
-                            {SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length}
+                            {SubStakeholder?.length!! >= 1 && SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length}
                             <br />
                           </>
                         )}

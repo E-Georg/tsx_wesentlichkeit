@@ -114,11 +114,12 @@ const SubStakeholderList = () => {
         style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px' }}
       >
         {newStakeholder.stakeholderId === 0 && <option value={0}>Choose SubStakeholder</option>}
-        {Stakeholder?.map((stakeholder, index) => (
-          <option key={index} value={stakeholder.id}>
-            {stakeholder.title}
-          </option>
-        ))}
+        {SubStakeholderQuery?.length! >= 1 &&
+          Stakeholder?.map((stakeholder, index) => (
+            <option key={index} value={stakeholder.id}>
+              {stakeholder.title}
+            </option>
+          ))}
       </select>
 
       {onChangeSubStakeholder.mode != HttpAction.POST && onChangeSubStakeholder.mode != HttpAction.DELETE ? (
