@@ -89,7 +89,7 @@ const ModalTable = ({
             options={options}
             value={classification}
             onChange={handleSelectChange}
-            placeholder={undefined}
+            placeholder={'Choose Classification'}
             style={{
               width: '100%',
               height: '2rem',
@@ -107,7 +107,7 @@ const ModalTable = ({
             rows={1}
             cols={10}
           />
-          <SelectDropdown options={relevances} value={relevance?.value!!} onChange={handleChange} placeholder={undefined} />
+          <SelectDropdown options={relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Choose Relevance'} />
         </div>
       )}
     </div>
