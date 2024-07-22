@@ -146,27 +146,28 @@ const SubStakeholderList = () => {
               </tr>
             </thead>
             <tbody>
-              {SubStakeholderQuery?.map((stakeholder: SubStakeholder, index: number) => (
-                <tr
-                  onClick={() => {
-                    setNewStakeholder({
-                      id: stakeholder.id,
-                      name: stakeholder.name,
-                      email: stakeholder.email,
-                      stakeholderId: stakeholder.stakeholderId,
-                    });
-                    // nur um die Button zutauschen, da DELETE in der Function abgefragt wird!
-                    // TODO: Muss überdacht werden
-                    if (DELETE) setOnChangeSubStakeholder({ mode: HttpAction.DELETE, ID: stakeholder.id });
-                    else setOnChangeSubStakeholder({ mode: HttpAction.POST, ID: stakeholder.id });
-                  }}
-                  key={index}
-                >
-                  <td>{stakeholder.name}</td>
-                  <td>{stakeholder.email}</td>
-                  <td>{Stakeholder?.find((data) => data.id === stakeholder.stakeholderId)?.title}</td>
-                </tr>
-              ))}
+              {SubStakeholderQuery?.length! >= 1 &&
+                SubStakeholderQuery?.map((stakeholder: SubStakeholder, index: number) => (
+                  <tr
+                    onClick={() => {
+                      setNewStakeholder({
+                        id: stakeholder.id,
+                        name: stakeholder.name,
+                        email: stakeholder.email,
+                        stakeholderId: stakeholder.stakeholderId,
+                      });
+                      // nur um die Button zutauschen, da DELETE in der Function abgefragt wird!
+                      // TODO: Muss überdacht werden
+                      if (DELETE) setOnChangeSubStakeholder({ mode: HttpAction.DELETE, ID: stakeholder.id });
+                      else setOnChangeSubStakeholder({ mode: HttpAction.POST, ID: stakeholder.id });
+                    }}
+                    key={index}
+                  >
+                    <td>{stakeholder.name}</td>
+                    <td>{stakeholder.email}</td>
+                    <td>{Stakeholder?.find((data) => data.id === stakeholder.stakeholderId)?.title}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
