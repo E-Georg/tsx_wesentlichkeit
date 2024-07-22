@@ -17,18 +17,12 @@ const MatrixPage = () => {
     return <div>Loading...</div>;
   }
 
+  console.log(Stakeholder);
   return (
     <>
       <div className="matrixPage">
         {Cells && Stakeholder && SubGroup && (
-          <Matrix
-            rows={SubGroup}
-            columns={Stakeholder}
-            cells={Cells}
-            showAddToMatrix={true}
-            setTitle={setTitle}
-            setDescription={setDescription}
-          />
+          <Matrix rows={SubGroup} columns={Stakeholder} cells={Cells} showAddToMatrix={true} setTitle={setTitle} setDescription={setDescription} />
         )}
 
         <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />

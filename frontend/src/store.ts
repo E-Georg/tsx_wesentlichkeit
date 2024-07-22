@@ -18,8 +18,19 @@ export type ChangeObject = {
 export type messageValue = {
   title: string;
   text: string;
+  subStakeholderId: number;
 };
+
+export type relevance = {
+  text: string;
+  value: number;
+};
+// TODO: ein state für Stakeholder/ Subgroups usw.
+
+//stakeholder : {id, title, description, classification, }
+// onChangePrio({prio: number, id: number})
 interface State {
+  relevance: relevance;
   DELETE: boolean;
   title: string;
   description: string;
@@ -36,6 +47,7 @@ interface State {
 }
 
 interface Action {
+  setRelevance: (obj: relevance) => void;
   SetDELETE: () => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
@@ -55,6 +67,8 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
+    relevance: { text: '', value: 0 },
+    setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,
     SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
     title: '',
@@ -62,23 +76,17 @@ export const useStore = create<State & Action>()(
     description: '',
     setDescription: (text: string) => set(() => ({ description: text })),
 
-    messageValue: [{ title: '', text: '' }],
+    messageValue: [{ title: '', text: '', subStakeholderId: 0 }],
     setMessageValue: (value: messageValue) => set((state) => ({ messageValue: [...state.messageValue, value] })),
-    // setMessageValueByIndex: (index: number, value: messageValue) =>
-    //   set((state) => ({
-    //     messageValue: state.messageValue.map((msg, i) =>
-    //       i === index ? { ...msg, title: value.title, text: value.text } : msg
-    //     ),
-    //   })),
     setMessageValueByIndex: (index: number, value: messageValue) =>
       set((state) => {
         const newMessageValue = [...state.messageValue];
 
         while (newMessageValue.length <= index) {
-          newMessageValue.push({ title: '', text: '' });
+          newMessageValue.push({ title: '', text: '', subStakeholderId: 0 });
         }
 
-        newMessageValue[index] = { ...newMessageValue[index], title: value.title, text: value.text };
+        newMessageValue[index] = { ...newMessageValue[index], title: value.title, text: value.text, subStakeholderId: value.subStakeholderId };
 
         return { messageValue: newMessageValue };
       }),
@@ -107,7 +115,8 @@ export const useStore = create<State & Action>()(
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
         onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
-        messageValue: [{ title: '', text: '' }],
+        messageValue: [{ title: '', text: '', subStakeholderId: 0 }],
+        relevance: { text: '', value: 0 },
       })),
     ClientID: 2,
     GroupID: 1,

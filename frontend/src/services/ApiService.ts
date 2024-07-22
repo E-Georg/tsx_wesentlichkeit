@@ -97,6 +97,7 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
 //   return [];
 // };
 
+// [POST]
 export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   console.log(matrixObject);
 
@@ -108,6 +109,8 @@ export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, C
       title: matrixObject.title,
       description: matrixObject.description,
       classification: matrixObject.classification,
+      relevance: matrixObject.relevance.value,
+      relevanceText: matrixObject.relevance.text,
     };
   } else {
     params = {
@@ -153,9 +156,12 @@ export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: an
 // [PUT]
 export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any): Promise<SubStakeholder[] | any> => {
   let url;
+  console.log(newStakeholder);
   url = `http://localhost/wesentlichkeit/backend/api/clientSubStakeholders.php?param={"action":"i", "name": "${newStakeholder.name}", "email": "${newStakeholder.email}", "stakeholderId": ${newStakeholder.stakeholderId}}`;
+  console.log(url);
   try {
     const res = await axios.post(url);
+    console.log(res);
     if (res.status === 200) {
       const newSub = { ...newStakeholder, id: res.data.lastId };
       return newSub;
@@ -188,6 +194,7 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
 //   return [];
 // };
 
+// [PUT]
 export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   console.log(matrixObject);
 
@@ -199,6 +206,8 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
       title: matrixObject.title,
       description: matrixObject.description,
       classification: matrixObject.classification,
+      relevance: matrixObject.relevance.value,
+      relevanceText: matrixObject.relevance.text,
     };
   } else {
     params = {

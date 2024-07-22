@@ -82,6 +82,7 @@ if( count( $clientSubGroups ) > 0 ) {
                         $messages[] = [
                             'title' => $client[ 'title' ],
                             'text' => $client[ 'text' ],
+                            'subStakeholderId' => $client['subStakeholderId'],
                             'editDate' => $client[ 'editDate' ]
                         ];
                     }

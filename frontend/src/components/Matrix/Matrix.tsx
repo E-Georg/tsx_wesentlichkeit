@@ -15,11 +15,24 @@ interface Props {
 }
 
 const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
-  const { setShowModal, setCellID, setOnChangeSubGroup, setOnChangeStakeholder, setOnChangeCells, setClassification, DELETE, SetDELETE, setMessageValueByIndex } =
-    useStore();
-  const [selectedOption, setSelectedOption] = useState(options[0].value);
-  const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
+  const {
+    setShowModal,
+    setCellID,
+    setOnChangeSubGroup,
+    setOnChangeStakeholder,
+    setOnChangeCells,
+    setClassification,
+    DELETE,
+    SetDELETE,
+    setMessageValueByIndex,
+    setRelevance,
+  } = useStore();
+
   const { SubStakeholder, isLoadingStack } = useSubStakeholderData();
+
+  const [selectedOption, setSelectedOption] = useState<number>(options[0].value);
+  const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
+
   if (isLoadingStack) <div> Loading...</div>;
 
   useEffect(() => {
@@ -103,38 +116,41 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <table className="table">
             <thead>
               <tr>
-                <th></th>
+                <th>Stakholderanzahl: </th>
                 {columns &&
                   copyColumns.map((column: Stakeholder) => (
-                    <th
-                      onClick={() => {
-                        setDescription(column.description);
-                        setTitle(column.title);
-                        setClassification(column.classification!!);
-                        // TEMPORÄR
-                        if (DELETE)
-                          setOnChangeStakeholder({
-                            mode: HttpAction.DELETE,
-                            ID: column.id,
-                          });
-                        else
-                          setOnChangeStakeholder({
-                            mode: HttpAction.UPDATE,
-                            ID: column.id,
-                          });
-                        setShowModal();
-                      }}
-                      key={column.id}
-                    >
-                      {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length !== 0 && (
-                        <>
-                          Stakeholderanzahl:&nbsp;
-                          {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length}
-                          <br />
-                        </>
-                      )}
+                    <th key={column.id}>
+                      <div
+                        onClick={() => {
+                          setDescription(column.description);
+                          setTitle(column.title);
+                          setClassification(column.classification!!);
+                          setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
+                          // TEMPORÄR
+                          if (DELETE)
+                            setOnChangeStakeholder({
+                              mode: HttpAction.DELETE,
+                              ID: column.id,
+                            });
+                          else
+                            setOnChangeStakeholder({
+                              mode: HttpAction.UPDATE,
+                              ID: column.id,
+                            });
+                          setShowModal();
+                        }}
+                        key={column.id}
+                      >
+                        {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length !== 0 && (
+                          <>
+                            {SubStakeholder?.filter((option: any) => option.stakeholderId === column.id).length}
+                            <br />
+                          </>
+                        )}
 
-                      {column.title}
+                        {column.title}
+                      </div>
+                      {/* <RoundButton priority={prio} setPriority={setPrio} /> */}
                     </th>
                   ))}
               </tr>
@@ -193,6 +209,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                               setMessageValueByIndex(index, {
                                 title: foundCell.message[index].title,
                                 text: foundCell.message[index].text,
+                                subStakeholderId: foundCell.message[index].subStakeholderId,
                               });
                             });
                             setShowModal();

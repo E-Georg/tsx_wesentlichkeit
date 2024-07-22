@@ -1,14 +1,13 @@
 import { Fragment } from 'react/jsx-runtime';
 import { ChangeObject, messageValue, CellID } from '../../store';
 import { HttpAction } from '../Models/data.interfaces';
-import Dropdown from '../Dropdown/Dropdown';
 import Editor from '../Editor/Editor';
 
 type Props = {
   onChangeCells: ChangeObject;
   messageValue: messageValue[];
   cellID: CellID;
-  setMessageValueByIndex: (index: number, obj: { title: string; text: string }) => void;
+  setMessageValueByIndex: (index: number, obj: messageValue) => void;
 };
 
 const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByIndex }: Props) => {
@@ -19,9 +18,6 @@ const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByInde
           <Fragment key={index}>
             {/* Modal-Menu */}
             <div className="modal-menu">
-              <div key={index} className="menu-wrapper">
-                <Dropdown stakeholderID={cellID.coolumnID} />
-              </div>
               <div className="input-group">
                 <label htmlFor="cell">Cell Title:</label>
                 <input
@@ -30,7 +26,7 @@ const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByInde
                   placeholder="Enter Cell Title..."
                   value={messageValue[index].title}
                   onChange={(event) =>
-                    setMessageValueByIndex(index, { title: event.target.value, text: messageValue[index].text })
+                    setMessageValueByIndex(index, { title: event.target.value, text: messageValue[index].text, subStakeholderId: messageValue[index].subStakeholderId })
                   }
                 />
               </div>
@@ -38,6 +34,7 @@ const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByInde
 
             {/* CKEditor */}
             <Editor
+              columnID={cellID.coolumnID}
               text={messageValue[index].text}
               setMessageValueByIndex={setMessageValueByIndex}
               index={index}

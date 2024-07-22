@@ -112,6 +112,7 @@ switch ( $action ) {
                 $cols['active'] = 1;
                 $cols['title'] = $message->title;
                 $cols['text'] = $message->text;
+                $cols['subStakeholderId'] = $message->subStakeholderId;
                 $cols['editDate'] = date("Y-m-d H:i:s");
                 $lastId = dbInsert($db, 'wa_clientStakeholderSignificanceText', $cols);
             }
@@ -169,6 +170,7 @@ switch ( $action ) {
                 'active' => 1,
                 'title' => $message->title,
                 'text' => $message->text,
+                'subStakeholderId'=> $message->subStakeholderId,
                 'editDate' => date("Y-m-d H:i:s")
             );
 

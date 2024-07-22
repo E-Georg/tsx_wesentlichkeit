@@ -47,6 +47,8 @@ switch ( $action ) {
                 $jsonArray[ $pointer ][ 'title' ] = $clientStakeholder[ 'title' ];
                 $jsonArray[ $pointer ][ 'description' ] = $clientStakeholder[ 'description' ];
                 $jsonArray[ $pointer ][ 'classification' ] = $clientStakeholder[ 'classification' ];
+                $jsonArray[ $pointer ][ 'relevance' ] = $clientStakeholder[ 'relevance' ];
+                $jsonArray[ $pointer ][ 'relevanceText' ] = $clientStakeholder[ 'relevanceText' ];
                 $pointer++;
             }
         }
@@ -64,6 +66,8 @@ switch ( $action ) {
         $classification = isset($data['classification']) ? $data['classification'] : null;
         $title = isset($data['title']) ? $data['title'] : null;
         $description = isset($data['description']) ? $data['description'] : null;
+        $relevance = isset($data['relevance']) ? $data['relevance'] : null;
+        $relevanceText = isset($data['relevanceText']) ? $data['relevanceText'] : null;
 
 
         // $clientId = $param->clientId;
@@ -81,6 +85,8 @@ switch ( $action ) {
         $cols[ 'title' ] = $title;
         $cols[ 'description' ] = $description;
         $cols[ 'classification' ] = $classification;
+        $cols[ 'relevance' ] = $relevance;
+        $cols[ 'relevanceText' ] = $relevanceText;
         $cols[ 'sort' ] = $lastSort + 10; 
         $cols[ 'active' ] = 1;
 
@@ -114,6 +120,8 @@ switch ( $action ) {
             $classification = isset($data['classification']) ? $data['classification'] : null;
             $title = isset($data['title']) ? $data['title'] : null;
             $description = isset($data['description']) ? $data['description'] : null;
+            $relevance = isset($data['relevance']) ? $data['relevance'] : null;
+            $relevanceText = isset($data['relevanceText']) ? $data['relevanceText'] : null;
             
             // $clientStakeholderId = $param->clientStakeholderId;
             // $title = $param->title;
@@ -130,9 +138,11 @@ switch ( $action ) {
                 $cols[ 'title' ] = $title;
                 $cols[ 'description' ] = $description;
                 $cols[ 'classification' ] = $classification;
+                $cols[ 'relevance' ] = $relevance;
+                $cols[ 'relevanceText' ] = $relevanceText;
                 $cols[ 'active' ] = 1;
         
-                $query = 'update `wa_clientStakeholders` set active = :active, title = :title, description = :description, classification = :classification where id = ' . $clientStakeholderId; 
+                $query = 'update `wa_clientStakeholders` set active = :active, title = :title, description = :description, classification = :classification, relevance = :relevance, relevanceText = :relevanceText where id = ' . $clientStakeholderId; 
                 dbSelect( $db, $query, $cols );
                 
                 $jsonArray[ 'return' ] = 1;   

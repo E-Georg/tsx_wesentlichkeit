@@ -1,5 +1,5 @@
 import { MutationFunction } from '@tanstack/react-query';
-import { CellID, ChangeObject, messageValue } from '../../store';
+import { CellID, ChangeObject, messageValue, relevance } from '../../store';
 import { ClientTypes, HttpAction } from '../Models/data.interfaces';
 
 export const SubgroupFunction = async (
@@ -51,7 +51,8 @@ export const StakeholderFunction = async (
   onChangeStakeholder: ChangeObject,
   title: string,
   description: string,
-  classification: number
+  classification: number,
+  relevance: relevance
 ) => {
   if (onChangeStakeholder.mode === HttpAction.DELETE)
     await deleteStakeholderMutation({
@@ -67,6 +68,7 @@ export const StakeholderFunction = async (
         title: title,
         description: description,
         classification: classification,
+        relevance: relevance,
       },
       typeParameter: ClientTypes.Stakeholders,
     });
@@ -79,6 +81,7 @@ export const StakeholderFunction = async (
         title: title,
         description: description,
         classification: classification,
+        relevance: relevance,
       },
       typeParameter: ClientTypes.Stakeholders,
     });

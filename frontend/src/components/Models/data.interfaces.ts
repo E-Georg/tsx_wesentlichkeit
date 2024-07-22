@@ -3,6 +3,8 @@ export interface Stakeholder {
   title: string;
   description: string;
   classification?: number;
+  relevance?: number;
+  relevanceText?: string;
 }
 
 export interface Cell {
@@ -13,6 +15,7 @@ export interface Cell {
     {
       title: string;
       text: string;
+      subStakeholderId: number;
     }
   ];
 }
@@ -49,3 +52,8 @@ export interface Classification {
   value: number;
   label: string;
 }
+
+export type Prio = {
+  value: number;
+  label: string;
+};

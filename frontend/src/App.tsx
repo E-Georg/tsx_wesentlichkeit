@@ -10,10 +10,12 @@ import { tokenLoader } from './utils/auth';
 import RootLayout from './components/Root/RootLayout';
 import SubStakeholderList from './components/StakeholderList/SubStakeholderList';
 
+//TODO: infinity hinzufügen
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      staleTime: Infinity, //240000,
     },
   },
 });

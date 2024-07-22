@@ -28,6 +28,8 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
     messageValue,
     setMessageValue,
     setMessageValueByIndex,
+    relevance,
+    setRelevance,
   } = useStore();
 
   const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
@@ -46,7 +48,16 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
     }
     //==========================================================STAKEHOLDER========================================================================
     if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {
-      StakeholderFunction(deleteStakeholderMutation, updateStakeholderMutation, addStakeholderMutation, onChangeStakeholder, title, description, classification);
+      StakeholderFunction(
+        deleteStakeholderMutation,
+        updateStakeholderMutation,
+        addStakeholderMutation,
+        onChangeStakeholder,
+        title,
+        description,
+        classification,
+        relevance!!
+      );
     }
 
     // ============================================================CELLS============================================================================
@@ -66,7 +77,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
         {onChangeCells.mode !== HttpAction.DEFAULT && (
           <>
-            <button onClick={() => setMessageValue({ title: '', text: '' })}>Add</button>
+            <button onClick={() => setMessageValue({ title: '', text: '', subStakeholderId: 0 })}>Add</button>
             <ModalCells cellID={cellID} messageValue={messageValue} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
           </>
         )}
@@ -81,6 +92,8 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
             title={title}
             classification={classification}
             setClassification={setClassification}
+            relevance={relevance}
+            setRelevance={setRelevance}
           />
         )}
 

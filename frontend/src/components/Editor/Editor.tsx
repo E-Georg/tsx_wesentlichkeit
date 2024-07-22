@@ -7,15 +7,17 @@ import './Editor.css';
 import { useEffect } from 'react';
 import { editorConfig } from './configEditor';
 import { messageValue } from '../../store';
+import Dropdown from '../Dropdown/Dropdown';
 
 type Props = {
   text: string;
   setMessageValueByIndex: (index: number, value: messageValue) => void;
   index: number;
   messageValue: messageValue;
+  columnID: number;
 };
 
-const Editor = ({ text, setMessageValueByIndex, index, messageValue }: Props) => {
+const Editor = ({ columnID, text, setMessageValueByIndex, index, messageValue }: Props) => {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
@@ -26,9 +28,14 @@ const Editor = ({ text, setMessageValueByIndex, index, messageValue }: Props) =>
 
   return (
     <>
+      <div key={index} className="menu-wrapper">
+        <Dropdown messageValue={messageValue} index={index} setMessageValueByIndex={setMessageValueByIndex} stakeholderID={columnID} />
+      </div>
       {isLayoutReady && (
         <CKEditor
-          onChange={(_, editor) => setMessageValueByIndex(index, { title: messageValue.title, text: editor.getData() })}
+          onChange={(_, editor) => {
+            setMessageValueByIndex(index, { title: messageValue.title, text: editor.getData(), subStakeholderId: messageValue.subStakeholderId });
+          }}
           data={text}
           editor={ClassicEditor}
           config={editorConfig}

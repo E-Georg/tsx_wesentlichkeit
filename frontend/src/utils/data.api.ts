@@ -5,19 +5,19 @@ export const Zellen: Cell[] = [
     clientStakeholderId: 1,
     clientSubGroupId: 1,
     id: 1,
-    message: { title: '', text: '2023-01-05' },
+    message: [{ title: '', text: '2023-01-05' }],
   },
   {
     clientStakeholderId: 1,
     clientSubGroupId: 2,
     id: 2,
-    message: { title: 'Hello', text: '2023-01-05' },
+    message: [{ title: 'Hello', text: '2023-01-05' }],
   },
   {
     clientStakeholderId: 2,
     clientSubGroupId: 1,
     id: 3,
-    message: { title: 'World', text: '2023-01-05' },
+    message: [{ title: 'World', text: '2023-01-05' }],
   },
 ];
 

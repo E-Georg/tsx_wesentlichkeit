@@ -1,10 +1,10 @@
-import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
-import MainNavigation from "../MainNavigation/MainNavigation";
-import { useEffect } from "react";
-import { getTokenDuration } from "../../utils/auth";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
-import "./RootLayout.css";
+import { Outlet, useLoaderData, useSubmit } from 'react-router-dom';
+import MainNavigation from '../MainNavigation/MainNavigation';
+import { useEffect } from 'react';
+import { getTokenDuration } from '../../utils/auth';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import './RootLayout.css';
 
 const RootLayout = () => {
   const token = useLoaderData();
@@ -14,8 +14,8 @@ const RootLayout = () => {
       return;
     }
 
-    if (token === "EXPIRED") {
-      submit(null, { action: "/logout", method: "post" });
+    if (token === 'EXPIRED') {
+      submit(null, { action: '/logout', method: 'post' });
       return;
     }
 
@@ -23,18 +23,18 @@ const RootLayout = () => {
     console.log(tokenDuration);
 
     setTimeout(() => {
-      submit(null, { action: "/logout", method: "post" });
+      submit(null, { action: '/logout', method: 'post' });
     }, tokenDuration);
   }, [token, submit]);
   return (
     <>
       <MainNavigation />
-      <Header></Header>
+      <Header />
       <main className="main">
         <Outlet />
       </main>
 
-      <Footer></Footer>
+      <Footer />
     </>
   );
 };

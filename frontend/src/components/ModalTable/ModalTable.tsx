@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { options } from '../../utils/constants';
+import { options, prioritys } from '../../utils/constants';
+import { relevance } from '../../store';
 
 type Props = {
   title: string;
@@ -8,11 +9,31 @@ type Props = {
   setDescription: (description: string) => void;
   classification?: number;
   setClassification?: (num: number) => void;
+  relevance?: relevance;
+  setRelevance?: (data: relevance) => void;
 };
 
-const ModalTable = ({ title, setTitle, description, setDescription, classification = undefined, setClassification = undefined }: Props) => {
+const ModalTable = ({
+  title,
+  setTitle,
+  description,
+  setDescription,
+  classification = undefined,
+  setClassification = undefined,
+  relevance = undefined,
+  setRelevance = undefined,
+}: Props) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
+
+  const handleChange = (event: any) => {
+    setRelevance!!({ text: relevance?.text!!, value: Number(event.target.value) });
+  };
+
+  const handleInputChange = (event: any) => {
+    const newText = event.target.value;
+    setRelevance!!({ text: newText, value: relevance!!.value });
+  };
 
   useEffect(() => {
     if (editorRef.current) {
@@ -61,7 +82,7 @@ const ModalTable = ({ title, setTitle, description, setDescription, classificati
       {classification != undefined && setClassification != undefined && (
         <div>
           <select
-            value={classification ?? ''}
+            value={classification}
             onChange={(e) => setClassification(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0)}
             style={{
               width: '100%',
@@ -82,6 +103,15 @@ const ModalTable = ({ title, setTitle, description, setDescription, classificati
                   {opt.label}
                 </option>
               ))}
+          </select>
+
+          <input placeholder="Why Prio or not" value={relevance?.text} onChange={handleInputChange} />
+          <select value={relevance?.value} onChange={handleChange} aria-placeholder={'Nulli'}>
+            {prioritys.map((priority, index) => (
+              <option key={index} value={priority.value}>
+                {priority.label}
+              </option>
+            ))}
           </select>
         </div>
       )}

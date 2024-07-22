@@ -1,4 +1,4 @@
-import { Classification } from '../components/Models/data.interfaces';
+import { Classification, Prio } from '../components/Models/data.interfaces';
 
 export const DEFAULT_TITLE = 'Default Title';
 export const DEFAULT_TEXT = 'Default Text';
@@ -15,4 +15,10 @@ export const options: Classification[] = [
   { value: 1, label: 'Interner Stakeholder' },
   { value: 2, label: 'Externer Stakeholder' },
   { value: 3, label: 'Stiller Stakeholder' },
+];
+
+export const prioritys: Prio[] = [
+  { value: 0, label: 'null' },
+  { value: 1, label: 'Relevant' },
+  { value: 2, label: 'Unrelevant' },
 ];
