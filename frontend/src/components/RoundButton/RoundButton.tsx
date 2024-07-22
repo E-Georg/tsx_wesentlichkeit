@@ -1,30 +1,25 @@
 import { useEffect, useState } from 'react';
-import { relevance, useStore } from '../../store';
 
 type Props = {
-  relevance: relevance;
-  setRelevance: (prio: relevance) => void;
+  relevance: number;
 };
 
-function RoundButton({}: Props) {
-  const { relevance, setRelevance } = useStore();
-  const [color, setColor] = useState(relevance.value === 1 ? 'green' : 'white');
+function RoundButton({ relevance }: Props) {
+  const getColor = (relevance: number) => {
+    switch (relevance) {
+      case 1:
+        return 'green';
+      case 2:
+        return 'red';
+      default:
+        return 'yellow';
+    }
+  };
+  const [color, setColor] = useState(getColor(relevance));
 
   useEffect(() => {
-    setColor(relevance.value === 1 ? 'green' : 'white');
+    setColor(getColor(relevance));
   }, [relevance]);
-
-  const handleClick = () => {
-    let newPriority;
-
-    if (color === 'white') newPriority = 1;
-    else newPriority = 0;
-
-    setRelevance({ text: relevance.text, value: newPriority });
-
-    if (newPriority) setColor('green');
-    else setColor('white');
-  };
 
   const style = {
     backgroundColor: color,
@@ -35,7 +30,7 @@ function RoundButton({}: Props) {
     cursor: 'pointer',
   };
 
-  return <button style={style} onClick={handleClick}></button>;
+  return <button style={style}></button>;
 }
 
 export default RoundButton;

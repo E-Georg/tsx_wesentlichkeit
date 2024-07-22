@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import './Martix.css';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
+import RoundButton from '../RoundButton/RoundButton';
 
 interface Props {
   rows: SubGroup[];
@@ -65,22 +66,11 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         );
       }
     }
-  }, [columns, selectedOption, selectedRelevance]);
+  }, [columns, selectedRelevance, selectedOption]); //, selectedOption, selectedRelevance]);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
     setSelectedOption(value);
-
-    if (value === 0) {
-      setCopyColums(columns);
-    } else {
-      setCopyColums(
-        columns.filter((item: Stakeholder) => {
-          if (item.classification === null) return false;
-          return item.classification === value;
-        })
-      );
-    }
   };
 
   const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -167,8 +157,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                           </>
                         )}
                         {column.title}
+                        <div>
+                          <RoundButton relevance={column.relevance!!} />
+                        </div>
                       </div>
-                      {/* <RoundButton priority={rele} setPriority={setPrio} /> */}
                     </th>
                   ))}
               </tr>
