@@ -13,6 +13,7 @@ export interface Cell {
   id: number;
   message: [
     {
+      id: number;
       title: string;
       text: string;
       subStakeholderId: number;

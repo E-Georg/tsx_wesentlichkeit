@@ -78,6 +78,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     setSelectedRelevance(value);
   };
 
+  console.log(cells);
   return (
     <>
       <section className="hero-container">
@@ -85,10 +86,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         <div className="input-container">
           <div className="select-wrapper">
             <label className="label" htmlFor="stakeholderArt">
-              Stakeholder Art auswählen:
+              Stakeholder filtern:
             </label>
-            <SelectDropdown options={Classifications} value={selectedOption} onChange={handleSelectChange} placeholder="All Stakeholders" style={{ width: '200px' }} />
-            <SelectDropdown options={Relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="All Relevance" style={{ width: '200px' }} />
+            <SelectDropdown options={Classifications} value={selectedOption} onChange={handleSelectChange} placeholder="Alle Stakeholder" style={{ width: '200px' }} />
+            <SelectDropdown options={Relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="Alle Relevanzen" style={{ width: '200px' }} />
           </div>
           <div className="checkbox-wrapper">
             <label className="label" htmlFor="setDELETE">
@@ -106,7 +107,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                 setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
               }}
             >
-              Add Stakeholder
+              Stakeholder hinzufügen
             </button>
 
             <button
@@ -115,7 +116,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                 setOnChangeSubGroup({ mode: HttpAction.POST, ID: 0 });
               }}
             >
-              Add SubGroup
+              Thema hinzufügen
             </button>
           </div>
         ) : null}
@@ -124,7 +125,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <table className="table">
             <thead>
               <tr>
-                <th style={{ verticalAlign: 'top' }}>Stakeholderanzahl: </th>
+                <th style={{ verticalAlign: 'top' }}>Anzahl hinterlegter Stakeholder: </th>
                 {columns &&
                   copyColumns.map((column: Stakeholder) => (
                     <th style={{ verticalAlign: 'bottom' }} key={column.id}>
@@ -218,6 +219,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                             // iterate and fill the whole object
                             foundCell.message.forEach((_, index: number) => {
                               setMessageValueByIndex(index, {
+                                id: foundCell.message[index].id,
                                 title: foundCell.message[index].title,
                                 text: foundCell.message[index].text,
                                 subStakeholderId: foundCell.message[index].subStakeholderId,
@@ -238,7 +240,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                           }
                         }}
                       >
-                        {cells && cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id)?.message?.length}
+                        {cells && cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id && c.message.length > 0)?.message?.length}
                       </td>
                     ))}
                 </tr>

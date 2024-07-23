@@ -72,8 +72,8 @@ function RoundButton({ relevance }: Props) {
   const tooltipStyle: any = {
     display: hover ? 'display' : 'none',
     position: 'absolute',
-    top: '-40px',
-    left: '30%',
+    top: '-3.7rem', // "-60%"
+    left: '50%',
     transform: 'translateX(-50%)',
     backgroundColor: 'black',
     color: 'white',

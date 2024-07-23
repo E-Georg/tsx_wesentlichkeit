@@ -96,7 +96,7 @@ const ModalTable = ({
             options={Classifications}
             value={classification}
             onChange={handleSelectChange}
-            placeholder={'Choose Classification'}
+            placeholder={'Wähle Stakeholderklassifizierung'}
             style={{
               width: '100%',
               height: '2rem',
@@ -109,13 +109,13 @@ const ModalTable = ({
 
           <textarea
             style={{ width: '30rem', height: '4rem', marginRight: '2rem' }}
-            placeholder="Why have you choosen this Relevance?"
+            placeholder="Begründen Sie die Bedeutsamkeit!"
             value={relevance?.text}
             onChange={handleChangeInput}
             rows={1}
             cols={10}
           />
-          <SelectDropdown options={Relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Choose Relevance'} slice={true} defaultValue={5} />
+          <SelectDropdown options={Relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Relevanz auswählen'} slice={true} defaultValue={5} />
         </div>
       )}
     </div>
