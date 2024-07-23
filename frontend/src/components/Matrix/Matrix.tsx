@@ -124,10 +124,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <table className="table">
             <thead>
               <tr>
-                <th>Stakholderanzahl: </th>
+                <th style={{ verticalAlign: 'top' }}>Stakeholderanzahl: </th>
                 {columns &&
                   copyColumns.map((column: Stakeholder) => (
-                    <th key={column.id}>
+                    <th style={{ verticalAlign: 'bottom' }} key={column.id}>
                       <div
                         onClick={() => {
                           setDescription(column.description);
