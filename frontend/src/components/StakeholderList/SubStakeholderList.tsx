@@ -116,9 +116,11 @@ const SubStakeholderList = () => {
           type="checkbox"
           id="setDELETE"
           name="setDELETE"
-          onChange={() => {
+          // TODO: FUNKT net
+          onChange={(e) => {
+            console.log(DELETE);
             SetDELETE();
-            setButtonUpdateDelete(!DELETE ? 'Daten Löschen' : 'Daten aktualisieren');
+            setButtonUpdateDelete(e.target.checked ? 'Daten Löschen' : 'Daten aktualisieren');
           }}
         />
       </div>
@@ -132,7 +134,7 @@ const SubStakeholderList = () => {
       />
       <input
         type="email"
-        placeholder="Email"
+        placeholder="E-Mail"
         value={newStakeholder.email}
         onChange={(e) => setNewStakeholder({ ...newStakeholder, email: e.target.value })}
         style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px' }}
@@ -172,8 +174,8 @@ const SubStakeholderList = () => {
             <thead style={{ textAlign: 'left', fontSize: '20px', textDecoration: 'underline', textDecorationThickness: '0.01rem' }}>
               <tr>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Stakeholder</th>
+                <th>E-Mail</th>
+                <th>Stakeholdergruppe</th>
               </tr>
             </thead>
             <tbody>

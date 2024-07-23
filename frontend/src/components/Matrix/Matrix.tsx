@@ -82,6 +82,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     <>
       <section className="hero-container">
         {/* STAKEHOLDER ART MENU */}
+        <h1 style={{ display: 'flex', justifyContent: 'center' }}>Ermittlung relevanter Stakeholder</h1>
         <div className="input-container">
           <div className="select-wrapper">
             <label className="label" htmlFor="stakeholderArt">
