@@ -109,7 +109,7 @@ const ModalTable = ({
 
           <textarea
             style={{ width: '30rem', height: '4rem', marginRight: '2rem' }}
-            placeholder="Begründen Sie die Bedeutsamkeit!"
+            placeholder="Begründen Sie die Relevanz!"
             value={relevance?.text}
             onChange={handleChangeInput}
             rows={1}

@@ -78,7 +78,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
         {onChangeCells.mode !== HttpAction.DEFAULT && (
           <>
             <button onClick={() => setMessageValue({ id: 0, title: '', text: '', subStakeholderId: 0 })}>Hinzufügen</button>
-            <ModalCells cellID={cellID} messageValue={messageValue} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
+            <ModalCells cellID={cellID} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
           </>
         )}
 

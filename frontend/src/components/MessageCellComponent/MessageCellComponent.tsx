@@ -3,9 +3,11 @@ import { ClassicEditor } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
 import './MessageCellComponent.css';
 import { editorConfig } from './configEditor';
-import { messageValue } from '../../store';
+import { messageValue, useStore } from '../../store';
 import Dropdown from '../Dropdown/Dropdown';
 import useCellData from '../Queries/useCellData';
+import TrashButton from '../TrashButton/TrashButton';
+import { useEffect } from 'react';
 
 type Props = {
   text: string;
@@ -22,17 +24,20 @@ type Props = {
 
 const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, messageValue }: Props) => {
   const { deleteCellMutation } = useCellData();
+  const { setDelteMessageValueByIndex } = useStore();
+
+  useEffect(() => {}, [deleteCellMutation]);
 
   const handleDelete = async (cellMessageId: number) => {
     const res = await deleteCellMutation(cellMessageId);
-    console.log(cellMessageId);
     console.log(res);
+    if (res === 1) setDelteMessageValueByIndex(cellMessageId);
   };
 
   return (
     <>
       <div key={index} className="menu-wrapper">
-        {/* <TrashButton handleClick={() => handleDelete(messageValue.id)} /> */}
+        <TrashButton handleClick={() => handleDelete(messageValue.id)} />
         <Dropdown messageValue={messageValue} index={index} setMessageValueByIndex={setMessageValueByIndex} stakeholderID={columnID} />
       </div>
       <CKEditor

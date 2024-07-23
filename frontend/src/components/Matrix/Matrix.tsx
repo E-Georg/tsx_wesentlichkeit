@@ -78,7 +78,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     setSelectedRelevance(value);
   };
 
-  console.log(cells);
   return (
     <>
       <section className="hero-container">
@@ -107,7 +106,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                 setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
               }}
             >
-              Stakeholder hinzufügen
+              Stakeholdergruppe hinzufügen
             </button>
 
             <button

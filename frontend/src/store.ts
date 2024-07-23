@@ -59,6 +59,7 @@ interface Action {
   setDescription: (text: string) => void;
   setMessageValue: (value: messageValue) => void;
   setMessageValueByIndex: (index: number, value: messageValue) => void;
+  setDelteMessageValueByIndex: (Id: number) => void;
   setClassification: (num: number) => void;
   setShowModal: () => void;
   setOnChangeSubGroup: (obj: ChangeObject) => void;
@@ -93,6 +94,17 @@ export const useStore = create<State & Action>()(
         }
 
         newMessageValue[index] = { ...newMessageValue[index], id: value.id, title: value.title, text: value.text, subStakeholderId: value.subStakeholderId };
+
+        return { messageValue: newMessageValue };
+      }),
+    setDelteMessageValueByIndex: (Id: number) =>
+      set((state) => {
+        let newMessageValue = [...state.messageValue];
+        console.log(newMessageValue);
+        newMessageValue = newMessageValue.filter((cellmessage: any) => {
+          return cellmessage.id != Id;
+        });
+        console.log(newMessageValue);
 
         return { messageValue: newMessageValue };
       }),

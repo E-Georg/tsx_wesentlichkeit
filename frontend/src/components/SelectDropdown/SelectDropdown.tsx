@@ -15,9 +15,15 @@ const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, def
   if (slice) {
     options = options.slice(0, -1);
   }
+
   return (
-    <select value={value} onChange={onChange} style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px', ...style }} disabled={disabled}>
-      {placeholder != undefined ? <option value={defaultValue}>{placeholder}</option> : <>''</>}
+    <select
+      value={value != null ? value : ''}
+      onChange={onChange}
+      style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px', ...style }}
+      disabled={disabled}
+    >
+      {placeholder != undefined ? <option value={defaultValue}>{placeholder}</option> : ''}
       {options.map((option: Option, index: number) => (
         <option key={index} value={option.value}>
           {option.label}
