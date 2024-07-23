@@ -6,13 +6,18 @@ type Props = {
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder?: string;
   style?: React.CSSProperties;
+  slice?: boolean;
+  defaultValue?: number;
   disabled?: boolean;
 };
 
-const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, disabled = false }: Props) => {
+const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, defaultValue = 0, slice = false, disabled = false }: Props) => {
+  if (slice) {
+    options = options.slice(0, -1);
+  }
   return (
     <select value={value} onChange={onChange} style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px', ...style }} disabled={disabled}>
-      {placeholder != undefined ? <option value={0}>{placeholder}</option> : <>''</>}
+      {placeholder != undefined ? <option value={defaultValue}>{placeholder}</option> : <>''</>}
       {options.map((option: Option, index: number) => (
         <option key={index} value={option.value}>
           {option.label}

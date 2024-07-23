@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { options, relevances } from '../../utils/constants';
+import { Classifications, Relevances } from '../../utils/constants';
 import { relevance } from '../../store';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
 
@@ -27,12 +27,19 @@ const ModalTable = ({
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
 
-  const handleSelectChange = (e: any) => {
-    setClassification!!(options.find((opt) => opt.value.toString() === e.target.value)?.value ?? 0);
+  const handleSelectChange = (event: any) => {
+    let value = Number(event?.target.value);
+    value = value === 0 ? 5 : value;
+    console.log(value);
+    // setClassification!!(Classifications.find((opt) => opt.value === value)?.value ?? 0);
+    setClassification!!(value);
   };
 
   const handleChange = (event: any) => {
-    setRelevance!!({ text: relevance?.text!!, value: Number(event.target.value) });
+    let value = Number(event.target.value);
+    console.log(value);
+    value = value === 0 ? 5 : value;
+    setRelevance!!({ text: relevance?.text!!, value: value });
   };
 
   const handleChangeInput = (event: any) => {
@@ -86,7 +93,7 @@ const ModalTable = ({
       {classification != undefined && setClassification != undefined && (
         <div>
           <SelectDropdown
-            options={options}
+            options={Classifications}
             value={classification}
             onChange={handleSelectChange}
             placeholder={'Choose Classification'}
@@ -96,9 +103,10 @@ const ModalTable = ({
               marginBottom: '1rem',
               textAlign: 'center',
             }}
+            slice={true}
+            defaultValue={5}
           />
 
-          {/* <input style={inputStyle} placeholder="Why Prio or not" value={relevance?.text} onChange={handleChange} maxLength={maxLength} /> */}
           <textarea
             style={{ width: '30rem', height: '4rem', marginRight: '2rem' }}
             placeholder="Why have you choosen this Relevance?"
@@ -107,7 +115,7 @@ const ModalTable = ({
             rows={1}
             cols={10}
           />
-          <SelectDropdown options={relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Choose Relevance'} />
+          <SelectDropdown options={Relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Choose Relevance'} slice={true} defaultValue={5} />
         </div>
       )}
     </div>

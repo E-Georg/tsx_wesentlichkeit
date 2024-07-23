@@ -72,7 +72,7 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
-    relevance: { text: '', value: 0 },
+    relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,
     SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
@@ -96,7 +96,7 @@ export const useStore = create<State & Action>()(
         return { messageValue: newMessageValue };
       }),
 
-    classification: 0,
+    classification: 5,
     setClassification: (num: number) => set(() => ({ classification: num })),
     showModal: false,
     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
@@ -114,14 +114,14 @@ export const useStore = create<State & Action>()(
       set((state) => ({
         title: '',
         description: '',
-        classification: 0,
+        classification: 5,
         showModal: false,
         textsCell: [''],
         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
         onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
         onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
         messageValue: [{ title: '', text: '', subStakeholderId: 0 }],
-        relevance: { text: '', value: 0 },
+        relevance: { text: '', value: 5 },
       })),
     ClientID: 2,
     GroupID: 1,

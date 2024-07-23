@@ -10,15 +10,15 @@ export const BUTTONS = {
   UPDATE: 'Bearbeiten',
 };
 
-export const options: Classification[] = [
+export const Classifications: Classification[] = [
   { value: 1, label: 'Interner Stakeholder' },
   { value: 2, label: 'Externer Stakeholder' },
   { value: 3, label: 'Stiller Stakeholder' },
-  { value: 4, label: 'not defined' },
+  { value: 5, label: 'not defined' },
 ];
 
-export const relevances: Relevance[] = [
+export const Relevances: Relevance[] = [
   { value: 1, label: 'Relevant' },
   { value: 2, label: 'Unrelevant' },
-  { value: 3, label: 'not defined' },
+  { value: 5, label: 'not defined' },
 ];

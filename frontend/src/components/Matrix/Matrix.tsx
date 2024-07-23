@@ -1,6 +1,6 @@
 import { Cell, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
 import { useStore } from '../../store';
-import { options, relevances } from '../../utils/constants';
+import { Classifications, Relevances } from '../../utils/constants';
 import { useEffect, useState } from 'react';
 import './Martix.css';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
@@ -69,12 +69,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
   }, [columns, selectedRelevance, selectedOption]);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(event.target.value);
+    let value = Number(event.target.value);
     setSelectedOption(value);
   };
 
   const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(event.target.value);
+    let value = Number(event.target.value);
     setSelectedRelevance(value);
   };
 
@@ -87,8 +87,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <label className="label" htmlFor="stakeholderArt">
               Stakeholder Art auswählen:
             </label>
-            <SelectDropdown options={options} value={selectedOption} onChange={handleSelectChange} placeholder="All Stakeholders" style={{ width: '200px' }} />
-            <SelectDropdown options={relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="All Relevance" style={{ width: '200px' }} />
+            <SelectDropdown options={Classifications} value={selectedOption} onChange={handleSelectChange} placeholder="All Stakeholders" style={{ width: '200px' }} />
+            <SelectDropdown options={Relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="All Relevance" style={{ width: '200px' }} />
           </div>
           <div className="checkbox-wrapper">
             <label className="label" htmlFor="setDELETE">
