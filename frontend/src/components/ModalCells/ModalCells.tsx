@@ -14,24 +14,9 @@ const ModalCells = ({ onChangeCells, messageValue, cellID, setMessageValueByInde
   return (
     <>
       {onChangeCells.mode !== HttpAction.DEFAULT &&
-        [...Array(messageValue.length)].map((_, index) => (
+        // [...Array(messageValue.length)].map((_, index) => (
+        messageValue.map((_, index) => (
           <Fragment key={index}>
-            {/* Modal-Menu */}
-            <div className="modal-menu">
-              <div className="input-group">
-                <label htmlFor="cell">Cell Title:</label>
-                <input
-                  id="cell"
-                  type="text"
-                  placeholder="Enter Cell Title..."
-                  value={messageValue[index].title}
-                  onChange={(event) =>
-                    setMessageValueByIndex(index, { title: event.target.value, text: messageValue[index].text, subStakeholderId: messageValue[index].subStakeholderId })
-                  }
-                />
-              </div>
-            </div>
-
             {/* CKEditor */}
             <MessageCellComponent
               columnID={cellID.coolumnID}

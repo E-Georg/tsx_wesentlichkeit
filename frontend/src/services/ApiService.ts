@@ -304,3 +304,17 @@ export const DeleteDataFromDatabaseQuery = async ({
   }
   return [];
 };
+
+// [DELETE]
+export const DeleteMessageFromCell = async (ID: number) => {
+  const url = `${API_URL}cellText.php`;
+
+  const data = { action: 'd', cellDataTextId: ID };
+  try {
+    const response = await axios.delete(url, { data });
+    if (response.status === 200) return response.data;
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+  return [];
+};

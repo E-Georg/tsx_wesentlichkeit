@@ -80,6 +80,7 @@ if( count( $clientSubGroups ) > 0 ) {
                     $messages = []; // Temporäres Array für Nachrichten
                     foreach ($clientStakeholderSignificanceText as $client) {     
                         $messages[] = [
+                            'id' => $client[ 'id' ],
                             'title' => $client[ 'title' ],
                             'text' => $client[ 'text' ],
                             'subStakeholderId' => $client['subStakeholderId'],

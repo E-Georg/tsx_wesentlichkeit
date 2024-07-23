@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  DeleteCellFromDatabaseQuery,
-  fetchCellsQuery,
-  UpdateCellsToDatabaseQuery,
-  AddCellToDataBaseQuery,
-} from '../../services/ApiService';
+import { DeleteCellFromDatabaseQuery, fetchCellsQuery, UpdateCellsToDatabaseQuery, AddCellToDataBaseQuery, DeleteMessageFromCell } from '../../services/ApiService';
 import { useStore } from '../../store';
 
 const useCellData = () => {
@@ -34,6 +29,14 @@ const useCellData = () => {
     },
   });
 
+  // Delete Cell mutation
+  const { mutateAsync: deleteCellMutation } = useMutation({
+    mutationFn: (ID: number) => DeleteMessageFromCell(ID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Cells'] });
+    },
+  });
+
   //   // Update Cells mutation
   const { mutateAsync: updateCellsMutation } = useMutation({
     mutationFn: ({ cell }: any) => UpdateCellsToDatabaseQuery({ cell }),
@@ -47,6 +50,7 @@ const useCellData = () => {
     isLoadingCells,
     addCellsMutation,
     deleteCellsMutation,
+    deleteCellMutation,
     updateCellsMutation,
   };
 };

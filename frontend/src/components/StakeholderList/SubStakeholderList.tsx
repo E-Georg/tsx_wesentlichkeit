@@ -4,6 +4,7 @@ import { useStore } from '../../store';
 import useStakeholderData from '../Queries/useStakeholderData';
 import { HttpAction, SubStakeholder } from '../Models/data.interfaces';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
+import { COLORS } from '../../utils/constants';
 
 // 1. mit Query die Daten holen (id, name, email, stakeholderId)
 // 2. unterscheidung zwischen löschen/updaten/adden
@@ -24,6 +25,7 @@ const SubStakeholderList = () => {
     email: '',
     stakeholderId: 0,
   });
+  const [ButtonUpdateDelete, setButtonUpdateDelete] = useState(DELETE ? 'Daten Löschen' : 'Daten Aktualisieren');
 
   const [error, setError] = useState<string | null>(null);
 
@@ -82,16 +84,45 @@ const SubStakeholderList = () => {
     setNewStakeholder({ id: 0, name: '', email: '', stakeholderId: 0 });
   };
 
+  // SORT im BACKEND
+  // const sortedSubStakeholders = SubStakeholderQuery?.sort((x, y) => x.id - y.id);
+
   return (
     <div style={{ margin: '20px' }}>
-      <button onClick={reset}>Clear</button>
+      <button
+        style={{
+          height: '1.5rem',
+          padding: '0 1rem',
+          fontSize: '0.8rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'none',
+          backgroundColor: 'grey',
+          color: '#fff',
+          borderRadius: '0.25rem',
+          cursor: 'pointer',
+        }}
+        onClick={reset}
+      >
+        Zurücksetzen
+      </button>
+      <h2>Substakeholder anlegen</h2>
       <div className="checkbox-wrapper">
         <label className="label" htmlFor="setDELETE">
           Löschen aktivieren:
         </label>
-        <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
+        <input
+          type="checkbox"
+          id="setDELETE"
+          name="setDELETE"
+          onChange={() => {
+            SetDELETE();
+            setButtonUpdateDelete(!DELETE ? 'Daten Löschen' : 'Daten aktualisieren');
+          }}
+        />
       </div>
-      <h2>Add a new stakeholder</h2>
+
       <input
         type="text"
         placeholder="Name"
@@ -106,7 +137,7 @@ const SubStakeholderList = () => {
         onChange={(e) => setNewStakeholder({ ...newStakeholder, email: e.target.value })}
         style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px' }}
       />
-
+      {/* // TODO: IN COMPONENT */}
       <select
         value={newStakeholder.stakeholderId}
         onChange={(e) => {
@@ -115,33 +146,30 @@ const SubStakeholderList = () => {
             stakeholderId: Number(e.target.value),
           });
         }}
-        style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px' }}
+        style={{ margin: '10px 0', padding: '5px', width: '15rem', height: '2rem' }}
       >
-        {newStakeholder.stakeholderId === 0 && <option value={0}>Choose SubStakeholder</option>}
+        {newStakeholder.stakeholderId === 0 && <option value={0}>Stakeholdergruppe auswählen</option>}
         {Stakeholder?.map((stakeholder, index) => (
           <option key={index} value={stakeholder.id}>
             {stakeholder.title}
           </option>
         ))}
       </select>
-
       {onChangeSubStakeholder.mode != HttpAction.POST && onChangeSubStakeholder.mode != HttpAction.DELETE ? (
-        <button onClick={addStakeholder} style={{ padding: '5px 10px', margin: '10px 0' }}>
-          Add Stakeholder
+        <button onClick={addStakeholder} style={{ backgroundColor: COLORS.TERTIARY, padding: '5px 10px', marginLeft: '10px' }}>
+          Substakeholder hinzufügen
         </button>
       ) : (
-        <button onClick={updateDataOrDelete} style={{ padding: '5px 10px', margin: '10px 0' }}>
-          Update / Delete Data
+        <button onClick={updateDataOrDelete} style={{ backgroundColor: COLORS.SECONDARY, padding: '5px 10px', marginLeft: '10px' }}>
+          {ButtonUpdateDelete}
         </button>
       )}
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {SubStakeholderQuery && (
         <div>
-          <h2>Stakeholders</h2>
+          <h2 style={{ marginTop: '5rem' }}>Substakeholder Übersicht </h2>
           <table style={{ margin: '20px 0', width: '100%' }}>
-            <thead>
+            <thead style={{ textAlign: 'left', fontSize: '20px', textDecoration: 'underline', textDecorationThickness: '0.01rem' }}>
               <tr>
                 <th>Name</th>
                 <th>Email</th>

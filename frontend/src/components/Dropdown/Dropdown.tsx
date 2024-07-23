@@ -25,6 +25,7 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
 
   const handleSelectChange = (event: any) => {
     setMessageValueByIndex(index, {
+      id: messageValue.id,
       title: messageValue.title,
       text: messageValue.text,
       subStakeholderId: Number(event.target.value),
@@ -40,12 +41,13 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
     <div className="dropdown-container">
       <SelectDropdown
         options={options}
+        style={{ height: '2rem' }}
         value={messageValue.subStakeholderId !== 0 ? messageValue.subStakeholderId : 0}
         onChange={handleSelectChange}
-        placeholder="Choose Stakeholder"
+        placeholder="Substakeholder auswählen"
       />
 
-      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Go to Stakeholder List</button>
+      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Zur Substakeholderliste</button>
     </div>
   );
 };
