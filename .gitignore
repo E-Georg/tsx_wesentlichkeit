@@ -16,6 +16,7 @@ dist-ssr
 # Ignoriere alle .env Dateien
 **/.env
 env
+**/env.php
 
 # Editor directories and files
 !.vscode/extensions.json
