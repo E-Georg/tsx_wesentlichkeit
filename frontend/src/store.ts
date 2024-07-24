@@ -54,7 +54,7 @@ interface State {
 
 interface Action {
   setRelevance: (obj: relevance) => void;
-  SetDELETE: () => void;
+  SetDELETE: (del: boolean) => void;
   setTitle: (title: string) => void;
   setDescription: (text: string) => void;
   setMessageValue: (value: messageValue) => void;
@@ -77,7 +77,7 @@ export const useStore = create<State & Action>()(
     relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,
-    SetDELETE: () => set((state) => ({ DELETE: !state.DELETE })),
+    SetDELETE: (del: boolean) => set(() => ({ DELETE: del })),
     title: '',
     setTitle: (title: string) => set(() => ({ title: title })),
     description: '',

@@ -119,7 +119,7 @@ const SubStakeholderList = () => {
           // TODO: FUNKT net
           onChange={(e) => {
             console.log(DELETE);
-            SetDELETE();
+            SetDELETE(e.target.checked);
             setButtonUpdateDelete(e.target.checked ? 'Daten Löschen' : 'Daten aktualisieren');
           }}
         />

@@ -95,7 +95,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <label className="label" htmlFor="setDELETE">
               Löschen aktivieren:
             </label>
-            <input type="checkbox" id="setDELETE" name="setDELETE" onChange={() => SetDELETE()} />
+            <input type="checkbox" id="setDELETE" name="setDELETE" onChange={(e) => SetDELETE(e.target.checked)} />
           </div>
         </div>
         {/* ADD BUTTON CONTAINER */}
