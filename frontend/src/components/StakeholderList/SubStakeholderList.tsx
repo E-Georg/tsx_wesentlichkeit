@@ -25,7 +25,7 @@ const SubStakeholderList = () => {
     email: '',
     stakeholderId: 0,
   });
-  const [ButtonUpdateDelete, setButtonUpdateDelete] = useState(DELETE ? 'Daten Löschen' : 'Daten Aktualisieren');
+  const [ButtonUpdateDelete, setButtonUpdateDelete] = useState('Daten Aktualisieren');
 
   const [error, setError] = useState<string | null>(null);
 
@@ -121,10 +121,10 @@ const SubStakeholderList = () => {
           id="setDELETE"
           name="setDELETE"
           // TODO: FUNKT net
-          onChange={(e) => {
+          onChange={(event) => {
             console.log(DELETE);
-            SetDELETE(e.target.checked);
-            setButtonUpdateDelete(e.target.checked ? 'Daten Löschen' : 'Daten aktualisieren');
+            SetDELETE(event.target.checked);
+            setButtonUpdateDelete(event.target.checked ? 'Daten Löschen' : 'Daten aktualisieren');
           }}
         />
       </div>
