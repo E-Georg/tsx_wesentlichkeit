@@ -36,6 +36,7 @@ import {
   Underline,
   Undo,
 } from 'ckeditor5';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const editorConfig: EditorConfig = {
   toolbar: {
@@ -207,7 +208,7 @@ export const editorConfig: EditorConfig = {
     contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'],
   },
   simpleUpload: {
-    uploadUrl: `http://192.168.20.53/test/upload.php`,
+    uploadUrl: `${API_URL}ImageUpload`,
     withCredentials: true,
   },
 };

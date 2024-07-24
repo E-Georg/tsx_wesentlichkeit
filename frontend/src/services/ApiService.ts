@@ -174,7 +174,7 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
     };
   }
 
-  let url = `${API_URL}${typeParameter}${PHP_EXTENSION}`;
+  let url = `${API_URL}${typeParameter}`;
   console.log(JSON.stringify(params));
 
   try {
@@ -265,7 +265,7 @@ export const DeleteDataFromDatabaseQuery = async ({
 
 // [DELETE]
 export const DeleteMessageFromCell = async (ID: number) => {
-  const url = `${API_URL}cellText.php`;
+  const url = `${API_URL}cellMessage.php`;
 
   const data = { action: 'd', cellDataTextId: ID };
   try {

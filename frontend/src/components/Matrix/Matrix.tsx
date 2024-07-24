@@ -48,33 +48,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     SetDELETE(false);
   }, []);
 
-  // const DisplayColums = (copyColumns: Stakeholder[]) => {
-  //   if (copyColumns && copyColumns.length > 0) {
-  //     return (
-  //       <>
-  //         {copyColumns.map((column: Stakeholder) => (
-  //           <th style={{ verticalAlign: 'bottom' }} key={column.id}>
-  //             <div
-  //               onClick={() => {
-  //                 onClickColumn(setDescription, column, setTitle, setClassification, setRelevance, DELETE, setOnChangeStakeholder, setShowModal);
-  //               }}
-  //               key={column.id}
-  //             >
-  //               {filteredStakeholderCount(column.id, SubStakeholder)}
-  //               <br />
-  //               {column.title}
-  //               <div>
-  //                 <RoundButton relevance={column.relevance!!} />
-  //               </div>
-  //             </div>
-  //           </th>
-  //         ))}
-  //       </>
-  //     );
-  //   }
-  //   return null;
-  // };
-
   return (
     <>
       <section className="hero-container">

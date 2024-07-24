@@ -17,6 +17,7 @@ const SubStakeholderList = () => {
 
   useEffect(() => {
     SetDELETE(false);
+    reset(setOnChangeSubStakeholder, setNewSubStakeholder);
   }, []);
 
   return (

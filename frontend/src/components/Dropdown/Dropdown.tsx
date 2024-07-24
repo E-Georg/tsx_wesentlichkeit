@@ -19,7 +19,7 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
   const [value, setValue] = useState(messageValue.subStakeholderId);
 
   if (isLoadingStack) {
-    return <div>Loading...</div>;
+    <div>Loading...</div>;
   }
 
   const filteredSubStakeholders =
