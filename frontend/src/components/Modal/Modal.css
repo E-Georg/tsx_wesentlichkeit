@@ -1,7 +1,7 @@
 .modal {
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -20,11 +20,13 @@
   border: 1px solid #888;
   width: min(62rem, 90%);
   /* height: min(32rem, 90%); */
+  max-height: 100%;
   margin-top: 10rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
 }
 
 .modal-header {

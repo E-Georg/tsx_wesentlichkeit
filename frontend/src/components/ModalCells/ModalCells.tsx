@@ -1,6 +1,7 @@
 import { Fragment } from 'react/jsx-runtime';
 import { ChangeObject, messageValue, CellID, useStore } from '../../store';
 import MessageCellComponent from '../MessageCellComponent/MessageCellComponent';
+import { useMemo } from 'react';
 
 type Props = {
   onChangeCells: ChangeObject;
@@ -11,6 +12,7 @@ type Props = {
 
 const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
   const { messageValue } = useStore();
+  useMemo(() => messageValue, [messageValue]);
 
   return (
     <>

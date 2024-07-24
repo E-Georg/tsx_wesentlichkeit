@@ -7,7 +7,6 @@ import { messageValue, useStore } from '../../store';
 import Dropdown from '../Dropdown/Dropdown';
 import useCellData from '../Queries/useCellData';
 import TrashButton from '../TrashButton/TrashButton';
-import { useEffect } from 'react';
 
 type Props = {
   text: string;
@@ -26,9 +25,14 @@ const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, m
   const { deleteCellMutation } = useCellData();
   const { setDelteMessageValueByIndex } = useStore();
 
-  useEffect(() => {}, [deleteCellMutation]);
+  // useEffect(() => {}, [deleteCellMutation]);
 
   const handleDelete = async (cellMessageId: number) => {
+    if (cellMessageId.toString().length === 13) {
+      setDelteMessageValueByIndex(cellMessageId);
+      return;
+    }
+
     const res = await deleteCellMutation(cellMessageId);
     console.log(res);
     if (res === 1) setDelteMessageValueByIndex(cellMessageId);
