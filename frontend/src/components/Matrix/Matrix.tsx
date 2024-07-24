@@ -68,6 +68,10 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     }
   }, [columns, selectedRelevance, selectedOption]);
 
+  useEffect(() => {
+    SetDELETE(false);
+  }, []);
+
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let value = Number(event.target.value);
     setSelectedOption(value);

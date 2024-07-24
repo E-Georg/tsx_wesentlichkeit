@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
 import useStakeholderData from '../Queries/useStakeholderData';
@@ -32,6 +32,10 @@ const SubStakeholderList = () => {
   if (isLoadingStack) {
     <div> ...LOADING</div>;
   }
+
+  useEffect(() => {
+    SetDELETE(false);
+  }, []);
 
   const addStakeholder = async () => {
     // Post to Database
