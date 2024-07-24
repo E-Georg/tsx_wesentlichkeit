@@ -1,209 +1,159 @@
-// import { Cell, ClientTypes, Stakeholder, SubGroup } from '../../utils/data.interfaces';
-// import { Zellen } from '../../utils/data.api';
-// import {
-//   AddCellToDatabase,
-//   AddDataToDatabase,
-//   DeleteCellFromDatabase,
-//   DeleteDataFromDatabase,
-//   fetchData,
-//   UpdateCellToDatabase,
-//   UpdateDataToDatabase,
-// } from '../../services/ApiService';
+import { CellID, ChangeObject, messageValue, relevance } from '../../store';
+import { Cell, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
 
-// export const AddStakeholder = async (
-//   title: string,
-//   description: string,
-//   columns: Stakeholder[],
-//   setColumns: (column: Stakeholder[]) => void,
-//   clientID: number
-// ) => {
-//   const stakeholder: Stakeholder = {
-//     id: columns.length + 1,
-//     title: title,
-//     description: description,
-//     classification: 1,
-//   };
-//   if (stakeholder.title !== '') {
-//     const res = await AddDataToDatabase(stakeholder, ClientTypes.Stakeholders, clientID);
+export const setFilterFunction = (selectedOption: number, selectedRelevance: number, setCopyColums: (columns: Stakeholder[]) => void, columns: Stakeholder[]) => {
+  if (selectedOption !== 0) {
+    if (selectedRelevance === 0) {
+      setCopyColums(
+        columns.filter((item: Stakeholder) => {
+          if (item.classification === null) return false;
+          return item.classification === selectedOption;
+        })
+      );
+    } else {
+      setCopyColums(
+        columns.filter((item: Stakeholder) => {
+          if (item.classification === null) return false;
+          return item.classification === selectedOption && item.relevance === selectedRelevance;
+        })
+      );
+    }
+  } else {
+    if (selectedRelevance != 0) {
+      setCopyColums(
+        columns.filter((item: Stakeholder) => {
+          if (item.classification === null) return false;
+          return item.relevance === selectedRelevance;
+        })
+      );
+    }
+  }
+};
 
-//     if (res === 200) fetchData(ClientTypes.Stakeholders, setColumns, 2); // setColumns([...columns, stakeholder]);
-//   }
-//   // Fehlermeldung => gebe Text ein
-// };
+export const onClickColumn = (
+  setDescription: (description: string) => void,
+  column: Stakeholder,
+  setTitle: (title: string) => void,
+  setClassification: (classification: number) => void,
+  setRelevance: (relevance: relevance) => void,
+  DELETE: boolean,
+  setOnChangeStakeholder: (obj: ChangeObject) => void,
+  setShowModal: () => void
+) => {
+  setDescription(column.description);
+  setTitle(column.title);
+  // console.log(column.classification);
+  setClassification(column.classification!!);
+  setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
+  console.log({ text: column.relevanceText!!, value: column.relevance!! });
+  // TEMPORÄR
+  if (DELETE)
+    setOnChangeStakeholder({
+      mode: HttpAction.DELETE,
+      ID: column.id,
+    });
+  else
+    setOnChangeStakeholder({
+      mode: HttpAction.UPDATE,
+      ID: column.id,
+    });
+  setShowModal();
+};
 
-// export const AddSubGroup = async (
-//   title: string,
-//   description: string,
-//   rows: SubGroup[],
-//   setRows: (row: SubGroup[]) => void,
-//   clientID: number,
-//   groupID: number
-// ) => {
-//   const subgroup: SubGroup = {
-//     id: rows.length + 1,
-//     title: title,
-//     description: description,
-//   };
-//   if (subgroup.description !== '') {
-//     const res = await AddDataToDatabase(subgroup, ClientTypes.SubGroups, clientID, groupID);
+export const onClickRow = (
+  setDescription: (description: string) => void,
+  row: SubGroup,
+  setTitle: (title: string) => void,
+  DELETE: boolean,
+  setOnChangeSubGroup: (obj: ChangeObject) => void,
+  setShowModal: () => void
+) => {
+  setDescription(row.description);
+  setTitle(row.title);
+  // TEMPORÄR
+  if (DELETE)
+    setOnChangeSubGroup({
+      mode: HttpAction.DELETE,
+      ID: row.id,
+    });
+  else
+    setOnChangeSubGroup({
+      mode: HttpAction.UPDATE,
+      ID: row.id,
+    });
+  setShowModal();
+};
 
-//     if (res === 200) fetchData(ClientTypes.SubGroups, setRows, 2, 1); // setRows([...rows, subgroup]);
-//   }
-//   // Fehlermeldung => gebe Text ein
-// };
+export const onClickCell = (
+  cells: Cell[],
+  column: Stakeholder,
+  row: SubGroup,
+  setCellID: (cellID: CellID) => void,
+  setShowModal: () => void,
+  setOnChangeCells: (obj: ChangeObject) => void,
+  setMessageValueByIndex: (index: number, messageValue: messageValue) => void,
+  DELETE: boolean
+) => {
+  const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id);
+  const idOfCell = foundCell === undefined ? 0 : foundCell.id;
+  setCellID({
+    rowID: row.id,
+    coolumnID: column.id,
+    cellID: idOfCell,
+  });
+  console.log({
+    rowID: row.id,
+    coolumnID: column.id,
+    cellID: idOfCell,
+  });
 
-// export const AddCell = async (
-//   clientSubGroupId: number,
-//   clientStakeholderId: number,
-//   title: string,
-//   description: string,
-//   clientID: number,
-//   cells: Cell[], // depends on the method
-//   setCells: (cell: Cell[]) => void
-// ) => {
-//   const newCell: Cell = {
-//     clientStakeholderId: clientStakeholderId,
-//     clientSubGroupId: clientSubGroupId,
-//     id: 0,
-//     message: {
-//       title: title,
-//       description: description,
-//     },
-//   };
+  if (!foundCell) {
+    setShowModal();
+    setOnChangeCells({
+      mode: HttpAction.POST,
+      ID: idOfCell,
+    });
+  } else {
+    // iterate and fill the whole object
+    foundCell.message.forEach((_, index: number) => {
+      setMessageValueByIndex(index, {
+        id: foundCell.message[index].id,
+        title: foundCell.message[index].title,
+        text: foundCell.message[index].text,
+        subStakeholderId: foundCell.message[index].subStakeholderId,
+      });
+    });
+    setShowModal();
+    // TEMPORÄR
+    if (DELETE)
+      setOnChangeCells({
+        mode: HttpAction.DELETE,
+        ID: idOfCell,
+      });
+    else
+      setOnChangeCells({
+        mode: HttpAction.UPDATE,
+        ID: idOfCell,
+      });
+  }
+};
 
-//   if (newCell.message.description !== '' || newCell.message.title !== '') {
-//     const status = await AddCellToDatabase(newCell, clientID);
+export const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>, setSelectedRelevance: (relevance: number) => void) => {
+  let value = Number(event.target.value);
+  setSelectedRelevance(value);
+};
 
-//     if (status === 200) {
-//       //fetchCells(ClientTypes.Cells, 2, 1, setCells);
-//       setCells([...cells, newCell]);
-//     }
-//   }
-// };
+export const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setSelectedOption: (option: number) => void) => {
+  let value = Number(event.target.value);
+  setSelectedOption(value);
+};
 
-// export const UpdateSubGroup = async (
-//   setRows: (row: SubGroup[]) => void,
-//   rows: SubGroup[],
-//   id: number,
-//   title: string,
-//   description: string,
-//   clientID: number,
-//   groupID: number
-// ) => {
-//   const subGroup: SubGroup = {
-//     id: id,
-//     title: title,
-//     description: description,
-//   };
-
-//   // call API
-//   const res = await UpdateDataToDatabase(subGroup, ClientTypes.SubGroups, clientID, groupID);
-//   if (res.return === 1) {
-//     // TEMPORÄR
-//     const updatedRows = rows.map((row) => {
-//       if (row.id === id) {
-//         return { ...row, title: title, description: description };
-//       }
-//       return row;
-//     });
-//     setRows(updatedRows);
-//     // oder new Fetch
-//   }
-// };
-
-// export const UpdateStakeholder = async (
-//   setColumns: (row: Stakeholder[]) => void,
-//   column: Stakeholder[],
-//   id: number,
-//   title: string,
-//   description: string,
-//   clientID: number,
-//   groupID: number
-// ) => {
-//   const stakeholder: Stakeholder = {
-//     id: id,
-//     title: title,
-//     description: description,
-//   };
-
-//   const res = await UpdateDataToDatabase(stakeholder, ClientTypes.Stakeholders, clientID, groupID);
-
-//   if (res.return == 1) {
-//     // TEMPORÄR
-//     const updatedRows = await column.map((col) => {
-//       if (col.id === id) {
-//         return { ...col, title: title, description: description };
-//       }
-//       return col;
-//     });
-//     setColumns(updatedRows);
-
-//     // oder new Fetch
-//   }
-// };
-
-// export const UpdateCell = async (
-//   setCells: (cell: Cell[]) => void,
-//   cells: Cell[],
-//   cellID: [number, number, number],
-//   title: string,
-//   description: string
-// ) => {
-//   const newCell: Cell = {
-//     id: cellID[2],
-//     clientStakeholderId: cellID[0],
-//     clientSubGroupId: cellID[1],
-//     message: {
-//       title: title,
-//       description: description,
-//     },
-//   };
-//   const res = await UpdateCellToDatabase(newCell, cellID[2]);
-
-//   console.log(res);
-//   if (res === 200) {
-//     const updatedCells = await cells.map((cell) => {
-//       if (cell.id === cellID[2]) {
-//         return { ...cell, message: { title: title, description: description }, description: 'description' };
-//       }
-//       return cell;
-//     });
-//     console.log(cells);
-//     console.log(updatedCells);
-//     setCells(updatedCells);
-//   }
-// };
-
-// export const DeleteSubGroup = async (setRows: (row: SubGroup[]) => void, rows: SubGroup[], id: number) => {
-//   const res = await DeleteDataFromDatabase(id, ClientTypes.SubGroups);
-//   if (res === 200) setRows(rows.filter((item) => item.id !== id)); // FetchData(...)
-// };
-
-// export const DeleteStakeholder = async (
-//   setColumns: (row: Stakeholder[]) => void,
-//   columns: Stakeholder[],
-//   id: number
-// ) => {
-//   const res = await DeleteDataFromDatabase(id, ClientTypes.Stakeholders);
-//   if (res === 200) setColumns(columns.filter((item) => item.id !== id));
-// };
-
-// export const handleCellClick = (rowId: number, columnId: number) => {
-//   const zelle = Zellen.find((c) => c.clientStakeholderId === columnId && c.clientSubGroupId === rowId);
-
-//   if (zelle?.message.description) console.log('zelle: ', zelle.message.text);
-//   else console.log({ columnId }, { rowId });
-// };
-
-// export const DeleteCell = async (id: number, setCells: (cell: Cell[]) => void, cells: Cell[]) => {
-//   const status = await DeleteCellFromDatabase(id);
-
-//   if (status === 200) setCells(cells.filter((x: Cell) => x.id !== id));
-// };
-
-// //    <<<<<<<<<< =============== >>>>>>>>>>
-// //    <<<<<<<<<< =============== >>>>>>>>>>
-// //    <<<<<<<<<< =============== >>>>>>>>>>
-// // RELEVANT FÜR DELETE
-// // const newColumns = columns.filter(stakeholder => stakeholder.id !== stakeholderId);
-// // setColumns(newColumns);
+export const filteredStakeholderCount = (columnId: number, SubStakeholder: SubStakeholder[] = []) => {
+  if (SubStakeholder && SubStakeholder.length >= 1) {
+    const filteredOptions = SubStakeholder.filter((option: SubStakeholder) => option.stakeholderId === columnId);
+    if (filteredOptions.length !== 0) {
+      return filteredOptions.length;
+    }
+  }
+  return null;
+};

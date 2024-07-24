@@ -1,4 +1,4 @@
-import { Cell, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
+import { Cell, HttpAction, Stakeholder, SubGroup } from '../Models/data.interfaces';
 import { useStore } from '../../store';
 import { Classifications, Relevances } from '../../utils/constants';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import './Martix.css';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
 import RoundButton from '../RoundButton/RoundButton';
+import { filteredStakeholderCount, handleRelevanceChange, handleSelectChange, onClickCell, onClickColumn, onClickRow, setFilterFunction } from './MatrixFunctions';
 
 interface Props {
   rows: SubGroup[];
@@ -40,47 +41,39 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
 
   useEffect(() => {
     setCopyColums(columns);
-    if (selectedOption !== 0) {
-      if (selectedRelevance === 0) {
-        setCopyColums(
-          columns.filter((item: Stakeholder) => {
-            if (item.classification === null) return false;
-            return item.classification === selectedOption;
-          })
-        );
-      } else {
-        setCopyColums(
-          columns.filter((item: Stakeholder) => {
-            if (item.classification === null) return false;
-            return item.classification === selectedOption && item.relevance === selectedRelevance;
-          })
-        );
-      }
-    } else {
-      if (selectedRelevance != 0) {
-        setCopyColums(
-          columns.filter((item: Stakeholder) => {
-            if (item.classification === null) return false;
-            return item.relevance === selectedRelevance;
-          })
-        );
-      }
-    }
+    setFilterFunction(selectedOption, selectedRelevance, setCopyColums, columns);
   }, [columns, selectedRelevance, selectedOption]);
 
   useEffect(() => {
     SetDELETE(false);
   }, []);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    let value = Number(event.target.value);
-    setSelectedOption(value);
-  };
-
-  const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    let value = Number(event.target.value);
-    setSelectedRelevance(value);
-  };
+  // const DisplayColums = (copyColumns: Stakeholder[]) => {
+  //   if (copyColumns && copyColumns.length > 0) {
+  //     return (
+  //       <>
+  //         {copyColumns.map((column: Stakeholder) => (
+  //           <th style={{ verticalAlign: 'bottom' }} key={column.id}>
+  //             <div
+  //               onClick={() => {
+  //                 onClickColumn(setDescription, column, setTitle, setClassification, setRelevance, DELETE, setOnChangeStakeholder, setShowModal);
+  //               }}
+  //               key={column.id}
+  //             >
+  //               {filteredStakeholderCount(column.id, SubStakeholder)}
+  //               <br />
+  //               {column.title}
+  //               <div>
+  //                 <RoundButton relevance={column.relevance!!} />
+  //               </div>
+  //             </div>
+  //           </th>
+  //         ))}
+  //       </>
+  //     );
+  //   }
+  //   return null;
+  // };
 
   return (
     <>
@@ -92,8 +85,20 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <label className="label" htmlFor="stakeholderArt">
               Stakeholder filtern:
             </label>
-            <SelectDropdown options={Classifications} value={selectedOption} onChange={handleSelectChange} placeholder="Alle Stakeholder" style={{ width: '200px' }} />
-            <SelectDropdown options={Relevances} value={selectedRelevance} onChange={handleRelevanceChange} placeholder="Alle Relevanzen" style={{ width: '200px' }} />
+            <SelectDropdown
+              options={Classifications}
+              value={selectedOption}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => handleSelectChange(event, setSelectedOption)}
+              placeholder="Alle Stakeholder"
+              style={{ width: '200px' }}
+            />
+            <SelectDropdown
+              options={Relevances}
+              value={selectedRelevance}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => handleRelevanceChange(event, setSelectedRelevance)}
+              placeholder="Alle Relevanzen"
+              style={{ width: '200px' }}
+            />
           </div>
           <div className="checkbox-wrapper">
             <label className="label" htmlFor="setDELETE">
@@ -130,38 +135,19 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <thead>
               <tr>
                 <th style={{ verticalAlign: 'top' }}>Anzahl hinterlegter Stakeholder: </th>
+                {/* Display Colums */}
                 {columns &&
+                  columns.length > 0 &&
                   copyColumns.map((column: Stakeholder) => (
                     <th style={{ verticalAlign: 'bottom' }} key={column.id}>
                       <div
                         onClick={() => {
-                          setDescription(column.description);
-                          setTitle(column.title);
-                          // console.log(column.classification);
-                          setClassification(column.classification!!);
-                          setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
-                          console.log({ text: column.relevanceText!!, value: column.relevance!! });
-                          // TEMPORÄR
-                          if (DELETE)
-                            setOnChangeStakeholder({
-                              mode: HttpAction.DELETE,
-                              ID: column.id,
-                            });
-                          else
-                            setOnChangeStakeholder({
-                              mode: HttpAction.UPDATE,
-                              ID: column.id,
-                            });
-                          setShowModal();
+                          onClickColumn(setDescription, column, setTitle, setClassification, setRelevance, DELETE, setOnChangeStakeholder, setShowModal);
                         }}
                         key={column.id}
                       >
-                        {SubStakeholder?.length!! >= 1 && SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length !== 0 && (
-                          <>
-                            {SubStakeholder?.length!! >= 1 && SubStakeholder?.filter((option: SubStakeholder) => option.stakeholderId === column.id).length}
-                            <br />
-                          </>
-                        )}
+                        {filteredStakeholderCount(column.id, SubStakeholder)}
+                        <br />
                         {column.title}
                         <div>
                           <RoundButton relevance={column.relevance!!} />
@@ -172,83 +158,36 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
               </tr>
             </thead>
             <tbody>
-              {rows.map((row: Stakeholder) => (
-                <tr key={row.id}>
-                  <td
-                    key={row.id}
-                    onClick={() => {
-                      setDescription(row.description);
-                      setTitle(row.title);
-                      // TEMPORÄR
-                      if (DELETE)
-                        setOnChangeSubGroup({
-                          mode: HttpAction.DELETE,
-                          ID: row.id,
-                        });
-                      else
-                        setOnChangeSubGroup({
-                          mode: HttpAction.UPDATE,
-                          ID: row.id,
-                        });
-                      setShowModal();
-                    }}
-                  >
-                    {row.title}
-                  </td>
-                  {columns &&
-                    copyColumns.map((column: Stakeholder) => (
-                      <td
-                        key={column.id + row.id}
-                        onClick={() => {
-                          const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id);
-                          const idOfCell = foundCell === undefined ? 0 : foundCell.id;
-                          setCellID({
-                            rowID: row.id,
-                            coolumnID: column.id,
-                            cellID: idOfCell,
-                          });
-                          console.log({
-                            rowID: row.id,
-                            coolumnID: column.id,
-                            cellID: idOfCell,
-                          });
-
-                          if (!foundCell) {
-                            setShowModal();
-                            setOnChangeCells({
-                              mode: HttpAction.POST,
-                              ID: idOfCell,
-                            });
-                          } else {
-                            // iterate and fill the whole object
-                            foundCell.message.forEach((_, index: number) => {
-                              setMessageValueByIndex(index, {
-                                id: foundCell.message[index].id,
-                                title: foundCell.message[index].title,
-                                text: foundCell.message[index].text,
-                                subStakeholderId: foundCell.message[index].subStakeholderId,
-                              });
-                            });
-                            setShowModal();
-                            // TEMPORÄR
-                            if (DELETE)
-                              setOnChangeCells({
-                                mode: HttpAction.DELETE,
-                                ID: idOfCell,
-                              });
-                            else
-                              setOnChangeCells({
-                                mode: HttpAction.UPDATE,
-                                ID: idOfCell,
-                              });
-                          }
-                        }}
-                      >
-                        {cells && cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id && c.message.length > 0)?.message?.length}
-                      </td>
-                    ))}
-                </tr>
-              ))}
+              {/* Display Rows */}
+              {rows &&
+                rows.length > 0 &&
+                rows.map((row: Stakeholder) => (
+                  <tr key={row.id}>
+                    <td
+                      key={row.id}
+                      onClick={() => {
+                        onClickRow(setDescription, row, setTitle, DELETE, setOnChangeSubGroup, setShowModal);
+                      }}
+                    >
+                      {row.title}
+                    </td>
+                    {/* Display Cells */}
+                    {columns &&
+                      columns.length > 0 &&
+                      copyColumns.map((column: Stakeholder) => (
+                        <td
+                          key={column.id + row.id}
+                          onClick={() => {
+                            onClickCell(cells, column, row, setCellID, setShowModal, setOnChangeCells, setMessageValueByIndex, DELETE);
+                          }}
+                        >
+                          {cells &&
+                            cells.length > 0 &&
+                            cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id && c.message.length > 0)?.message?.length}
+                        </td>
+                      ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

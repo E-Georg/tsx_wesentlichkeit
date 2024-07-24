@@ -1,3 +1,4 @@
+import { MutationFunction } from '@tanstack/react-query';
 import {
   AccessibilityHelp,
   AutoLink,
@@ -183,15 +184,7 @@ export const editorConfig: EditorConfig = {
     ],
   },
   image: {
-    toolbar: [
-      'imageTextAlternative',
-      '|',
-      'imageStyle:alignBlockLeft',
-      'imageStyle:block',
-      'imageStyle:alignBlockRight',
-      '|',
-      'resizeImage',
-    ],
+    toolbar: ['imageTextAlternative', '|', 'imageStyle:alignBlockLeft', 'imageStyle:block', 'imageStyle:alignBlockRight', '|', 'resizeImage'],
     styles: {
       options: ['alignBlockLeft', 'block', 'alignBlockRight'],
     },
@@ -217,4 +210,17 @@ export const editorConfig: EditorConfig = {
     uploadUrl: `http://192.168.20.53/test/upload.php`,
     withCredentials: true,
   },
+};
+
+export const handleDelete = async (
+  cellMessageId: number,
+  setDelteMessageValueByIndex: (cellMessageId: number) => void,
+  deleteCellMutation: MutationFunction<number, number>
+) => {
+  if (cellMessageId.toString().length === 13) {
+    setDelteMessageValueByIndex(cellMessageId);
+    return;
+  }
+  const res = await deleteCellMutation(cellMessageId);
+  if (res === 1) setDelteMessageValueByIndex(cellMessageId);
 };

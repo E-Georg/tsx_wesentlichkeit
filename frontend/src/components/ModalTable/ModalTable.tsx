@@ -27,22 +27,20 @@ const ModalTable = ({
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
 
-  const handleSelectChange = (event: any) => {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let value = Number(event?.target.value);
     value = value === 0 ? 5 : value;
-    console.log(value);
-    // setClassification!!(Classifications.find((opt) => opt.value === value)?.value ?? 0);
     setClassification!!(value);
   };
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let value = Number(event.target.value);
     console.log(value);
     value = value === 0 ? 5 : value;
     setRelevance!!({ text: relevance?.text!!, value: value });
   };
 
-  const handleChangeInput = (event: any) => {
+  const handleChangeInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setRelevance!!({ text: event.target.value, value: relevance?.value!! });
   };
 

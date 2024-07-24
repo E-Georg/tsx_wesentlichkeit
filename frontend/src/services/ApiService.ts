@@ -78,25 +78,6 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
 };
 
 // [POST]
-// export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
-//   let url;
-//   if (typeParameter === ClientTypes.Stakeholders) {
-//     url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"e", "clientStakeholderId":${matrixObject.id}, "title":"${matrixObject.title}", "description":"${matrixObject.description}", "classification":${matrixObject.classification} }`;
-//   } else {
-//     url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"e", "clientSubGroupId": ${matrixObject.id}, "title":"${matrixObject.title}", "description":"${matrixObject.description}", "clientId":${ClientID}, "groupId":${GroupID}  } `;
-//   }
-//   console.log(url);
-//   try {
-//     const response = await axios.put(url);
-//     console.log(response);
-//     if (response.status === 200) return matrixObject;
-//   } catch (error) {
-//     console.error(`Error: ${error}`);
-//   }
-//   return [];
-// };
-
-// [POST]
 export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   console.log(matrixObject);
 
@@ -169,29 +150,6 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
 };
 
 // [PUT]
-// export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
-//   let url;
-//   console.log(matrixObject);
-
-//   if (GroupID === undefined) {
-//     url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"i","clientId":${ClientID},"title":"${matrixObject.title}","description":"${matrixObject.description}","classification":${matrixObject.classification}}`;
-//   } else {
-//     url = `${API_URL}${typeParameter}${PHP_EXTENSION}{ "action":"i", "groupId": ${GroupID}, "clientId":${ClientID}, "title":"${matrixObject.title}", "description":"${matrixObject.description}" } `;
-//   }
-//   console.log(url);
-//   try {
-//     const res = await axios.post(url);
-//     if (res.status === 200) {
-//       const newSub = { ...matrixObject, id: res.data.lastId };
-//       return newSub;
-//     }
-//   } catch (error) {
-//     console.error(`Error: ${error}`);
-//   }
-//   return [];
-// };
-
-// [PUT]
 export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID, GroupID = undefined }: any): Promise<Stakeholder[] | SubGroup[]> => {
   console.log(matrixObject);
 
@@ -218,7 +176,7 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
 
   let url = `${API_URL}${typeParameter}${PHP_EXTENSION}`;
   console.log(JSON.stringify(params));
-  // let stringiParam = JSON.stringify(params);
+
   try {
     const res = await axios.post(url, JSON.stringify(params));
     if (res.status === 200) {

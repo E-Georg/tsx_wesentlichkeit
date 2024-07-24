@@ -99,7 +99,7 @@ export const useStore = create<State & Action>()(
       }),
     setDelteMessageValueByIndex: (Id: number) =>
       set((state) => {
-        const newMessageValue = state.messageValue.filter((cellmessage: any) => {
+        const newMessageValue = state.messageValue.filter((cellmessage: messageValue) => {
           return cellmessage.id != Id;
         });
 
