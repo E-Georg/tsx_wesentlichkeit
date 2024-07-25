@@ -209,6 +209,7 @@ export const editorConfig: EditorConfig = {
   },
   simpleUpload: {
     uploadUrl: `${API_URL}ImageUpload`,
+    // uploadUrl: 'http://localhost:8080/upload',
     withCredentials: true,
   },
 };
