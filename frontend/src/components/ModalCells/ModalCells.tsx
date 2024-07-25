@@ -16,10 +16,10 @@ const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
 
   return (
     <>
-      {/* {onChangeCells.mode !== HttpAction.DEFAULT && */}
+      {/* onChangeCells.mode !== HttpAction.DEFAULT &&  */}
       {messageValue.map((_: messageValue, index: number) => (
         <Fragment key={index}>
-          {/* CKEditor */}
+          {/* CKEditor  */}
           <MessageCellComponent
             columnID={cellID.coolumnID}
             text={messageValue[index].text}

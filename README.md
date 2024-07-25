@@ -15,7 +15,7 @@ https://github.com/E-Georg/wesentlichkeit.git
 Go to the project directory
 
 ```bash
-  cd wesentlichkeit
+  cd wesentlichkeit/frontend
 ```
 
 Install dependencies

@@ -9,6 +9,7 @@ import MatrixPage from './components/Pages/MatrixPages/MatrixPage';
 import { tokenLoader } from './utils/auth';
 import RootLayout from './components/Root/RootLayout';
 import SubStakeholderList from './components/StakeholderList/SubStakeholderList';
+import SurveyPage from './components/Pages/SurveyPage/SurveyPage';
 
 //TODO: infinity hinzufügen
 const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
       { path: '/stakeholderlist', element: <SubStakeholderList /> },
+      { path: '/survey/:id?', element: <SurveyPage /> },
     ],
   },
 ]);

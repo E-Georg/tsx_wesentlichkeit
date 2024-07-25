@@ -16,12 +16,12 @@ const MainNavigation = () => {
             Substakeholder Liste
           </NavLink>
         </li>
-        {/* <li>
-            <NavLink to="/newsletter" className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}>
-              Newsletter
-            </NavLink>
-          </li>
-          {!token && (
+        <li className="nav_listitem">
+          <NavLink to="/survey" className={({ isActive }) => `${isActive ? 'active' : ''} nav_link`}>
+            Stakeholder Befragung
+          </NavLink>
+        </li>
+        {/*  {!token && (
             <li>
               <NavLink to="/auth?mode=login" className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}>
                 Authentication

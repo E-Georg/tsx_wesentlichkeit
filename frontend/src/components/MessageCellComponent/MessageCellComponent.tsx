@@ -24,6 +24,7 @@ const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, m
     <>
       <div key={index} className="menu-wrapper">
         <TrashButton handleClick={() => handleDelete(messageValue.id, setDelteMessageValueByIndex, deleteCellMutation)} />
+        {/* SubStakeholder-Dropdown */}
         <Dropdown messageValue={messageValue} index={index} setMessageValueByIndex={setMessageValueByIndex} stakeholderID={columnID} />
       </div>
       <CKEditor
