@@ -86,19 +86,18 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
             <button
               onClick={() => {
                 setShowModal();
-                setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
-              }}
-            >
-              Stakeholdergruppe hinzufügen
-            </button>
-
-            <button
-              onClick={() => {
-                setShowModal();
                 setOnChangeSubGroup({ mode: HttpAction.POST, ID: 0 });
               }}
             >
               Thema hinzufügen
+            </button>
+            <button
+              onClick={() => {
+                setShowModal();
+                setOnChangeStakeholder({ mode: HttpAction.POST, ID: 0 });
+              }}
+            >
+              Stakeholdergruppe hinzufügen
             </button>
           </div>
         ) : null}

@@ -21,7 +21,7 @@
   width: min(62rem, 90%);
   /* height: min(32rem, 90%); */
   max-height: 100%;
-  margin-top: 10rem;
+  margin-top: 1rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;

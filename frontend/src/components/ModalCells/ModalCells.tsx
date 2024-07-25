@@ -15,7 +15,12 @@ const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
   useMemo(() => messageValue, [messageValue]);
 
   return (
-    <>
+    <div
+      style={{
+        overflowY: 'scroll',
+        maxHeight: '400px',
+      }}
+    >
       {/* onChangeCells.mode !== HttpAction.DEFAULT &&  */}
       {messageValue.map((_: messageValue, index: number) => (
         <Fragment key={index}>
@@ -31,7 +36,7 @@ const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
       ))}
 
       {/* <FileUpload /> */}
-    </>
+    </div>
   );
 };
 
