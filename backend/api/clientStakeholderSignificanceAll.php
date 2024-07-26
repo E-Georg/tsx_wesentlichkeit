@@ -82,7 +82,6 @@ if( count( $clientGroups ) > 0 ) {
                     foreach ($clientStakeholderSignificanceText as $client) {     
                         $messages[] = [
                             'id' => $client[ 'id' ],
-                            'title' => $client[ 'title' ],
                             'text' => $client[ 'text' ],
                             'subStakeholderId' => $client['subStakeholderId'],
                             'editDate' => $client[ 'editDate' ]

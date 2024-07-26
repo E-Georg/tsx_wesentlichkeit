@@ -22,7 +22,6 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMessageValueByIndex(index, {
       id: messageValue.id,
-      title: messageValue.title,
       text: messageValue.text,
       subStakeholderId: Number(event.target.value),
     });

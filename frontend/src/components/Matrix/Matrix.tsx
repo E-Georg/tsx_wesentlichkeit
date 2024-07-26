@@ -150,6 +150,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         <td
                           key={column.id + row.id}
                           onClick={() => {
+                            console.log('hier');
                             onClickCell(cells, column, row, setCellID, setShowModal, setOnChangeCells, setMessageValueByIndex, DELETE);
                           }}
                         >

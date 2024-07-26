@@ -108,6 +108,7 @@ export const onClickCell = (
   });
 
   if (!foundCell) {
+    console.log('blub');
     setShowModal();
     setOnChangeCells({
       mode: HttpAction.POST,
@@ -119,7 +120,6 @@ export const onClickCell = (
     foundCell.message.forEach((_, index: number) => {
       setMessageValueByIndex(index, {
         id: foundCell.message[index].id,
-        title: foundCell.message[index].title,
         text: foundCell.message[index].text,
         subStakeholderId: foundCell.message[index].subStakeholderId,
       });

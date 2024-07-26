@@ -29,7 +29,7 @@ const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, m
       </div>
       <CKEditor
         onChange={(_, editor) => {
-          setMessageValueByIndex(index, { id: messageValue.id, title: messageValue.title, text: editor.getData(), subStakeholderId: messageValue.subStakeholderId });
+          setMessageValueByIndex(index, { id: messageValue.id, text: editor.getData(), subStakeholderId: messageValue.subStakeholderId });
         }}
         data={text}
         editor={ClassicEditor}

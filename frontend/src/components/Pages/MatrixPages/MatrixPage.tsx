@@ -18,6 +18,7 @@ const MatrixPage = () => {
   }
 
   console.log(Cells);
+  console.log(Stakeholder);
   return (
     <>
       <div className="matrixPage">
