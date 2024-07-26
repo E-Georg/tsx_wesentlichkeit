@@ -4,7 +4,6 @@ import useSubStakeholderData from '../Queries/useSubStakeholder';
 import { messageValue } from '../../store';
 import { SubStakeholder } from '../Models/data.interfaces';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
-import { useEffect, useState } from 'react';
 
 interface Props {
   stakeholderID: number;
@@ -16,7 +15,6 @@ interface Props {
 const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }: Props) => {
   const navigate = useNavigate();
   const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
-  const [value, setValue] = useState(messageValue.subStakeholderId);
 
   const filteredSubStakeholders =
     SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];
@@ -35,13 +33,15 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
     label: option.name,
   }));
 
-  useEffect(() => {
-    setValue(messageValue.subStakeholderId);
-  }, [messageValue]);
-
   return (
     <div className="dropdown-container">
-      <SelectDropdown options={options} style={{ height: '2rem' }} value={value} onChange={handleSelectChange} placeholder="Substakeholder auswählen" />
+      <SelectDropdown
+        options={options}
+        style={{ height: '2rem' }}
+        value={messageValue.subStakeholderId}
+        onChange={handleSelectChange}
+        placeholder="Substakeholder auswählen"
+      />
 
       <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Zur Substakeholderliste</button>
     </div>
