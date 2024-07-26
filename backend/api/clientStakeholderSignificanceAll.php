@@ -43,16 +43,16 @@ require_once __DIR__ . '/../inc/all.php';
 $param = json_decode( $_REQUEST[ 'param' ] );
 
 $clientId = $param->clientId;
-$groupId = $param->groupId;
+// $groupId = $param->groupId;
 
-$cols = array('groupId' => $groupId, 'clientId' => $clientId);
-$query = 'SELECT * FROM `wa_clientSubGroups` WHERE active = 1 AND groupId = :groupId AND clientId = :clientId order by sort ASC';
-$clientSubGroups = dbSelect($db, $query, $cols);
+$cols = array('clientId' => $clientId);
+$query = 'SELECT * FROM `wa_clientGroups` WHERE active = 1 AND clientId = :clientId order by sort ASC';
+$clientGroups = dbSelect($db, $query, $cols);
 
-if( count( $clientSubGroups ) > 0 ) {
+if( count( $clientGroups ) > 0 ) {
     $jsonArray = array();
     $pointer = 0;
-    foreach( $clientSubGroups as $clientSubGroup ) {
+    foreach( $clientGroups as $clientGroup ) {
 
         $cols = array('clientId' => $clientId);
         $query = 'SELECT * FROM `wa_clientStakeholders` WHERE active = 1 AND clientId = :clientId order by sort asc';
@@ -61,15 +61,16 @@ if( count( $clientSubGroups ) > 0 ) {
         foreach( $clientStakeholders as $clientStakeholder ) {
 
             $cols = array('clientId' => $clientId);
-            $cols['clientSubGroupId'] = $clientSubGroup[ 'id' ];
+            $cols['clientGroupId'] = $clientGroup[ 'id' ];
             $cols['clientStakeholderId'] = $clientStakeholder[ 'id' ];
 
-            $query = 'SELECT * FROM `wa_clientStakeholderSignificance` WHERE active = 1 AND clientId = :clientId AND clientSubgroupId = :clientSubGroupId AND clientStakeholderId = :clientStakeholderId';
+            $query = 'SELECT * FROM `wa_clientStakeholderSignificance` WHERE active = 1 AND clientId = :clientId AND clientgroupId = :clientGroupId AND clientStakeholderId = :clientStakeholderId';
             $clientStakeholderSignificance = dbSelect($db, $query, $cols);
 
             if( count( $clientStakeholderSignificance ) > 0 ) {
                 foreach( $clientStakeholderSignificance as $clientStakeholderSignificanceItem ) {
-                    $jsonArray[ $pointer ][ 'clientSubGroupId' ] = $clientSubGroup[ 'id' ];
+                    $jsonArray[ $pointer ][ 'clientSubGroupId' ] = $clientStakeholderSignificanceItem[ 'id' ];
+                    $jsonArray[ $pointer ][ 'clientGroupId' ] = $clientGroup[ 'id' ];
                     $jsonArray[ $pointer ][ 'clientStakeholderId' ] = $clientStakeholder[ 'id' ];
                     $jsonArray[ $pointer ][ 'id' ] = $clientStakeholderSignificanceItem[ 'id' ];
             

@@ -15,12 +15,8 @@ interface Props {
 
 const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }: Props) => {
   const navigate = useNavigate();
-  const { SubStakeholder: SubStakeholderQuery, isLoadingStack } = useSubStakeholderData();
+  const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
   const [value, setValue] = useState(messageValue.subStakeholderId);
-
-  if (isLoadingStack) {
-    <div>Loading...</div>;
-  }
 
   const filteredSubStakeholders =
     SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];

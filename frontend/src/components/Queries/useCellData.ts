@@ -3,13 +3,13 @@ import { DeleteCellFromDatabaseQuery, fetchCellsQuery, UpdateCellsToDatabaseQuer
 import { useStore } from '../../store';
 
 const useCellData = () => {
-  const { ClientID, GroupID } = useStore();
+  const { ClientID } = useStore();
   const queryClient = useQueryClient();
 
   // Fetch Cells data
   const { data: Cells, isLoading: isLoadingCells } = useQuery({
     queryKey: ['Cells'],
-    queryFn: () => fetchCellsQuery(ClientID, GroupID),
+    queryFn: () => fetchCellsQuery(ClientID),
     staleTime: Infinity,
   });
 

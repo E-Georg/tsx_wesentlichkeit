@@ -9,6 +9,7 @@ export interface Stakeholder {
 
 export interface Cell {
   clientStakeholderId: number;
+  clientGroupId: number;
   clientSubGroupId: number;
   id: number;
   message: [
@@ -26,6 +27,12 @@ export interface SubGroup {
   title: string;
   description: string;
 }
+
+export interface Group {
+  id: number;
+  title: string;
+  description: string;
+}
 export interface SubStakeholder {
   id: number;
   name: string;
@@ -37,6 +44,7 @@ export interface SubStakeholder {
 export enum ClientTypes {
   Stakeholders = 'clientStakeholders',
   SubGroups = 'clientSubGroups',
+  Groups = 'clientGroups',
   Cells = 'clientStakeholderSignificanceAll',
   Cell = 'clientStakeholderSignificance',
   SubStakeholder = 'clientSubStakeholders',

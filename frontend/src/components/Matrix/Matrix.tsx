@@ -1,4 +1,4 @@
-import { Cell, HttpAction, Stakeholder, SubGroup } from '../Models/data.interfaces';
+import { Cell, Group, HttpAction, Stakeholder } from '../Models/data.interfaces';
 import { useStore } from '../../store';
 import { Classifications, Relevances } from '../../utils/constants';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import RoundButton from '../RoundButton/RoundButton';
 import { filteredStakeholderCount, handleRelevanceChange, handleSelectChange, onClickCell, onClickColumn, onClickRow, setFilterFunction } from './MatrixFunctions';
 
 interface Props {
-  rows: SubGroup[];
+  rows: Group[];
   columns: Stakeholder[];
   cells: Cell[];
   showAddToMatrix: boolean;
@@ -155,7 +155,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         >
                           {cells &&
                             cells.length > 0 &&
-                            cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id && c.message.length > 0)?.message?.length}
+                            cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientGroupId === row.id && c.message.length > 0)?.message?.length}
                         </td>
                       ))}
                   </tr>

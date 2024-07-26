@@ -3,44 +3,44 @@ import { CellID, ChangeObject, messageValue, relevance } from '../../store';
 import { ClientTypes, HttpAction } from '../Models/data.interfaces';
 
 export const SubgroupFunction = async (
-  deleteSubGroupMutation: MutationFunction,
-  updateSubGroupMutation: MutationFunction,
-  addSubGroupMutation: MutationFunction,
+  deleteGroupMutation: MutationFunction,
+  updateGroupMutation: MutationFunction,
+  addGroupMutation: MutationFunction,
   onChangeSubGroup: ChangeObject,
   title: string,
   description: string
 ) => {
   // DELETE
   if (onChangeSubGroup.mode === HttpAction.DELETE) {
-    await deleteSubGroupMutation({
+    await deleteGroupMutation({
       matrixObject: {
         id: onChangeSubGroup.ID,
         title: title,
         description: description,
       },
-      typeParameter: ClientTypes.SubGroups,
+      typeParameter: ClientTypes.Groups,
     });
     //
     // UPDATE
   } else if (onChangeSubGroup.mode === HttpAction.UPDATE)
-    await updateSubGroupMutation({
+    await updateGroupMutation({
       matrixObject: {
         id: onChangeSubGroup.ID,
         title: title,
         description: description,
       },
-      typeParameter: ClientTypes.SubGroups,
+      typeParameter: ClientTypes.Groups,
     });
   //
   // POST
   else if (onChangeSubGroup.mode === HttpAction.POST)
-    await addSubGroupMutation({
+    await addGroupMutation({
       matrixObject: {
         id: onChangeSubGroup.ID,
         title: title,
         description: description,
       },
-      typeParameter: ClientTypes.SubGroups,
+      typeParameter: ClientTypes.Groups,
     });
 };
 
@@ -105,7 +105,7 @@ export const CellFunction = async (
     await addCellsMutation({
       cell: {
         id: cellID.cellID,
-        clientSubGroupId: cellID.rowID,
+        clientGroupId: cellID.rowID,
         clientStakeholderId: cellID.coolumnID,
         message: messageValue,
       },

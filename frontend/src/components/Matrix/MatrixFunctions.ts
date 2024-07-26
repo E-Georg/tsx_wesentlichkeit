@@ -1,5 +1,5 @@
 import { CellID, ChangeObject, messageValue, relevance } from '../../store';
-import { Cell, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
+import { Cell, Group, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
 
 export const setFilterFunction = (selectedOption: number, selectedRelevance: number, setCopyColums: (columns: Stakeholder[]) => void, columns: Stakeholder[]) => {
   if (selectedOption !== 0) {
@@ -87,14 +87,14 @@ export const onClickRow = (
 export const onClickCell = (
   cells: Cell[],
   column: Stakeholder,
-  row: SubGroup,
+  row: Group,
   setCellID: (cellID: CellID) => void,
   setShowModal: () => void,
   setOnChangeCells: (obj: ChangeObject) => void,
   setMessageValueByIndex: (index: number, messageValue: messageValue) => void,
   DELETE: boolean
 ) => {
-  const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientSubGroupId === row.id);
+  const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientGroupId === row.id);
   const idOfCell = foundCell === undefined ? 0 : foundCell.id;
   setCellID({
     rowID: row.id,
@@ -115,6 +115,7 @@ export const onClickCell = (
     });
   } else {
     // iterate and fill the whole object
+
     foundCell.message.forEach((_, index: number) => {
       setMessageValueByIndex(index, {
         id: foundCell.message[index].id,

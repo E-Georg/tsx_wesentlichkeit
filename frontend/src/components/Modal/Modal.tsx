@@ -1,12 +1,12 @@
 import './Modal.css';
 import { useStore } from '../../store';
 import { HttpAction } from '../Models/data.interfaces';
-import useSubGroupData from '../Queries/useSubGroupData';
 import useStakeholderData from '../Queries/useStakeholderData';
 import useCellData from '../Queries/useCellData';
 import { CellFunction, StakeholderFunction, SubgroupFunction } from './ModalFunction';
 import ModalCells from '../ModalCells/ModalCells';
 import ModalTable from '../ModalTable/ModalTable';
+import useGroupData from '../Queries/useGroupData';
 
 interface Props {
   title: string;
@@ -32,7 +32,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
     setRelevance,
   } = useStore();
 
-  const { addSubGroupMutation, deleteSubGroupMutation, updateSubGroupMutation } = useSubGroupData();
+  const { addGroupMutation, deleteGroupMutation, updateGroupMutation } = useGroupData();
   const { addStakeholderMutation, deleteStakeholderMutation, updateStakeholderMutation } = useStakeholderData();
   const { deleteCellsMutation, updateCellsMutation, addCellsMutation } = useCellData();
 
@@ -44,7 +44,7 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
-      SubgroupFunction(deleteSubGroupMutation, updateSubGroupMutation, addSubGroupMutation, onChangeSubGroup, title, description);
+      SubgroupFunction(deleteGroupMutation, updateGroupMutation, addGroupMutation, onChangeSubGroup, title, description);
     }
     //==========================================================STAKEHOLDER========================================================================
     if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {

@@ -83,15 +83,16 @@ switch ( $action ) {
 
     case "i": // insert
         $clientId = $param->clientId;
-        $clientSubGroupId = $param->clientSubGroupId;
+        $clientGroupId = $param->clientGroupId;
         $clientStakeholderId = $param->clientStakeholderId;
         $messages = $param->messages;
 
         $cols = array('clientId' => $clientId);
-        $cols['clientSubGroupId'] = $clientSubGroupId;
+        $cols['clientGroupId'] = $clientGroupId;
+        // $cols['clientSubGroupId'] = $clientSubGroupId;
         $cols['clientStakeholderId'] = $clientStakeholderId;
 
-        $query = 'SELECT * FROM `wa_clientStakeholderSignificance` WHERE active = 1 AND clientId = :clientId AND clientSubGroupId = :clientSubGroupId AND clientStakeholderId = :clientStakeholderId';
+        $query = 'SELECT * FROM `wa_clientStakeholderSignificance` WHERE active = 1 AND clientId = :clientId AND clientGroupId = :clientGroupId AND clientStakeholderId = :clientStakeholderId';
         $clientStakeholderSignificance = dbSelect($db, $query, $cols);
 
         if (count($clientStakeholderSignificance) > 0) {
@@ -99,7 +100,7 @@ switch ( $action ) {
             $jsonArray['errorMessage'] = 'Datensatz schon vorhanden';
         } else {
             $cols = array('clientId' => $clientId);
-            $cols['clientSubGroupId'] = $clientSubGroupId;
+            $cols['clientGroupId'] = $clientGroupId;
             $cols['clientStakeholderId'] = $clientStakeholderId;
             $cols['active'] = 1;
 
