@@ -30,3 +30,5 @@ export const COLORS = {
   SECONDARY: '#58a9DC',
   TERTIARY: '#0082C8',
 };
+
+export const Importance = [{ value: -2 }, { value: -1 }, { value: 0 }, { value: 1 }, { value: 2 }];

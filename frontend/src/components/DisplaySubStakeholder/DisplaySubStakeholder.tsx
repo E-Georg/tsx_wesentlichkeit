@@ -54,6 +54,7 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
             <tbody>
               {SubStakeholderQuery &&
                 SubStakeholderQuery.length! >= 1 &&
+                Array.isArray(SubStakeholderQuery) &&
                 // Sort
                 SubStakeholderQuery?.sort((x: any, y: any) => x.stakeholderId - y.stakeholderId)
                   // Filter according to choosen stakeholder or all

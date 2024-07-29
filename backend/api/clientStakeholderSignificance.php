@@ -10,27 +10,15 @@
  * 
  */
 
-
-
-
-
-
-
-
 $notLog = 1;
 
 include('inc/include.php');
 require_once __DIR__ . '/../inc/all.php';
 
-
-
 //new 
 $rawPostData = file_get_contents("php://input");
 $data = json_decode($rawPostData, true);
 $jsonArray = array();
-
-
-
 
 
 

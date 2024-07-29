@@ -66,3 +66,11 @@ export type Relevance = {
   value: number;
   label: string;
 };
+
+export type Question = {
+  groupId: number;
+  subGroupId: number;
+  subGroupTitle: string;
+  questionDescription: string;
+  questionId: number;
+};

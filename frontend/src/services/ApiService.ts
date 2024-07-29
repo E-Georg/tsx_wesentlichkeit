@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Cell, ClientTypes, Group, Stakeholder, SubStakeholder } from '../components/Models/data.interfaces';
+import { Cell, ClientTypes, Group, Question, Stakeholder, SubStakeholder } from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
 
 const PHP_EXTENSION = import.meta.env.VITE_PHP_EXTENSION;
@@ -8,26 +8,30 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ========================================== REACT QUERY DATA ==========================================================
 // [GET]
 export const fetchCellsQuery = async (ClientID: number): Promise<Cell[]> => {
-  let url = `${API_URL}${ClientTypes.Cells}${PHP_EXTENSION}{ "action":"r", "clientId":${ClientID} }`;
-  console.log(url);
+  const url = `${API_URL}${ClientTypes.Cells}`;
+
+  const params = {
+    data: JSON.stringify({ clientId: ClientID }),
+  };
+
   try {
-    const response = await axiosInstance.get<Cell[]>(url);
+    const response = await axiosInstance.get<Cell[]>(url, { params });
 
     if (response.status === 200) return response.data;
   } catch (error) {
-    console.error('Error fetching stakeholders:', error);
+    console.error('Error fetching cells:', error);
   }
 
   return [];
 };
+
 // [GET]
 export const fetchDataQuery = async (typeParameter: string, ClientID: number): Promise<Stakeholder[] | Group[]> => {
   let url;
   url = `${API_URL}${typeParameter}${PHP_EXTENSION}{"action":"r", "clientId":${ClientID}}`;
 
-  console.log(url);
   try {
-    const response = await axios.get(url);
+    const response = await axiosInstance.get(url);
     const fetchedData: Stakeholder[] | Group[] = response.data;
 
     if (response.status === 200) return fetchedData;
@@ -48,6 +52,23 @@ export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> 
     const fetchedData: SubStakeholder[] = response.data;
 
     if (response.status === 200) return fetchedData;
+  } catch (error) {
+    console.error(`Error fetching:`, error);
+  }
+  return [];
+};
+
+// [GET]
+export const fetchSurveyQuestions = async (ClientID: number): Promise<Question[]> => {
+  let url = `${API_URL}SurveyQuestions`;
+
+  const params = {
+    data: JSON.stringify({ clientId: ClientID }),
+  };
+  try {
+    const response = await axiosInstance.get(url, { params });
+    console.log(response);
+    if (response.status === 200) return response.data;
   } catch (error) {
     console.error(`Error fetching:`, error);
   }

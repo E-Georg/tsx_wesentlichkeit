@@ -35,12 +35,12 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
 
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const [selectedRelevance, setSelectedRelevance] = useState<number>(0);
-  const [copyColumns, setCopyColums] = useState<Stakeholder[]>(columns);
+  const [copyColumns, setCopyColums] = useState<Stakeholder[]>(Array.isArray(columns) ? columns : []);
 
   if (isLoadingStack) <div> Loading...</div>;
 
   useEffect(() => {
-    setCopyColums(columns);
+    setCopyColums(Array.isArray(columns) ? columns : []);
     setFilterFunction(selectedOption, selectedRelevance, setCopyColums, columns);
   }, [columns, selectedRelevance, selectedOption]);
 
@@ -108,8 +108,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
               <tr>
                 <th style={{ verticalAlign: 'top' }}>Anzahl hinterlegter Stakeholder: </th>
                 {/* Display Colums */}
-                {columns &&
-                  columns.length > 0 &&
+                {copyColumns &&
+                  copyColumns.length > 0 &&
                   copyColumns.map((column: Stakeholder) => (
                     <th style={{ verticalAlign: 'bottom' }} key={column.id}>
                       <div
@@ -133,6 +133,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
               {/* Display Rows */}
               {rows &&
                 rows.length > 0 &&
+                Array.isArray(rows) &&
                 rows.map((row: Stakeholder) => (
                   <tr key={row.id}>
                     <td
@@ -144,8 +145,8 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       {row.title}
                     </td>
                     {/* Display Cells */}
-                    {columns &&
-                      columns.length > 0 &&
+                    {copyColumns &&
+                      copyColumns.length > 0 &&
                       copyColumns.map((column: Stakeholder) => (
                         <td
                           key={column.id + row.id}
