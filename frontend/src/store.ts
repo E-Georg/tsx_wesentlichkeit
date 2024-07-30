@@ -30,11 +30,17 @@ export type Option = {
   value: number | string;
   label: string;
 };
-// TODO: ein state für Stakeholder/ Subgroups usw.
+
+export type SurveyText = {
+  text: string;
+  SubStakeholderId: number;
+  groupId: number;
+};
 
 //stakeholder : {id, title, description, classification, }
 // onChangePrio({prio: number, id: number})
 interface State {
+  surveyText: SurveyText[];
   relevance: relevance;
   DELETE: boolean;
   title: string;
@@ -52,6 +58,7 @@ interface State {
 }
 
 interface Action {
+  setSurveyText: (surveyText: SurveyText) => void;
   setRelevance: (obj: relevance) => void;
   SetDELETE: (del: boolean) => void;
   setTitle: (title: string) => void;
@@ -73,6 +80,8 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set) => ({
+    surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }],
+    setSurveyText: (surveyText: SurveyText) => set((state) => ({ surveyText: [...state.surveyText, surveyText] })),
     relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,

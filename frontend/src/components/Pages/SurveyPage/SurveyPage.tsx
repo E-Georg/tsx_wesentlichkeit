@@ -9,7 +9,6 @@ const SurveyPage = () => {
   if (isLoadingQuestions || isLoading) {
     <div>Loading ... </div>;
   }
-  console.log(SurveyQuestions);
   return <>{SurveyQuestions && Array.isArray(SurveyQuestions) && Group && Array.isArray(Group) && <Survey SurveyQuestions={SurveyQuestions} Group={Group} />}</>;
 };
 

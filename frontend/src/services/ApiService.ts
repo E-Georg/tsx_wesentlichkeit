@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Cell, ClientTypes, Group, Question, Stakeholder, SubStakeholder } from '../components/Models/data.interfaces';
+import { Cell, ClientTypes, Group, Stakeholder, SubStakeholder, SurveyAnswer, SurveyQuestion } from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
 
 const PHP_EXTENSION = import.meta.env.VITE_PHP_EXTENSION;
@@ -59,8 +59,8 @@ export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> 
 };
 
 // [GET]
-export const fetchSurveyQuestions = async (ClientID: number): Promise<Question[]> => {
-  let url = `${API_URL}SurveyQuestions`;
+export const fetchSurveyQuestions = async (ClientID: number): Promise<SurveyQuestion[]> => {
+  let url = `${API_URL}${ClientTypes.SurveyQuestions}`;
 
   const params = {
     data: JSON.stringify({ clientId: ClientID }),
@@ -75,7 +75,7 @@ export const fetchSurveyQuestions = async (ClientID: number): Promise<Question[]
   return [];
 };
 
-// [POST]
+// [PUT]
 export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]> => {
   const url = `${API_URL}${ClientTypes.Cell}`;
 
@@ -96,7 +96,7 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
   return [];
 };
 
-// [POST]
+// [PUT]
 export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID }: any): Promise<Stakeholder[] | Group[]> => {
   console.log(matrixObject);
 
@@ -133,7 +133,7 @@ export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, C
   return [];
 };
 
-// [POST]
+// [PUT]
 export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: any) => {
   let url;
   console.log(newStakeholder);
@@ -150,7 +150,7 @@ export const UpdateSubStakeholderToDatabaseQuery = async ({ newStakeholder }: an
   return [];
 };
 
-// [PUT]
+// [POST]
 export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any): Promise<SubStakeholder[] | any> => {
   let url;
   console.log(newStakeholder);
@@ -167,7 +167,7 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
   }
 };
 
-// [PUT]
+// [POST]
 export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID }: any): Promise<Stakeholder[] | Group[]> => {
   console.log(matrixObject);
 
@@ -205,7 +205,7 @@ export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, Clie
   return [];
 };
 
-// [PUT]
+// [POST]
 export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<Cell[]> => {
   let url = `${API_URL}${ClientTypes.Cell}`;
 
@@ -215,6 +215,29 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
     clientStakeholderId: cell.clientStakeholderId,
     messages: cell.message,
   };
+  console.log(url);
+  console.log(data);
+
+  try {
+    const response = await axios.post(url, data);
+    console.log(response);
+    if (response.status === 2000) return response.data;
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+  return [];
+};
+
+export const AddSurveyQuestionAnswers = async (subStakeholderID: number, clientId: number, groupId: number, message: SurveyAnswer[], comment: string) => {
+  let url = `${API_URL}${ClientTypes.SurveyQuestions}`;
+  const data = {
+    subStakeholderID: subStakeholderID,
+    clientId: clientId,
+    groupId: groupId,
+    message: message, // subGroupId: subGroupId, answer: answers,
+    comment: comment,
+  };
+
   console.log(url);
   console.log(data);
 

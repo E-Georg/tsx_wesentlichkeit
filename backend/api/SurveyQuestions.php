@@ -16,20 +16,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (json_last_error() === JSON_ERROR_NONE) {
             $clientId = isset($data['clientId']) ? $data['clientId'] : null;
 
+            // ClientGroups
+            // ClientSubGroups
+            // ClientSubSubGroups
+
             if ($clientId) {
                 $query = '
                 SELECT 
                     g.id as groupId, 
+                    g.title as groupTitle, 
                     sg.id as subGroupId, 
                     sg.title as subGroupTitle, 
-                    q.description as questionDescription, 
-                    q.Id as questionId
+                    ss.title as questionDescription, 
+                    ss.id as questionId
                 FROM 
                     wa_clientGroups g
                 LEFT JOIN 
                     wa_clientSubGroups sg ON sg.clientId = g.clientId  AND g.id = sg.groupId AND sg.active = 1
                 LEFT JOIN 
-                    wa_clientQuestions q ON q.clientId = sg.clientId AND q.active = 1  AND q.clientSubgroupId = sg.Id
+                    wa_clientSubSubGroups ss ON ss.clientId = sg.clientId AND ss.subGroupId = sg.Id AND ss.active = 1  
                 WHERE 
                     g.active = 1 AND g.clientId = :clientId
                 ORDER BY 
@@ -39,25 +44,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $cols = array('clientId' => $clientId);
                 $results = dbSelect($db, $query, $cols);
 
-                // echo json_encode($results);
                 $groupMap = [];
 
-                $pointer = 0;
                 foreach ($results as $result) {
                     $groupId = $result['groupId'];
                     $subGroupId = $result['subGroupId'];
 
-                    if (!isset($groupMap[$groupId])) {
-                        if ($result["questionId"] != null)
-                            $groupMap[$pointer] = [
-                                'groupId' => $groupId,
-                                'subGroupId' => $subGroupId,
-                                'subGroupTitle' => $result['subGroupTitle'],
-                                'questionDescription' => $result['questionDescription'],
-                                'questionId' => $result['questionId'],
-                            ];
+                    // Check if the groupId already exists in the groupMap
+                    $found = false;
+                    foreach ($groupMap as &$group) {
+                        if ($group['groupId'] == $groupId && $group['subGroupId'] == $subGroupId) {
+                            $found = true;
+                            // Add the questionDescription and questionId as an object to the existing array
+                            if ($result['questionId'] != null) {
+                                $group['questions'] = [
+                                    'id' => $result['questionId'],
+                                    'value' => $result['questionDescription']
+                                ];
+                            }
+                            break;
+                        }
                     }
-                    $pointer = $pointer + 1;
+                    // If not found, create a new entry
+                    if (!$found) {
+                        $questionsArray = [];
+                        if ($result['questionId'] != null) {
+                            $questionsArray = [
+                                'id' => $result['questionId'],
+                                'value' => $result['questionDescription']
+                            ];
+                        }
+                        $groupMap[] = [
+                            'groupId' => $groupId,
+                            'groupTitle' => $result['groupTitle'],
+                            'subGroupId' => $subGroupId,
+                            'subGroupTitle' => $result['subGroupTitle'],
+                            'questions' => $questionsArray
+                        ];
+                    }
                 }
 
                 $jsonArray = array_values($groupMap);
@@ -73,6 +97,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         http_response_code(400);
         $jsonArray = ['error' => 'No data provided'];
     }
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $rawPostData = file_get_contents("php://input");
+    $data = json_decode($rawPostData, true);
+    $jsonArray = array();
+
+
+    $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+    $subStakeholderID = isset($data['subStakeholderID']) ? $data['subStakeholderID'] : null;;
+    // $subGroupId = isset($data['subGroupId']) ? $data['subGroupId'] : null;
+    $groupId = isset($data['groupId']) ? $data['groupId'] : null;
+    $messages = isset($data['message']) ? $data['message'] : null;
+    $comment = isset($data['comment']) ? $data['comment'] : null;
+    echo json_encode($data);
+
+    foreach ($messages as $message) {
+        $cols = [
+            'subStakeholderID' => $subStakeholderID,
+            'clientSubGroupsId' => $message['subGroupId'],
+            'answer' => $message['answer'],
+            'active' => 1,
+            'editDate' => date("Y-m-d H:i:s")
+        ];
+        $lastIdAnswers = dbInsert($db, 'wa_clientSubStakeholderAnswers', $cols);
+    }
+
+    $colsN = [
+        'subStakeholderID' => $subStakeholderID,
+        'clientGroupId' => $groupId,
+        'comment' => $comment,
+        'clientId' => $clientId,
+        'active' => 1,
+        'editDate' => date("Y-m-d H:i:s")
+    ];
+    $lastIdComments = dbInsert($db, 'wa_clientSubStakeholderAnswersComments', $colsN);
+
+
+
+
+    echo json_encode($lastIdAnswers);
+    echo json_encode($lastIdComments);
 } else {
     http_response_code(405);
     $jsonArray = ['error' => 'Method not allowed'];

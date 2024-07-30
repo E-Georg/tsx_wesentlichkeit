@@ -48,6 +48,7 @@ export enum ClientTypes {
   Cells = 'clientStakeholderSignificanceAll',
   Cell = 'clientStakeholderSignificance',
   SubStakeholder = 'clientSubStakeholders',
+  SurveyQuestions = 'SurveyQuestions',
 }
 
 export enum HttpAction {
@@ -67,10 +68,28 @@ export type Relevance = {
   label: string;
 };
 
-export type Question = {
+export interface Question {
+  id: number;
+  value: string;
+}
+
+export interface SurveyQuestion {
   groupId: number;
+  groupTitle: string;
   subGroupId: number;
   subGroupTitle: string;
-  questionDescription: string;
-  questionId: number;
+  questions: Question;
+}
+
+export type SurveyAnswer = {
+  subGroupId: number;
+  answers: number;
+};
+
+export type AddSurveyQuestionAnswersParams = {
+  subStakeholderID: number;
+  clientId: number;
+  groupId: number;
+  message: SurveyAnswer[];
+  comment: string;
 };

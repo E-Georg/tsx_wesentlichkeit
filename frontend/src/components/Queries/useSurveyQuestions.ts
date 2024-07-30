@@ -1,8 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchSurveyQuestions } from '../../services/ApiService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AddSurveyQuestionAnswers, fetchSurveyQuestions } from '../../services/ApiService';
 import { useStore } from '../../store';
+import { AddSurveyQuestionAnswersParams } from '../Models/data.interfaces';
 
 const useSurveyQuestions = () => {
+  const queryClient = useQueryClient();
   const { ClientID } = useStore();
   // Fetch SurveyQuestions
   const {
@@ -15,8 +17,18 @@ const useSurveyQuestions = () => {
     staleTime: Infinity,
   });
 
+  // Add Stakeholder mutation
+  const { mutateAsync: addAnswers } = useMutation({
+    mutationFn: ({ subStakeholderID, clientId, groupId, message, comment }: AddSurveyQuestionAnswersParams) =>
+      AddSurveyQuestionAnswers(subStakeholderID, clientId, groupId, message, comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Questions'] });
+    },
+  });
+
   return {
     SurveyQuestions,
+    addAnswers,
     status,
     isLoadingQuestions,
   };
