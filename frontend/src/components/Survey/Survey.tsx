@@ -13,8 +13,8 @@ type Props = {
 };
 
 const Survey = ({ SurveyQuestions, Group }: Props) => {
-  const { subStakeholderId } = useParams();
-  // const subStakeholderId = 2;
+  //const { subStakeholderId } = useParams();
+  const subStakeholderId = 2;
   const { surveyText, setSurveyText, ClientID, surveyAnswer, setSurveyAnswer, resetSurvey } = useStore();
   const [visibleDescription, setVisibleDescription] = useState<{ [key: number]: boolean }>({});
 

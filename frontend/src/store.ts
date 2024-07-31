@@ -85,11 +85,21 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set, get) => ({
-    surveyAnswer: [{ answer: 0, subGroupId: 0 }],
+    surveyAnswer: [],
     setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) => set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
     getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
-    surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }],
-    setSurveyText: (surveyText: SurveyText) => set((state) => ({ surveyText: [...state.surveyText, surveyText] })),
+    surveyText: [],
+    setSurveyText: (newSurveyText: SurveyText) =>
+      set((state) => {
+        const existingIndex = state.surveyText.findIndex((item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId);
+        if (existingIndex > -1) {
+          const updatedSurveyText = [...state.surveyText];
+          updatedSurveyText[existingIndex] = { ...updatedSurveyText[existingIndex], text: newSurveyText.text };
+          return { surveyText: updatedSurveyText };
+        } else {
+          return { surveyText: [...state.surveyText, newSurveyText] };
+        }
+      }),
     resetSurvey: () => set(() => ({ surveyAnswer: [{ answer: 0, subGroupId: 0 }], surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }] })),
     relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
