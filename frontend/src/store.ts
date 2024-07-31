@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { HttpAction } from './components/Models/data.interfaces';
+import { HttpAction, SurveyAnswer } from './components/Models/data.interfaces';
 import { devtools } from 'zustand/middleware';
 
 /// ================================================
@@ -36,11 +36,13 @@ export type SurveyText = {
   SubStakeholderId: number;
   groupId: number;
 };
+// const [selectedValues, setSelectedValues] = useState<SurveyAnswer[]>([]);
 
 //stakeholder : {id, title, description, classification, }
 // onChangePrio({prio: number, id: number})
 interface State {
   surveyText: SurveyText[];
+  surveyAnswer: SurveyAnswer[];
   relevance: relevance;
   DELETE: boolean;
   title: string;
@@ -58,7 +60,10 @@ interface State {
 }
 
 interface Action {
+  resetSurvey: () => void;
   setSurveyText: (surveyText: SurveyText) => void;
+  getSurveyAnswerById: (id: number) => any;
+  setSurveyAnswer: (x: any) => any;
   setRelevance: (obj: relevance) => void;
   SetDELETE: (del: boolean) => void;
   setTitle: (title: string) => void;
@@ -79,9 +84,13 @@ interface Action {
 }
 
 export const useStore = create<State & Action>()(
-  devtools((set) => ({
+  devtools((set, get) => ({
+    surveyAnswer: [{ answer: 0, subGroupId: 0 }],
+    setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) => set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
+    getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
     surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }],
     setSurveyText: (surveyText: SurveyText) => set((state) => ({ surveyText: [...state.surveyText, surveyText] })),
+    resetSurvey: () => set(() => ({ surveyAnswer: [{ answer: 0, subGroupId: 0 }], surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }] })),
     relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,

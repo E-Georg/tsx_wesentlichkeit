@@ -4,7 +4,7 @@ import { Group, SurveyAnswer, SurveyQuestion } from '../Models/data.interfaces';
 import { COLORS, Importance } from '../../utils/constants';
 import { useStore } from '../../store';
 import { useParams } from 'react-router-dom';
-import { closeDescription, handleChange, handleChangeInput, toggleDescription } from './SurveyFunctions';
+import { closeDescription, handleChangeInput, toggleDescription } from './SurveyFunctions';
 import { AddSurveyQuestionAnswers } from '../../services/ApiService';
 
 type Props = {
@@ -14,8 +14,8 @@ type Props = {
 
 const Survey = ({ SurveyQuestions, Group }: Props) => {
   const { subStakeholderId } = useParams();
-  const { surveyText, setSurveyText, ClientID } = useStore();
-  const [selectedValues, setSelectedValues] = useState<SurveyAnswer[]>([]);
+  // const subStakeholderId = 2;
+  const { surveyText, setSurveyText, ClientID, surveyAnswer, setSurveyAnswer, resetSurvey } = useStore();
   const [visibleDescription, setVisibleDescription] = useState<{ [key: number]: boolean }>({});
 
   const groupedQuestions = SurveyQuestions.reduce((acc: any, question: SurveyQuestion) => {
@@ -26,22 +26,24 @@ const Survey = ({ SurveyQuestions, Group }: Props) => {
     return acc;
   }, {});
 
-  const handleClick = async (groupId: number) => {
-    // subStakeholderID: number,
-    //clientId: number,
-    // groupId: number,
-    // message: SurveyAnswer[],
-    // comment: string
+  const handleClick = async () => {
+    await AddSurveyQuestionAnswers(Number(subStakeholderId), ClientID, surveyAnswer, surveyText);
+    resetSurvey();
+  };
 
-    /// BUTTON PRESSED AFTER ALL GROUPS ARE DONE, NEED TO BE SAVED BEFORE!
-    // TODO: NOT WORKING
-    await AddSurveyQuestionAnswers(
-      Number(subStakeholderId),
-      ClientID,
-      groupId,
-      selectedValues,
-      surveyText.find((item) => item.SubStakeholderId === Number(subStakeholderId) && item.groupId === groupId)?.text!!
-    );
+  const handleChange = (subGroupId: number, answerValue: number) => {
+    setSurveyAnswer((prevValues: SurveyAnswer[]) => {
+      const existingIndex = prevValues.findIndex((item) => item.subGroupId === subGroupId);
+      if (existingIndex > -1) {
+        // Update the existing entry
+        const updatedValues = [...prevValues];
+        updatedValues[existingIndex] = { subGroupId, answer: answerValue };
+        return updatedValues;
+      } else {
+        // Add a new entry
+        return [...prevValues, { subGroupId, answer: answerValue }];
+      }
+    });
   };
 
   return (
@@ -59,69 +61,50 @@ const Survey = ({ SurveyQuestions, Group }: Props) => {
             <div key={groupId} className="group-container">
               <h2 className="group-title">{group?.title}</h2>
               {questions.map((q: SurveyQuestion, index: number) => (
-                <>
-                  <div key={index} className="question-box">
-                    <div className="subgroup-container">
-                      <p className="subgroup-title">
-                        {q.subGroupTitle}
+                <div key={index} className="question-box">
+                  <div className="subgroup-container">
+                    <p className="subgroup-title" onClick={() => console.log(q)}>
+                      {q.subGroupTitle}
 
-                        <button
-                          onClick={() => toggleDescription(setVisibleDescription, q.questions.id)}
+                      <button onClick={() => toggleDescription(setVisibleDescription, q.questions.id)} className="button1">
+                        <img
+                          src="/src/assets/info.svg"
                           style={{
-                            marginLeft: '1rem',
-                            border: 'none',
-                            background: 'white',
-                            cursor: 'pointer',
-                            color: 'white',
-                            padding: '5px',
-                            borderRadius: '50%',
-                            outline: 'none',
+                            width: '20px',
+                            height: '20px',
                           }}
-                        >
-                          <img
-                            src="/src/assets/info.svg"
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                            }}
-                            alt="Info"
-                          />
-                        </button>
-                      </p>
+                          alt="Info"
+                        />
+                      </button>
+                    </p>
 
-                      <div className={`question-description ${visibleDescription[q.questions.id] ? 'show' : ''}`}>
-                        <span className="close-button" onClick={() => closeDescription(setVisibleDescription, q.questions.id)}>
-                          ×
-                        </span>
-                        {q.questions.id}
-                      </div>
-                    </div>
-                    <p>{q.questions.value}</p>
-                    <div className="radio-container">
-                      <div className="radio-labels">
-                        {Importance.map((imp) => (
-                          <span key={imp.value} className="radio-label">
-                            {imp.value}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="radio-inputs">
-                        {Importance.map((imp) => (
-                          <label key={imp.value} className="radio-input">
-                            <input
-                              type="radio"
-                              name={`question-${q.questions.id}`}
-                              value={imp.value}
-                              checked={selectedValues.find((item) => item.subGroupId === q.subGroupId)?.answers === imp.value}
-                              onChange={() => handleChange(setSelectedValues, q.subGroupId, imp.value)}
-                            />
-                          </label>
-                        ))}
-                      </div>
+                    <div className={`question-description ${visibleDescription[q.questions.id] ? 'show' : ''}`}>
+                      <span className="close-button" onClick={() => closeDescription(setVisibleDescription, q.questions.id)}>
+                        ×
+                      </span>
+                      {q.questions.id}
                     </div>
                   </div>
-                </>
+                  <p>{q.questions.value}</p>
+                  <div className="radio-container">
+                    <div className="radio-labels">
+                      {Importance.map((imp) => (
+                        <span key={imp.answer} className="radio-label">
+                          {imp.answer}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="radio-inputs">
+                      {Importance.map((imp) => (
+                        <label key={imp.answer} className="radio-input">
+                          <input type="radio" name={`question-${q.subGroupId}`} value={imp.answer} onChange={() => handleChange(q.subGroupId, imp.answer)} />
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))}
+
               <textarea
                 onChange={(event) => handleChangeInput(setSurveyText, Number(subStakeholderId), event, Number(group.id))}
                 style={{ width: '100%', height: '5rem' }}
@@ -129,7 +112,7 @@ const Survey = ({ SurveyQuestions, Group }: Props) => {
             </div>
           );
         })}
-      <button onClick={() => handleClick(1)} style={{ width: '100%', backgroundColor: COLORS.TERTIARY }}>
+      <button onClick={() => handleClick()} style={{ width: '100%', backgroundColor: COLORS.TERTIARY }}>
         Senden
       </button>
     </div>

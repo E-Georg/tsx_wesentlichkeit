@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Cell, ClientTypes, Group, Stakeholder, SubStakeholder, SurveyAnswer, SurveyQuestion } from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
+import { SurveyText } from '../store';
 
 const PHP_EXTENSION = import.meta.env.VITE_PHP_EXTENSION;
 const API_URL = import.meta.env.VITE_API_URL;
@@ -228,14 +229,13 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
   return [];
 };
 
-export const AddSurveyQuestionAnswers = async (subStakeholderID: number, clientId: number, groupId: number, message: SurveyAnswer[], comment: string) => {
+export const AddSurveyQuestionAnswers = async (subStakeholderID: number, clientId: number, message: SurveyAnswer[], comment: SurveyText[]) => {
   let url = `${API_URL}${ClientTypes.SurveyQuestions}`;
   const data = {
     subStakeholderID: subStakeholderID,
     clientId: clientId,
-    groupId: groupId,
     message: message, // subGroupId: subGroupId, answer: answers,
-    comment: comment,
+    comment: comment, // text: string; SubStakeholderId: number; groupId: number;
   };
 
   console.log(url);

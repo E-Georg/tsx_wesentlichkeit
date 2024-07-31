@@ -1,3 +1,5 @@
+import { SurveyText } from '../../store';
+
 export interface Stakeholder {
   id: number;
   title: string;
@@ -83,7 +85,7 @@ export interface SurveyQuestion {
 
 export type SurveyAnswer = {
   subGroupId: number;
-  answers: number;
+  answer: number;
 };
 
 export type AddSurveyQuestionAnswersParams = {
@@ -91,5 +93,5 @@ export type AddSurveyQuestionAnswersParams = {
   clientId: number;
   groupId: number;
   message: SurveyAnswer[];
-  comment: string;
+  comment: SurveyText[];
 };

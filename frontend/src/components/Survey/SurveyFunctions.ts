@@ -9,15 +9,18 @@ type SetSelectedValues = React.Dispatch<React.SetStateAction<SurveyAnswer[]>>;
 
 type SetVisibleDescription = React.Dispatch<React.SetStateAction<VisibleDescription>>;
 
-export const handleChange = (setSelectedValues: SetSelectedValues, subGroupId: number, value: number) => {
-  setSelectedValues((prevValues) => {
-    const existingIndex = prevValues.findIndex((item) => item.subGroupId === subGroupId);
+export const handleChange = (setSelectedValues: SetSelectedValues, subGroupId: number, answers: number) => {
+  console.log(setSelectedValues);
+  console.log(answers);
+  console.log(subGroupId);
+  setSelectedValues((prevValues: any) => {
+    const existingIndex = prevValues.findIndex((item: any) => item.subGroupId === subGroupId);
     if (existingIndex > -1) {
       const updatedValues = [...prevValues];
-      updatedValues[existingIndex] = { subGroupId, answers: value };
+      updatedValues[existingIndex] = { subGroupId, answers };
       return updatedValues;
     } else {
-      return [...prevValues, { subGroupId, answers: value }];
+      return [...prevValues, { subGroupId, answers }];
     }
   });
 };

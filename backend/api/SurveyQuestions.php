@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // $subGroupId = isset($data['subGroupId']) ? $data['subGroupId'] : null;
     $groupId = isset($data['groupId']) ? $data['groupId'] : null;
     $messages = isset($data['message']) ? $data['message'] : null;
-    $comment = isset($data['comment']) ? $data['comment'] : null;
+    $comments = isset($data['comment']) ? $data['comment'] : null;
     echo json_encode($data);
 
     foreach ($messages as $message) {
@@ -122,16 +122,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $lastIdAnswers = dbInsert($db, 'wa_clientSubStakeholderAnswers', $cols);
     }
 
-    $colsN = [
-        'subStakeholderID' => $subStakeholderID,
-        'clientGroupId' => $groupId,
-        'comment' => $comment,
-        'clientId' => $clientId,
-        'active' => 1,
-        'editDate' => date("Y-m-d H:i:s")
-    ];
-    $lastIdComments = dbInsert($db, 'wa_clientSubStakeholderAnswersComments', $colsN);
-
+    foreach ($comments as $comment) {
+        $colsN = [
+            'subStakeholderID' => $subStakeholderID,
+            'clientGroupId' => $comment['groupId'],
+            'comment' => $comment['text'],
+            'clientId' => $clientId,
+            'active' => 1,
+            'editDate' => date("Y-m-d H:i:s")
+        ];
+        $lastIdComments = dbInsert($db, 'wa_clientSubStakeholderAnswersComments', $colsN);
+    }
 
 
 

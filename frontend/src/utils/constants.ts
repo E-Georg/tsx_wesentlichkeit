@@ -31,4 +31,4 @@ export const COLORS = {
   TERTIARY: '#0082C8',
 };
 
-export const Importance = [{ value: -2 }, { value: -1 }, { value: 0 }, { value: 1 }, { value: 2 }];
+export const Importance = [{ answer: -2 }, { answer: -1 }, { answer: 0 }, { answer: 1 }, { answer: 2 }];
