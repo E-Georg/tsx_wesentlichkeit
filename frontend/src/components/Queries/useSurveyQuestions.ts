@@ -19,7 +19,9 @@ const useSurveyQuestions = () => {
 
   // Add Stakeholder mutation
   const { mutateAsync: addAnswers } = useMutation({
-    mutationFn: ({ subStakeholderID, message, comment }: AddSurveyQuestionAnswersParams) => AddSurveyQuestionAnswers(subStakeholderID, ClientID, message, comment),
+    mutationFn: ({ subStakeholderID, message, comment }: AddSurveyQuestionAnswersParams) => (
+      console.log(subStakeholderID, ClientID, message, comment), AddSurveyQuestionAnswers(subStakeholderID, ClientID, message, comment)
+    ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Questions'] });
     },

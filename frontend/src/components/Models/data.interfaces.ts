@@ -90,8 +90,15 @@ export type SurveyAnswer = {
 
 export type AddSurveyQuestionAnswersParams = {
   subStakeholderID: number;
-  clientId: number;
-  groupId: number;
+  clientId?: number;
   message: SurveyAnswer[];
   comment: SurveyText[];
 };
+
+export type VisibleDescription = {
+  [key: number]: boolean;
+};
+
+export type SetSelectedValues = React.Dispatch<React.SetStateAction<SurveyAnswer[]>>;
+
+export type SetVisibleDescription = React.Dispatch<React.SetStateAction<VisibleDescription>>;

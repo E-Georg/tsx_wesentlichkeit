@@ -8,6 +8,11 @@ export const BUTTONS = {
   SAVE: 'Speichern',
   DELETE: 'Löschen',
   UPDATE: 'Bearbeiten',
+  SEND: 'Senden',
+};
+
+export const STRINGS = {
+  SUBSTAKEHOLDERCOUNT: 'Anzahl hinterlegter Stakeholder:',
 };
 
 export const Classifications: Classification[] = [

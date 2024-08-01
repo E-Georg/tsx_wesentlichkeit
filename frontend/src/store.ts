@@ -100,7 +100,7 @@ export const useStore = create<State & Action>()(
           return { surveyText: [...state.surveyText, newSurveyText] };
         }
       }),
-    resetSurvey: () => set(() => ({ surveyAnswer: [{ answer: 0, subGroupId: 0 }], surveyText: [{ text: '', SubStakeholderId: 0, groupId: 0 }] })),
+    resetSurvey: () => set(() => ({ surveyAnswer: [], surveyText: [] })),
     relevance: { text: '', value: 5 },
     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
     DELETE: false,

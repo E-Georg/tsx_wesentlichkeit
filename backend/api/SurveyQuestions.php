@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $query = '
                 SELECT 
                     g.id as groupId, 
-                    g.title as groupTitle, 
                     sg.id as subGroupId, 
                     sg.title as subGroupTitle, 
                     ss.title as questionDescription, 
@@ -76,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         }
                         $groupMap[] = [
                             'groupId' => $groupId,
-                            'groupTitle' => $result['groupTitle'],
                             'subGroupId' => $subGroupId,
                             'subGroupTitle' => $result['subGroupTitle'],
                             'questions' => $questionsArray
@@ -111,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $comments = isset($data['comment']) ? $data['comment'] : null;
     echo json_encode($data);
 
+    // if values on this id exist, remove the first. => but better to block the link after first submit
     foreach ($messages as $message) {
         $cols = [
             'subStakeholderID' => $subStakeholderID,
