@@ -21,6 +21,11 @@ const MainNavigation = () => {
             Stakeholder Befragung
           </NavLink>
         </li>
+        <li className="nav_listitem">
+          <NavLink to="/WesAn" className={({ isActive }) => `${isActive ? 'active' : ''} nav_link`}>
+            Wesentlichkeitsanalyse
+          </NavLink>
+        </li>
         {/*  {!token && (
             <li>
               <NavLink to="/auth?mode=login" className={({ isActive }) => `${isActive ? "active" : ""} nav_link`}>
