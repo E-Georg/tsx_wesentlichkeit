@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     g.id as groupId, 
                     sg.id as subGroupId, 
                     sg.title as subGroupTitle, 
-                    ss.title as questionDescription, 
+                    ss.description as questionDescription, 
                     ss.id as questionId
                 FROM 
                     wa_clientGroups g

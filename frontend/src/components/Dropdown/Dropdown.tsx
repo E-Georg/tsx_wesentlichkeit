@@ -5,6 +5,7 @@ import { messageValue } from '../../store';
 import { SubStakeholder } from '../Models/data.interfaces';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
 import { handleSelectChange } from './DropdownFuntion';
+import { useEffect } from 'react';
 
 interface Props {
   stakeholderID: number;
@@ -16,6 +17,12 @@ interface Props {
 const Dropdown = ({ index, stakeholderID, setMessageValueByIndex, messageValue }: Props) => {
   const navigate = useNavigate();
   const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
+
+  useEffect(() => {
+    if (sessionStorage) {
+      sessionStorage.clear();
+    }
+  }, []);
 
   const filteredSubStakeholders =
     SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];

@@ -47,6 +47,7 @@ export enum ClientTypes {
   Stakeholders = 'clientStakeholders',
   SubGroups = 'clientSubGroups',
   Groups = 'clientGroups',
+  GroupSubGroup = 'clientGroupSubGroup',
   Cells = 'clientStakeholderSignificanceAll',
   Cell = 'clientStakeholderSignificance',
   SubStakeholder = 'clientSubStakeholders',
