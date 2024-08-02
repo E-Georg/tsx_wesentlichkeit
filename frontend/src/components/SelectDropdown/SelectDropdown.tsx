@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Option } from '../../store';
 
 type Props = {
@@ -10,6 +11,10 @@ type Props = {
   defaultValue?: number;
   disabled?: boolean;
 };
+
+useEffect(() => {
+  sessionStorage.clear();
+}, []);
 
 const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, defaultValue = 0, slice = false, disabled = false }: Props) => {
   if (slice) {

@@ -4,28 +4,21 @@ import useSubStakeholderData from '../Queries/useSubStakeholder';
 import { messageValue } from '../../store';
 import { SubStakeholder } from '../Models/data.interfaces';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
+import { handleSelectChange } from './DropdownFuntion';
 
 interface Props {
   stakeholderID: number;
   index: number;
-  setMessageValueByIndex: (index: number, value: messageValue) => void;
+  setMessageValueByIndex: any; //(index: number, value: messageValue) => void;
   messageValue: messageValue;
 }
 
-const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }: Props) => {
+const Dropdown = ({ index, stakeholderID, setMessageValueByIndex, messageValue }: Props) => {
   const navigate = useNavigate();
   const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
 
   const filteredSubStakeholders =
     SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMessageValueByIndex(index, {
-      id: messageValue.id,
-      text: messageValue.text,
-      subStakeholderId: Number(event.target.value),
-    });
-  };
 
   const options = filteredSubStakeholders!.map((option) => ({
     value: option.id,
@@ -38,7 +31,7 @@ const Dropdown = ({ messageValue, index, stakeholderID, setMessageValueByIndex }
         options={options}
         style={{ height: '2rem' }}
         value={messageValue.subStakeholderId}
-        onChange={handleSelectChange}
+        onChange={(event) => handleSelectChange(setMessageValueByIndex, index, messageValue, event)}
         placeholder="Substakeholder auswählen"
       />
 
