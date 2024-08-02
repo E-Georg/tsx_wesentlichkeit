@@ -27,6 +27,7 @@ const SubStakeholderList = () => {
         newSubStakeholder={newSubStakeholder}
         setNewSubStakeholder={setNewSubStakeholder}
       />
+      
       <DisplaySubStakeholder setNewSubStakeholder={setNewSubStakeholder} />
     </div>
   );
