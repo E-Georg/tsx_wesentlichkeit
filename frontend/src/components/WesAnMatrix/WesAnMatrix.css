@@ -85,3 +85,16 @@
     display: none;
   }
   
+  .WesAn-group-container{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chkbox-title-container{
+    display: flex;
+    gap: 8px;
+  }
+
+  .WesAn-checkbox {
+    transform : scale(1.3); 
+  }
