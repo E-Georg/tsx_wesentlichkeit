@@ -10,6 +10,7 @@ import { tokenLoader } from './utils/auth';
 import RootLayout from './components/Root/RootLayout';
 import SubStakeholderList from './components/StakeholderList/SubStakeholderList';
 import SurveyPage from './components/Pages/SurveyPage/SurveyPage';
+import Wesentlichkeitsanalyse from './components/Pages/Wesentlichkeitsanalyse/Wesentlichkeitsanalyse';
 
 //TODO: infinity hinzufügen
 const queryClient = new QueryClient({
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: '/register', element: <RegisterPage /> },
       { path: '/stakeholderlist', element: <SubStakeholderList /> },
       { path: '/survey/:id?', element: <SurveyPage /> },
+      { path: '/WesAn', element: <Wesentlichkeitsanalyse /> },
     ],
   },
 ]);

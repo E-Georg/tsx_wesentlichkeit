@@ -1,20 +1,25 @@
-import { ChangeEvent, useState } from 'react';
-import { useStore } from '../../store';
-import { SubStakeholder } from '../Models/data.interfaces';
-import useStakeholderData from '../Queries/useStakeholderData';
-import useSubStakeholderData from '../Queries/useSubStakeholder';
-import { setEditOrDelete } from './DisplaySubStakeholderFunctions';
-import SelectDropdown from '../SelectDropdown/SelectDropdown';
+import { ChangeEvent, useState } from "react";
+import { useStore } from "../../store";
+import { SubStakeholder } from "../Models/data.interfaces";
+import useStakeholderData from "../Queries/useStakeholderData";
+import useSubStakeholderData from "../Queries/useSubStakeholder";
+import { setEditOrDelete } from "./DisplaySubStakeholderFunctions";
+import SelectDropdown from "../SelectDropdown/SelectDropdown";
+import EmailButtonList from "../StakeholderEmailList/StakeholderEmailList";
 
 type Props = {
   setNewSubStakeholder: (subStakeholder: SubStakeholder) => void;
 };
 
-const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Props) => {
+const DisplaySubStakeholder = ({
+  setNewSubStakeholder: setNewStakeholder,
+}: Props) => {
   const { Stakeholder, isLoadingStack } = useStakeholderData();
   const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
   const { setOnChangeSubStakeholder, DELETE } = useStore();
   const [filter, setFilter] = useState(0);
+
+  const Betreff = "Umfrage zur Wesentlichkeitsanalyse";
 
   if (isLoadingStack) {
     <div> ...LOADING</div>;
@@ -30,21 +35,41 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
 
   return (
     <>
-      {SubStakeholderQuery && SubStakeholderQuery.length > 1 && (
+      {Array.isArray(SubStakeholderQuery) && (
         <div>
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-            <h2 style={{ marginTop: '5rem' }}>Substakeholder Übersicht </h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "baseline",
+            }}
+          >
+            <h2 style={{ marginTop: "5rem" }}>Substakeholder Übersicht </h2>
             {/* Choose the wanted Stakeholder */}
             <SelectDropdown
               options={options}
               value={filter}
-              onChange={(event: ChangeEvent<HTMLSelectElement>) => setFilter(Number(event.target.value))}
+              onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                setFilter(Number(event.target.value))
+              }
               placeholder="Stakeholdergruppe auswählen"
-              style={{ marginLeft: '7rem', padding: '5px', width: '15rem', height: '2rem' }}
+              style={{
+                marginLeft: "7rem",
+                padding: "5px",
+                width: "15rem",
+                height: "2rem",
+              }}
             />
           </div>
-          <table style={{ margin: '20px 0', width: '100%' }}>
-            <thead style={{ textAlign: 'left', fontSize: '20px', textDecoration: 'underline', textDecorationThickness: '0.01rem' }}>
+          <table style={{ margin: "20px 0", width: "100%" }}>
+            <thead
+              style={{
+                textAlign: "left",
+                fontSize: "20px",
+                textDecoration: "underline",
+                textDecorationThickness: "0.01rem",
+              }}
+            >
               <tr>
                 <th>Name</th>
                 <th>E-Mail</th>
@@ -56,7 +81,9 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
                 SubStakeholderQuery.length! >= 1 &&
                 Array.isArray(SubStakeholderQuery) &&
                 // Sort
-                SubStakeholderQuery?.sort((x: any, y: any) => x.stakeholderId - y.stakeholderId)
+                SubStakeholderQuery?.sort(
+                  (x: any, y: any) => x.stakeholderId - y.stakeholderId
+                )
                   // Filter according to choosen stakeholder or all
                   .filter((subStake: SubStakeholder) => {
                     if (filter != 0) {
@@ -68,13 +95,29 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
                   .map((subStakeholder: SubStakeholder, index: number) => (
                     <tr
                       onClick={() => {
-                        setEditOrDelete(setNewStakeholder, subStakeholder, DELETE, setOnChangeSubStakeholder);
+                        setEditOrDelete(
+                          setNewStakeholder,
+                          subStakeholder,
+                          DELETE,
+                          setOnChangeSubStakeholder
+                        );
                       }}
                       key={index}
                     >
                       <td>{subStakeholder.name}</td>
                       <td>{subStakeholder.email}</td>
-                      <td>{Stakeholder?.find((data) => data.id === subStakeholder.stakeholderId)?.title}</td>
+                      <td>
+                        {
+                          Stakeholder?.find(
+                            (data) => data.id === subStakeholder.stakeholderId
+                          )?.title
+                        }
+                      </td>
+                      <EmailButtonList
+                        stakeholders={Stakeholder!!}
+                        subStakeholder={subStakeholder}
+                        Betreff={Betreff}
+                      />
                     </tr>
                   ))}
             </tbody>
