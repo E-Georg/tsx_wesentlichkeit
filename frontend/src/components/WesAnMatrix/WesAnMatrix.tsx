@@ -1,15 +1,21 @@
 import useGroupSubGroupData from "../Queries/useGroupSubGroup";
 import React, { useState } from "react";
 import "./WesAnMatrix.css";
+import useStakeholderData from "../Queries/useStakeholderData";
 
 type Props = {};
 
 const WesAnMatrix = (_: Props) => {
   const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
-  const [visibleGroupId, setVisibleGroupId] = useState<string | null>(null);
 
+  const [visibleGroups, setVisibleGroups] = useState<{
+    [key: string]: boolean;
+  }>({});
   const handleToggle = (groupId: string) => {
-    setVisibleGroupId(visibleGroupId === groupId ? null : groupId);
+    setVisibleGroups((prevState) => ({
+      ...prevState,
+      [groupId]: !prevState[groupId],
+    }));
   };
 
   if (load) {
@@ -44,21 +50,19 @@ const WesAnMatrix = (_: Props) => {
             <tr className="title-blue">
               {group.groupTitle} {group.groupId}
               <button onClick={() => handleToggle(group.groupId)}>
-                Mehr info
+                {group.groupTitle}
               </button>
             </tr>
-            {GroupSubGroup.filter(
-              (subGroup) => subGroup.groupId === group.groupId
-            ).map((subGroup) => (
-              <tr
-                key={subGroup.subGroupId}
-                className={`title-green ${
-                  visibleGroupId === group.groupId ? "" : "disable"
-                }`}
-              >
-                {subGroup.subGroupTitle} {group.groupId}
-              </tr>
-            ))}
+            {visibleGroups[group.groupId] &&
+              GroupSubGroup.filter(
+                (subGroup) => subGroup.groupId === group.groupId
+              ).map((subGroup) => (
+                <tr key={subGroup.subGroupId} className="title-green">
+                  <td>
+                    {subGroup.subGroupTitle} {group.groupId}
+                  </td>
+                </tr>
+              ))}
           </React.Fragment>
         ))}
       </tbody>
