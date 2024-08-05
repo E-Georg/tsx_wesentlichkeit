@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 g.id as groupId,
                 g.title as groupTitle,
                 sg.id as subGroupId,
-                sg.title as subGroupTitle
-            
+                sg.title as subGroupTitle,
+                sg.groupId as subGroupGroupId
             FROM
                 wa_clientGroups g
             LEFT JOIN
@@ -41,18 +41,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $clientGroups = dbSelect($db, $query, $cols);
 
-    // echo json_encode($clientGroups);
 
+    $jsonArray = [];
 
     if (count($clientGroups) > 0) {
-        $pointer = 0;
         foreach ($clientGroups as $clientGroup) {
-            $jsonArray[$pointer]['groupId'] = $clientGroup['groupId'];
-            $jsonArray[$pointer]['groupTitle'] = $clientGroup['groupTitle'];
-            $jsonArray[$pointer]['subGroupId'] = $clientGroup['subGroupId'];
-            $jsonArray[$pointer]['subGroupTitle'] = $clientGroup['subGroupTitle'];
-            $pointer++;
+            $groupId = $clientGroup['groupId'];
+
+            // Check if the group already exists in the $jsonArray
+            if (!isset($jsonArray[$groupId])) {
+                // If it doesn't exist, create a new group entry
+                $jsonArray[$groupId] = [
+                    'groupId' => $clientGroup['groupId'],
+                    'groupTitle' => $clientGroup['groupTitle'],
+                    'subGroups' => []
+                ];
+            }
+
+            // Add the subgroup to the corresponding group's 'subGroups' array
+            $jsonArray[$groupId]['subGroups'][] = [
+                'subGroupId' => $clientGroup['subGroupId'],
+                'subGroupTitle' => $clientGroup['subGroupTitle']
+            ];
         }
+
+        // Re-index the array by resetting the keys to make it a non-associative array
+        $jsonArray = array_values($jsonArray);
     } else {
         $jsonArray['errorNo'] = 1;
         $jsonArray['errorMessage'] = "nicht gefunden";

@@ -5,14 +5,14 @@ import './WesAnList.css';
 
 const WesAnList = () => {
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } = useSurveyQuestionAverageValues();
-  const { GroupSubGroup2, isLoadingGroupSubGroup } = useGroupSubGroupData();
+  const { GroupSubGroup, isLoading } = useGroupSubGroupData();
   const [expandedGroupId, setExpandedGroupId] = useState<number | null>(null);
   const [areAllGroupsExpanded, setAreAllGroupsExpanded] = useState<boolean>(false);
 
   let groupAverageMap;
   let subgroupAverageMap;
 
-  if (isLoadingQuestionsAverage || isLoadingGroupSubGroup) {
+  if (isLoadingQuestionsAverage || isLoading) {
     return <div>...Loading</div>;
   } else {
     // Create a mapping of groupId to groupAverage
@@ -60,10 +60,10 @@ const WesAnList = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(GroupSubGroup2) &&
-            !isLoadingGroupSubGroup &&
+          {Array.isArray(GroupSubGroup) &&
+            !isLoading &&
             !isLoadingQuestionsAverage &&
-            GroupSubGroup2.map((group: any) => (
+            GroupSubGroup.map((group: any) => (
               <Fragment key={group.groupId}>
                 {/* Group Title Row */}
                 <tr className="group-row">
