@@ -101,10 +101,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $jsonArray = array();
 
     $answererdAverageValues = isset($data['answererdAverageValues']) ? $data['answererdAverageValues'] : null;
+    $answererdText = isset($data['answererdText']) ? $data['answererdText'] : null;
     $clientId = isset($data['clientId']) ? $data['clientId'] : null;
 
 
-    if ($answererdAverageValues != null || $answererdAverageValues == true) {
+    if ($answererdAverageValues != null && $answererdAverageValues == true) {
         // Select all function to one groupId ==> values from there subGroup && clientId && Stakeholder
         // Call function which calculate average of all 
 
@@ -127,90 +128,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     g.sort ASC, sg.sort ASC;
                 ";
 
-        // gives  the group average and the subgroup Average too
-        // $query = "SELECT 
-        //             g.id as groupId,
-        //             sg.id as subGroupId,
-        //             AVG(a.answer) as subgroupAverage,
-
-        //             (SELECT AVG(a2.answer)
-        //             st.id
-        //             FROM wa_clientGroups g2
-        //             JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
-        //             JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
-        //             JOIN wa_subStakeholder  ssh ON a2.subStakeholderId = ssh.id
-        //             JOIN wa_clientStakeholders st ON ssh.stakeholderId = st.id
-        //             WHERE g2.id = g.id AND g2.active = 1 AND sg2.active = 1
-        //             ) as groupAverage
-
-        //         FROM
-        //             wa_clientGroups g
-        //         JOIN 
-        //             wa_clientSubGroups sg ON g.id = sg.groupId
-        //         JOIN 
-        //             wa_clientSubStakeholderAnswers a ON sg.id = a.clientSubGroupsId
-        //         WHERE
-        //             g.active = 1 
-        //             AND sg.active = 1
-        //             AND g.clientId = :clientId 
-        //         GROUP BY 
-        //             g.id, sg.id
-        //         ORDER BY 
-        //             g.id ASC;
-        //         ";
-
         $query = "SELECT 
-        g.id as groupId,
-        sg.id as subGroupId,
-        st.id as stakeholderId,
-        AVG(a.answer) as subgroupAverage,
-        (
-            SELECT AVG(a2.answer)
-            FROM wa_clientGroups g2
-            JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
-            JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
-            WHERE   
-                g2.id = g.id 
-            AND 
-                g2.active = 1 
-            AND 
-                sg2.active = 1
-        ) as groupAverageTotal,
-        (
-            SELECT AVG(a2.answer)
-            FROM wa_clientGroups g2
-            JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
-            JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
-            JOIN wa_subStakeholder sst ON sst.id = a2.subStakeholderId
-            JOIN wa_clientStakeholders stt ON stt.id = sst.stakeholderId
-            WHERE   
-                g2.id = g.id 
-            AND 
-                g2.active = 1 
-            AND 
-                sg2.active = 1
-            AND 
-                stt.id = st.id  -- Matching the current stakeholderId
-        ) as groupAverage
-    FROM wa_clientGroups g
-    JOIN wa_clientSubGroups sg ON g.id = sg.groupId
-    JOIN wa_clientSubStakeholderAnswers a ON sg.id = a.clientSubGroupsId
-    JOIN wa_subStakeholder sst ON sst.id = a.subStakeholderId
-    JOIN wa_clientStakeholders st ON st.id = sst.stakeholderId
-    WHERE
-        g.active = 1 
-    AND sg.active = 1
-    AND g.clientId = :clientId 
-    GROUP BY 
-        g.id, sg.id, st.id
-    ORDER BY 
-        g.id ASC;
-";
-
-
-
-
-
+                    g.id as groupId,
+                    g.title as groupTitle,
+                    sg.id as subGroupId,
+                    sg.title as subGroupTitle,
+                    st.id as stakeholderId,
+                    AVG(a.answer) as subgroupAverage,
+                    (
+                        SELECT AVG(a2.answer)
+                        FROM wa_clientGroups g2
+                        JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
+                        JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
+                        WHERE   
+                            g2.id = g.id 
+                        AND 
+                            g2.active = 1 
+                        AND 
+                            sg2.active = 1
+                    ) as groupAverageTotal,
+                    (
+                        SELECT AVG(a2.answer)
+                        FROM wa_clientGroups g2
+                        JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
+                        JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
+                        JOIN wa_subStakeholder sst ON sst.id = a2.subStakeholderId
+                        JOIN wa_clientStakeholders stt ON stt.id = sst.stakeholderId
+                        WHERE   
+                            g2.id = g.id 
+                        AND 
+                            g2.active = 1 
+                        AND 
+                            sg2.active = 1
+                        AND 
+                            stt.id = st.id  
+                    ) as groupAverage
+                FROM wa_clientGroups g
+                JOIN wa_clientSubGroups sg ON g.id = sg.groupId
+                JOIN wa_clientSubStakeholderAnswers a ON sg.id = a.clientSubGroupsId
+                JOIN wa_subStakeholder sst ON sst.id = a.subStakeholderId
+                JOIN wa_clientStakeholders st ON st.id = sst.stakeholderId
+                WHERE
+                    g.active = 1 
+                AND sg.active = 1
+                AND g.clientId = :clientId 
+                GROUP BY 
+                    g.id, sg.id, st.id
+                ORDER BY 
+                    g.id ASC;
+            ";
 
 
         // {
@@ -235,20 +201,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         foreach ($results as $row) {
             $groupId = $row['groupId'];
+            $groupTitle = $row['groupTitle'];
             $stakeholderId = $row['stakeholderId'];
             $subGroupId = $row['subGroupId'];
+            $subGroupTitle = $row['subGroupTitle'];
 
             // Initialize group if not set
             if (!isset($data[$groupId])) {
                 $data[$groupId] = [
                     'groupId' => $groupId,
+                    'groupTitle' => $groupTitle,
                     'groupAverageTotal' => $row['groupAverageTotal'],
                     'value' => [],
                     'subGroups' => []
                 ];
             }
 
-            // Add stakeholder data
             if (!isset($data[$groupId]['value'][$stakeholderId])) {
                 $data[$groupId]['value'][$stakeholderId] = [
                     'stakeholderId' => $stakeholderId,
@@ -259,6 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Add subGroup data
             $data[$groupId]['subGroups'][] = [
                 'subGroupId' => $subGroupId,
+                'subGroupTitle' => $subGroupTitle,
                 'stakeholderId' => $stakeholderId,
                 'subgroupAverage' => $row['subgroupAverage']
             ];
@@ -275,6 +244,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         echo $json;
         return;
+    } else if ($answererdText != null && $answererdText == true) {
+        // GroupId
+        // Messages:[
+        //  {
+        //     SubStakeholderId:                    wa_clientSubStakeholderAnswersComments
+        //     subGroupTitle:
+        //     text:                                wa_clientSubStakeholderAnswersComments
+        //  },
+        // ]
+
     }
 
 
