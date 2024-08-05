@@ -13,7 +13,7 @@ const useSubStakeholderData = () => {
   const {
     data: SubStakeholder,
     status,
-    isLoading: isLoadingStack,
+    isLoading: isLoadingStake,
   } = useQuery({
     queryKey: ['SubStakeholder'],
     queryFn: () => fetchDataQuerySubStakeholder(),
@@ -50,7 +50,7 @@ const useSubStakeholderData = () => {
     deleteSubStakeholderMutation,
     updateStakeholderMutation,
     status,
-    isLoadingStack,
+    isLoadingStake,
   };
 };
 

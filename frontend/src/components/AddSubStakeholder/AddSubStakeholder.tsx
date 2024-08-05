@@ -15,7 +15,7 @@ type Props = {
 };
 
 const AddSubStakeholder = ({ reset, newSubStakeholder, setNewSubStakeholder }: Props) => {
-  const { Stakeholder, isLoadingStack } = useStakeholderData();
+  const { Stakeholder, isLoadingStake } = useStakeholderData();
   const { addSubStakeholderMutation, deleteSubStakeholderMutation, updateStakeholderMutation } = useSubStakeholderData();
   const { onChangeSubStakeholder, DELETE, SetDELETE } = useStore();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const AddSubStakeholder = ({ reset, newSubStakeholder, setNewSubStakeholder }: P
   const [ButtonUpdateDelete, setButtonUpdateDelete] = useState('Daten Aktualisieren');
   const [error, setError] = useState<string | null>(null);
 
-  if (isLoadingStack) {
+  if (isLoadingStake) {
     <div> ...LOADING</div>;
   }
 

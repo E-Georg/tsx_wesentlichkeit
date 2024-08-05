@@ -1,11 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ClientTypes } from '../Models/data.interfaces';
-import {
-  AddDataToDataBaseQuery,
-  DeleteDataFromDatabaseQuery,
-  fetchDataQuery,
-  UpdateDataToDatabaseQuery,
-} from '../../services/ApiService';
+import { AddDataToDataBaseQuery, DeleteDataFromDatabaseQuery, fetchDataQuery, UpdateDataToDatabaseQuery } from '../../services/ApiService';
 import { useStore } from '../../store';
 
 const useStakeholderData = () => {
@@ -16,7 +11,7 @@ const useStakeholderData = () => {
   const {
     data: Stakeholder,
     status,
-    isLoading: isLoadingStack,
+    isLoading: isLoadingStake,
   } = useQuery({
     queryKey: ['Stakeholder'],
     queryFn: () => fetchDataQuery(ClientTypes.Stakeholders, ClientID),
@@ -26,8 +21,7 @@ const useStakeholderData = () => {
 
   // Add Stakeholder mutation
   const { mutateAsync: addStakeholderMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter }: any) =>
-      AddDataToDataBaseQuery({ matrixObject, typeParameter, ClientID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) => AddDataToDataBaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
     },
@@ -43,8 +37,7 @@ const useStakeholderData = () => {
 
   //   // Update Stakeholder mutation
   const { mutateAsync: updateStakeholderMutation } = useMutation({
-    mutationFn: ({ matrixObject, typeParameter }: any) =>
-      UpdateDataToDatabaseQuery({ matrixObject, typeParameter, ClientID }),
+    mutationFn: ({ matrixObject, typeParameter }: any) => UpdateDataToDatabaseQuery({ matrixObject, typeParameter, ClientID }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Stakeholder'] });
     },
@@ -53,7 +46,7 @@ const useStakeholderData = () => {
   return {
     Stakeholder,
     status,
-    isLoadingStack,
+    isLoadingStake,
     addStakeholderMutation,
     deleteStakeholderMutation,
     updateStakeholderMutation,

@@ -10,10 +10,10 @@ const MatrixPage = () => {
   const { title, setTitle, description, setDescription } = useStore();
 
   const { Group, isLoading } = useGroupData();
-  let { Stakeholder, isLoadingStack } = useStakeholderData();
+  let { Stakeholder, isLoadingStake } = useStakeholderData();
   const { Cells, isLoadingCells } = useCellData();
 
-  if (isLoading || isLoadingStack || isLoadingCells) {
+  if (isLoading || isLoadingStake || isLoadingCells) {
     return <div>Loading...</div>;
   }
 
