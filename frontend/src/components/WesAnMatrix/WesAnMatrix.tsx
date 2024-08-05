@@ -1,7 +1,6 @@
+import React, { useState, useEffect } from "react";
 import useGroupSubGroupData from "../Queries/useGroupSubGroup";
-import React, { useState } from "react";
 import "./WesAnMatrix.css";
-import useStakeholderData from "../Queries/useStakeholderData";
 
 type Props = {};
 
@@ -11,6 +10,36 @@ const WesAnMatrix = (_: Props) => {
   const [visibleGroups, setVisibleGroups] = useState<{
     [key: string]: boolean;
   }>({});
+
+  const [transformedData, setTransformedData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!load) {
+      const groupedData = GroupSubGroup.reduce((acc, item) => {
+        const group = acc.find((g) => g.groupId === item.groupId);
+        if (group) {
+          group.subGroups.push({
+            subGroupId: item.subGroupId,
+            subGroupTitle: item.subGroupTitle,
+          });
+        } else {
+          acc.push({
+            groupId: item.groupId,
+            groupTitle: item.groupTitle,
+            subGroups: [
+              {
+                subGroupId: item.subGroupId,
+                subGroupTitle: item.subGroupTitle,
+              },
+            ],
+          });
+        }
+        return acc;
+      }, []);
+      setTransformedData(groupedData);
+    }
+  }, [GroupSubGroup, load]);
+
   const handleToggle = (groupId: string) => {
     setVisibleGroups((prevState) => ({
       ...prevState,
@@ -23,16 +52,6 @@ const WesAnMatrix = (_: Props) => {
   }
 
   const stakeholderCount = 3;
-  const uniqueGroups = GroupSubGroup.map((item) => ({
-    groupId: item.groupId,
-    groupTitle: item.groupTitle,
-  })).filter(
-    (value, index, self) =>
-      index ===
-      self.findIndex(
-        (t) => t.groupId === value.groupId && t.groupTitle === value.groupTitle
-      )
-  );
 
   return (
     <table>
@@ -45,22 +64,29 @@ const WesAnMatrix = (_: Props) => {
         </tr>
       </thead>
       <tbody>
-        {uniqueGroups.map((group) => (
+        {transformedData.map((group) => (
           <React.Fragment key={group.groupId}>
-            <tr className="title-blue">
-              {group.groupTitle} {group.groupId}
-              <button onClick={() => handleToggle(group.groupId)}>
-                {group.groupTitle}
-              </button>
+            <tr
+              className="title-blue"
+              onClick={() => handleToggle(group.groupId)}
+              style={{ cursor: "pointer" }}
+            >
+              <td>
+                {group.groupTitle} {group.groupId}
+              </td>
+              {[...Array(stakeholderCount)].map((_, index) => (
+                <td key={index}></td>
+              ))}
             </tr>
             {visibleGroups[group.groupId] &&
-              GroupSubGroup.filter(
-                (subGroup) => subGroup.groupId === group.groupId
-              ).map((subGroup) => (
+              group.subGroups.map((subGroup) => (
                 <tr key={subGroup.subGroupId} className="title-green">
                   <td>
                     {subGroup.subGroupTitle} {group.groupId}
                   </td>
+                  {[...Array(stakeholderCount)].map((_, index) => (
+                    <td key={index}></td>
+                  ))}
                 </tr>
               ))}
           </React.Fragment>
