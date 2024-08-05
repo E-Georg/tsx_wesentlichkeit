@@ -1,29 +1,20 @@
 import useGroupSubGroupData from "../Queries/useGroupSubGroup";
-import React from "react";
+import React, { useState } from "react";
 import "./WesAnMatrix.css";
 
 type Props = {};
 
 const WesAnMatrix = (_: Props) => {
   const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
+  const [visibleGroupId, setVisibleGroupId] = useState<string | null>(null);
+
+  const handleToggle = (groupId: string) => {
+    setVisibleGroupId(visibleGroupId === groupId ? null : groupId);
+  };
 
   if (load) {
     return <div>Loading...</div>;
   }
-
-  // Gruppiere die Daten nach groupTitle
-  const groupedData: any[] = GroupSubGroup.reduce((acc: any[], curr: any) => {
-    const group = acc.find((g: any) => g.groupTitle === curr.groupTitle);
-    if (group) {
-      group.subGroupTitles.push(curr.subGroupTitle.trim());
-    } else {
-      acc.push({
-        groupTitle: curr.groupTitle.trim(),
-        subGroupTitles: [curr.subGroupTitle.trim()],
-      });
-    }
-    return acc;
-  }, [] as any[]);
 
   const stakeholderCount = 3;
   const uniqueGroups = GroupSubGroup.map((item) => ({
@@ -36,8 +27,6 @@ const WesAnMatrix = (_: Props) => {
         (t) => t.groupId === value.groupId && t.groupTitle === value.groupTitle
       )
   );
-
-  console.log(uniqueGroups);
 
   return (
     <table>
@@ -54,15 +43,22 @@ const WesAnMatrix = (_: Props) => {
           <React.Fragment key={group.groupId}>
             <tr className="title-blue">
               {group.groupTitle} {group.groupId}
+              <button onClick={() => handleToggle(group.groupId)}>
+                Mehr info
+              </button>
             </tr>
             {GroupSubGroup.filter(
               (subGroup) => subGroup.groupId === group.groupId
-            ) // Add your condition here
-              .map((subGroup) => (
-                <tr key={subGroup.subGroupId} className="title-green">
-                  {subGroup.subGroupTitle} {group.groupId}
-                </tr>
-              ))}
+            ).map((subGroup) => (
+              <tr
+                key={subGroup.subGroupId}
+                className={`title-green ${
+                  visibleGroupId === group.groupId ? "" : "disable"
+                }`}
+              >
+                {subGroup.subGroupTitle} {group.groupId}
+              </tr>
+            ))}
           </React.Fragment>
         ))}
       </tbody>
