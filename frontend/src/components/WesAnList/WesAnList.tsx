@@ -1,13 +1,15 @@
-import { Fragment, useState } from 'react';
-import useGroupSubGroupData from '../Queries/useGroupSubGroup';
-import useSurveyQuestionAverageValues from '../Queries/useSurveyQuestionAverageValues';
-import './WesAnList.css';
+import { Fragment, useState } from "react";
+import useGroupSubGroupData from "../Queries/useGroupSubGroup";
+import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageValues";
+import "./WesAnList.css";
 
 const WesAnList = () => {
-  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } = useSurveyQuestionAverageValues();
+  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } =
+    useSurveyQuestionAverageValues();
   const { GroupSubGroup, isLoading } = useGroupSubGroupData();
   const [expandedGroupId, setExpandedGroupId] = useState<number | null>(null);
-  const [areAllGroupsExpanded, setAreAllGroupsExpanded] = useState<boolean>(false);
+  const [areAllGroupsExpanded, setAreAllGroupsExpanded] =
+    useState<boolean>(false);
 
   let groupAverageMap;
   let subgroupAverageMap;
@@ -16,20 +18,26 @@ const WesAnList = () => {
     return <div>...Loading</div>;
   } else {
     // Create a mapping of groupId to groupAverage
-    groupAverageMap = SurveyQuestionAverageValues.reduce((acc: any, curr: any) => {
-      acc[curr.groupId] = curr.groupAverage;
-      return acc;
-    }, {} as Record<number, string>);
+    groupAverageMap = SurveyQuestionAverageValues.reduce(
+      (acc: any, curr: any) => {
+        acc[curr.groupId] = curr.groupAverage;
+        return acc;
+      },
+      {} as Record<number, string>
+    );
 
     // Create a mapping of subGroupId to subgroupAverage
-    subgroupAverageMap = SurveyQuestionAverageValues.reduce((acc: any, curr: any) => {
-      if (curr.subGroups) {
-        curr.subGroups.forEach((subGroup: any) => {
-          acc[subGroup.subGroupId] = subGroup.subgroupAverage;
-        });
-      }
-      return acc;
-    }, {} as Record<number, string>);
+    subgroupAverageMap = SurveyQuestionAverageValues.reduce(
+      (acc: any, curr: any) => {
+        if (curr.subGroups) {
+          curr.subGroups.forEach((subGroup: any) => {
+            acc[subGroup.subGroupId] = subGroup.subgroupAverage;
+          });
+        }
+        return acc;
+      },
+      {} as Record<number, string>
+    );
   }
 
   const toggleGroup = (groupId: number) => {
@@ -49,7 +57,9 @@ const WesAnList = () => {
 
   return (
     <div className="table-container">
-      <button onClick={toggleAllGroups}>{areAllGroupsExpanded ? 'Collapse All' : 'Expand All'}</button>
+      <button onClick={toggleAllGroups}>
+        {areAllGroupsExpanded ? "Collapse All" : "Expand All"}
+      </button>
       <table>
         <thead>
           <tr>
@@ -67,10 +77,15 @@ const WesAnList = () => {
               <Fragment key={group.groupId}>
                 {/* Group Title Row */}
                 <tr className="group-row">
-                  <td className="column-title" onClick={() => toggleGroup(group.groupId)}>
+                  <td
+                    className="column-title"
+                    onClick={() => toggleGroup(group.groupId)}
+                  >
                     {group.groupTitle}
                   </td>
-                  <td className="column-other">{groupAverageMap[group.groupId] || 'N/A'}</td>
+                  <td className="column-other">
+                    {groupAverageMap[group.groupId] || "N/A"}
+                  </td>
                   <td className="column-other">Hello 2</td>
                   <td className="column-checkbox">
                     <input type="checkbox" />
@@ -81,10 +96,16 @@ const WesAnList = () => {
                 {(expandedGroupId === group.groupId || areAllGroupsExpanded) &&
                   group.subGroups.map((subGroup: any) => (
                     <tr key={subGroup.subGroupId} className="subgroup-row">
-                      <td className="column-title">{subGroup.subGroupTitle || 'N/A'}</td>
-                      <td className="column-other">{subgroupAverageMap[subGroup.subGroupId] || 'N/A'}</td>
+                      <td className="column-title">
+                        {subGroup.subGroupTitle || "N/A"}
+                      </td>
+                      <td className="column-other">
+                        {subgroupAverageMap[subGroup.subGroupId] || "N/A"}
+                      </td>
                       <td className="column-other">Hello 2</td>
-                      <td className="column-checkbox">{/* <input type="checkbox" /> */}</td>
+                      <td className="column-checkbox">
+                        {/* <input type="checkbox" /> */}
+                      </td>
                     </tr>
                   ))}
               </Fragment>
