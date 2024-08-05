@@ -1,0 +1,59 @@
+/* WesAnList.css */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #f4f4f4;
+    color: black;
+  }
+  
+  thead th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+  
+  tbody tr {
+    border-bottom: 1px solid #ddd;
+    color: black;
+  }
+  
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  tbody td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .subgroup-row {
+    background-color: #f9f9f9;
+  }
+  
+  .group-row {
+    cursor: pointer;
+    background-color: #fff;
+  }
+  
+  /* Absolute width for specific columns */
+  .column-title {
+    width: 200px; /* Set desired width for group title column */
+  }
+  
+  .column-other {
+    width: 100px; /* Set desired width for other columns */
+  }
+  
+  .column-checkbox {
+    width: 80px; /* Set desired width for checkbox column */
+  }
+  

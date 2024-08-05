@@ -11,6 +11,7 @@ import RootLayout from './components/Root/RootLayout';
 import SubStakeholderList from './components/StakeholderList/SubStakeholderList';
 import SurveyPage from './components/Pages/SurveyPage/SurveyPage';
 import Wesentlichkeitsanalyse from './components/Pages/Wesentlichkeitsanalyse/Wesentlichkeitsanalyse';
+import WesAnList from './components/WesAnList/WesAnList';
 
 //TODO: infinity hinzufügen
 const queryClient = new QueryClient({
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: '/stakeholderlist', element: <SubStakeholderList /> },
       { path: '/survey/:id?', element: <SurveyPage /> },
       { path: '/WesAn', element: <Wesentlichkeitsanalyse /> },
+      { path: 'WesAnList', element: <WesAnList /> },
     ],
   },
 ]);
