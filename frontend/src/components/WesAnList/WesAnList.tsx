@@ -7,6 +7,7 @@ const WesAnList = () => {
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } = useSurveyQuestionAverageValues();
   const { GroupSubGroup2, isLoadingGroupSubGroup } = useGroupSubGroupData();
   const [expandedGroupId, setExpandedGroupId] = useState<number | null>(null);
+  const [areAllGroupsExpanded, setAreAllGroupsExpanded] = useState<boolean>(false);
 
   let groupAverageMap;
   let subgroupAverageMap;
@@ -32,11 +33,23 @@ const WesAnList = () => {
   }
 
   const toggleGroup = (groupId: number) => {
+    // Toggle a specific group
     setExpandedGroupId(expandedGroupId === groupId ? null : groupId);
+  };
+
+  const toggleAllGroups = () => {
+    // Toggle all groups
+    if (areAllGroupsExpanded) {
+      setExpandedGroupId(null);
+    } else {
+      setExpandedGroupId(-1);
+    }
+    setAreAllGroupsExpanded(!areAllGroupsExpanded);
   };
 
   return (
     <div className="table-container">
+      <button onClick={toggleAllGroups}>{areAllGroupsExpanded ? 'Collapse All' : 'Expand All'}</button>
       <table>
         <thead>
           <tr>
@@ -65,7 +78,7 @@ const WesAnList = () => {
                 </tr>
 
                 {/* SubGroup Rows */}
-                {expandedGroupId === group.groupId &&
+                {(expandedGroupId === group.groupId || areAllGroupsExpanded) &&
                   group.subGroups.map((subGroup: any) => (
                     <tr key={subGroup.subGroupId} className="subgroup-row">
                       <td className="column-title">{subGroup.subGroupTitle || 'N/A'}</td>
