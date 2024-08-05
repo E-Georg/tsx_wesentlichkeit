@@ -62,6 +62,22 @@ export const fetchGroupSubGroup = async (typeParameter: string, ClientID: number
   return [];
 };
 
+// [GET] with postBody
+export const fetchGroupSubGroupAverageValues = async (clientId: number) => {
+  const url = `${API_URL}${ClientTypes.SurveyQuestions}`;
+  const data = {
+    answererdAverageValues: true,
+    clientId: clientId,
+  };
+
+  try {
+    const res = await axiosInstance.post(url, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // [GET]
 export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> => {
   // get all SubStakeHolder
