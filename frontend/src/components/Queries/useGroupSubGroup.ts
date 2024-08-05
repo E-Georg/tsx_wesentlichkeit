@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ClientTypes } from '../Models/data.interfaces';
-import { fetchGroupSubGroup } from '../../services/ApiService';
+import { fetchGroupSubGroup, fetchGroupSubGroup2 } from '../../services/ApiService';
 import { useStore } from '../../store';
 
 const useGroupSubGroupData = () => {
@@ -13,7 +13,15 @@ const useGroupSubGroupData = () => {
     staleTime: Infinity,
   });
 
+  const { data: GroupSubGroup2, isLoading: isLoadingGroupSubGroup } = useQuery({
+    queryKey: ['GroupSubGroup2'],
+    queryFn: () => fetchGroupSubGroup2(ClientTypes.GroupSubGroup, ClientID),
+    staleTime: Infinity,
+  });
+
   return {
+    GroupSubGroup2,
+    isLoadingGroupSubGroup,
     GroupSubGroup,
     isLoading,
   };

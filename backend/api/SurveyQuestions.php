@@ -157,17 +157,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $cols = array('clientId' => $clientId);
         $results = dbSelect($db, $query, $cols);
 
-        $pointer = 0;
+        $jsonArray = []; // Initialize an empty array
 
         foreach ($results as $result) {
-            $jsonArray[$pointer]['groupId'] = $result['groupId'];
-            $jsonArray[$pointer]['subGroupId'] = $result['subGroupId'];
-            $jsonArray[$pointer]['subgroupAverage'] = $result['subgroupAverage'];
-            $jsonArray[$pointer]['groupAverage'] = $result['groupAverage'];
-            $pointer++;
+            $groupId = $result['groupId'];
+            $subGroupId = $result['subGroupId'];
+
+            // Check if the group already exists in the $jsonArray
+            if (!isset($jsonArray[$groupId])) {
+                // If it doesn't exist, create a new group entry
+                $jsonArray[$groupId] = [
+                    'groupId' => $result['groupId'],
+                    'groupAverage' => $result['groupAverage'], // Add groupAverage if needed
+                    'subGroups' => []
+                ];
+            }
+
+            // Add the subgroup to the corresponding group's 'subGroups' array
+            $jsonArray[$groupId]['subGroups'][] = [
+                'subGroupId' => $subGroupId,
+                'subgroupAverage' => $result['subgroupAverage'], // Add subgroupAverage if needed
+            ];
         }
 
-        echo json_encode($jsonArray);
+        // Re-index the array by resetting the keys to make it a non-associative array
+        $jsonArray = array_values($jsonArray);
+
+        // Output or process the $jsonArray as needed
+        echo json_encode($jsonArray, JSON_PRETTY_PRINT);
         return;
     }
 

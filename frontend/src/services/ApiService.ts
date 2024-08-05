@@ -42,9 +42,29 @@ export const fetchDataQuery = async (typeParameter: string, ClientID: number): P
   return [];
 };
 
-// [GET]
+// [GET] with postBody
 export const fetchGroupSubGroup = async (typeParameter: string, ClientID: number): Promise<any> => {
   const url = `${API_URL}${typeParameter}`;
+
+  const data = {
+    clientId: ClientID,
+  };
+
+  try {
+    const response = await axiosInstance.post(url, data);
+    const fetchedData = response.data;
+    console.log(fetchedData);
+
+    if (response.status === 200) return fetchedData;
+  } catch (error) {
+    console.error(`Error fetching ${typeParameter}:`, error);
+  }
+  return [];
+};
+
+// [GET] with postBody
+export const fetchGroupSubGroup2 = async (typeParameter: string, ClientID: number): Promise<any> => {
+  const url = `${API_URL}${typeParameter}2`;
 
   const data = {
     clientId: ClientID,
