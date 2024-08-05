@@ -100,11 +100,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $data = json_decode($rawPostData, true);
     $jsonArray = array();
 
-
+    $answererdAverageValues = isset($data['answererdAverageValues']) ? $data['answererdAverageValues'] : null;
     $clientId = isset($data['clientId']) ? $data['clientId'] : null;
-    $subStakeholderID = isset($data['subStakeholderID']) ? $data['subStakeholderID'] : null;;
-    // $subGroupId = isset($data['subGroupId']) ? $data['subGroupId'] : null;
+
+
+    if ($answererdAverageValues != null || $answererdAverageValues == true) {
+        // Select all function to one groupId ==> values from there subGroup && clientId && Stakeholder
+        // Call function which calculate average of all 
+
+        // gives just the group average
+        $query = "SELECT 
+                    g.id as groupId,
+                    AVG(a.answer) as answerValue
+                FROM
+                    wa_clientGroups g, 
+                    wa_clientSubGroups sg, 
+                    wa_clientSubStakeholderAnswers a
+                WHERE
+                    g.id = sg.groupId 
+                    AND sg.id = a.clientSubGroupsId 
+                    AND g.active = 1 
+                    AND g.clientId = :clientId
+                GROUP BY
+                g.id
+                ORDER BY 
+                    g.sort ASC, sg.sort ASC;
+                ";
+
+        // gives  the group average and the subgroup Average too
+        $query = "SELECT 
+                    g.id as groupId,
+                    sg.id as subGroupId,
+                    AVG(a.answer) as subgroupAverage,
+                    (SELECT AVG(a2.answer)
+                    FROM wa_clientGroups g2
+                    JOIN wa_clientSubGroups sg2 ON g2.id = sg2.groupId
+                    JOIN wa_clientSubStakeholderAnswers a2 ON sg2.id = a2.clientSubGroupsId
+                    WHERE g2.id = g.id AND g2.active = 1 AND sg2.active = 1
+                    ) as groupAverage
+                FROM
+                    wa_clientGroups g
+                JOIN 
+                    wa_clientSubGroups sg ON g.id = sg.groupId
+                JOIN 
+                    wa_clientSubStakeholderAnswers a ON sg.id = a.clientSubGroupsId
+                WHERE
+                    g.active = 1 
+                    AND sg.active = 1
+                    AND g.clientId = :clientId 
+                GROUP BY 
+                    g.id, sg.id
+                ORDER BY 
+                    g.id ASC;
+                ";
+
+        $cols = array('clientId' => $clientId);
+        $results = dbSelect($db, $query, $cols);
+
+        $pointer = 0;
+
+        foreach ($results as $result) {
+            $jsonArray[$pointer]['groupId'] = $result['groupId'];
+            $jsonArray[$pointer]['subGroupId'] = $result['subGroupId'];
+            $jsonArray[$pointer]['subgroupAverage'] = $result['subgroupAverage'];
+            $jsonArray[$pointer]['groupAverage'] = $result['groupAverage'];
+            $pointer++;
+        }
+
+        echo json_encode($jsonArray);
+        return;
+    }
+
+
+
+    $subGroupId = isset($data['subGroupId']) ? $data['subGroupId'] : null;
     $groupId = isset($data['groupId']) ? $data['groupId'] : null;
+    $subStakeholderID = isset($data['subStakeholderID']) ? $data['subStakeholderID'] : null;;
     $messages = isset($data['message']) ? $data['message'] : null;
     $comments = isset($data['comment']) ? $data['comment'] : null;
     echo json_encode($data);
