@@ -51,6 +51,7 @@ const useStakeholderData = () => {
     deleteStakeholderMutation,
     updateStakeholderMutation,
   };
+
 };
 
 export default useStakeholderData;
