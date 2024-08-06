@@ -11,14 +11,13 @@ import RootLayout from './components/Root/RootLayout';
 import SubStakeholderList from './components/StakeholderList/SubStakeholderList';
 import SurveyPage from './components/Pages/SurveyPage/SurveyPage';
 import Wesentlichkeitsanalyse from './components/Pages/Wesentlichkeitsanalyse/Wesentlichkeitsanalyse';
-import WesAnList from './components/WesAnList/WesAnList';
 
 //TODO: infinity hinzufügen
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: Infinity, //240000,
+      staleTime: 2400000,
     },
   },
 });
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
       { path: '/stakeholderlist', element: <SubStakeholderList /> },
       { path: '/survey/:id?', element: <SurveyPage /> },
       { path: '/WesAn', element: <Wesentlichkeitsanalyse /> },
-      { path: 'WesAnList', element: <WesAnList /> },
+      // { path: 'WesAnList', element: <WesAnList /> },
     ],
   },
 ]);

@@ -434,22 +434,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ];
         $lastIdComments = dbInsert($db, 'wa_clientSubStakeholderAnswersComments', $colsN);
     }
-    echo json_encode($lastIdAnswers);
-    echo json_encode($lastIdComments);
+
     if ($lastIdAnswers != false && $lastIdComments != false) {
-        // update wa_subStakeholder.responded = 1
-        // id = subStakeholderID
-        // $cols = array('id' => $subStakeholderID );
         $responded = 1;
-        $query = "UPDATE `wa_subStakeholder` SET `responded` = :responded WHERE `id` = :subStakeholderId";
-        $col = [
-            'responded' => $responded,
-        ];
-
-
-
-        $temp = dbUpdate($db, `wa_subStakeholder`, $subStakeholderID, $col);
-        echo json_encode($temp);
+        // "UPDATE `wa_subStakeholder` SET `responded` = :responded WHERE `id` = :subStakeholderId";
+        $cols = array('responded' => $responded);
+        dbUpdate($db, 'wa_subStakeholder', $subStakeholderID, $cols);
         echo "Record updated successfully!";
     }
 
