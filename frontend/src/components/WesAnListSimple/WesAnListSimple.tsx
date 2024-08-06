@@ -29,10 +29,12 @@ const WesAnListSimple = (_: Props) => {
     return <div className="loading">Loading...</div>;
   }
 
-  const stakeholderMap = Stakeholder.reduce((acc, stakeholder) => {
-    acc[stakeholder.id] = stakeholder.title;
-    return acc;
-  }, {} as Record<number, string>);
+  const stakeholderMap = Array.isArray(Stakeholder)
+    ? Stakeholder.reduce((acc, stakeholder) => {
+        acc[stakeholder.id] = stakeholder.title;
+        return acc;
+      }, {} as Record<number, string>)
+    : [];
 
   const flattenedData = SurveyQuestionAverageValues.map((group) => ({
     groupId: group.groupId,
@@ -67,37 +69,39 @@ const WesAnListSimple = (_: Props) => {
             <th className="header-group-title">Group Title</th>
             <th className="header-group-text">Stakeholderbefragung Text</th>
             <th className="header-group-average">Group Average</th>
-            {Stakeholder.map((stakeholder) => (
-              <th className="header-stakeholder" key={stakeholder.id}>
-                {stakeholder.title}
-              </th>
-            ))}
+            {Array.isArray(Stakeholder) &&
+              Stakeholder.map((stakeholder) => (
+                <th className="header-stakeholder" key={stakeholder.id}>
+                  {stakeholder.title}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
-          {flattenedData.map((group) => (
-            <tr key={group.groupId}>
-              <td className="group-title">{group.groupTitle}</td>
+          {Array.isArray(flattenedData) &&
+            flattenedData.map((group) => (
+              <tr key={group.groupId}>
+                <td className="group-title">{group.groupTitle}</td>
 
-              <td
-                className="group-text"
-                onClick={() => openModal(group.groupTitle, group.groupId)}
-              ></td>
-              <td className="group-average">{group.groupAverageTotal}</td>
-              {Stakeholder.map((stakeholder) => (
                 <td
-                  className="stakeholder-average"
-                  key={`${stakeholder.id}-${group.groupId}`}
-                >
-                  {SurveyQuestionAverageValues.find(
-                    (g) => g.groupId === group.groupId
-                  )?.subGroups.find(
-                    (subGroup) => subGroup.stakeholderId === stakeholder.id
-                  )?.subgroupAverage || "-"}
-                </td>
-              ))}
-            </tr>
-          ))}
+                  className="group-text"
+                  onClick={() => openModal(group.groupTitle, group.groupId)}
+                ></td>
+                <td className="group-average">{group.groupAverageTotal}</td>
+                {Stakeholder.map((stakeholder) => (
+                  <td
+                    className="stakeholder-average"
+                    key={`${stakeholder.id}-${group.groupId}`}
+                  >
+                    {SurveyQuestionAverageValues.find(
+                      (g) => g.groupId === group.groupId
+                    )?.subGroups.find(
+                      (subGroup) => subGroup.stakeholderId === stakeholder.id
+                    )?.subgroupAverage || "-"}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </table>
 

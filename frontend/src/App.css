@@ -1,5 +1,7 @@
 #root {
   display: flex;
   flex-direction: column;
-  width: 100dvw;
+  width: 100%; /*
+  * @E-AdisBabic angepasst für tabellen bug 
+  */
 }

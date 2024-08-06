@@ -2,45 +2,34 @@ import React, { useState } from "react";
 import "./Wesentlichkeitsanalyse.scss";
 import WesAnMatrixDetailed from "../../WesAnMatrix/WesAnMatrixDetailed";
 import WesAnListSimple from "../../WesAnListSimple/WesAnListSimple";
+import Switch from "../../switch/Switch";
 
 const Wesentlichkeitsanalyse = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentView, setCurrentView] = useState(0);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
 
-  const slides = [<WesAnListSimple />, <WesAnMatrixDetailed />];
+  const views = [
+    { component: <WesAnListSimple />, title: "Einfache Ansicht" },
+    { component: <WesAnMatrixDetailed />, title: "Detaillierte Ansicht" },
+  ];
 
-  const slideTitles = ["Einfache Ansicht", "Detaillierte Ansicht"];
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  const handleSwitch = () => {
+    setIsSwitchOn(!isSwitchOn);
+    setCurrentView(isSwitchOn ? 0 : 1); // Toggle between views
   };
 
   return (
     <div className="wesentlichkeitsanalyse-container">
-      <div className="slider-container">
-        <div className="slider-buttons">
-          <button className="slider-button" onClick={handlePrev}>
-            ❮
-          </button>
-          <button className="slider-button" onClick={handleNext}>
-            ❯
-          </button>
-          <div className="slider-text">{slideTitles[currentSlide]}</div>
-        </div>
-        <div
-          className="slider-wrapper"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-        >
-          {slides.map((slide, index) => (
-            <div className="slide" key={index}>
-              {slide}
-            </div>
-          ))}
-        </div>
+      <div className="switch-container">
+        <Switch
+          isOn={isSwitchOn}
+          handleToggle={handleSwitch}
+          onColor="#06D6A0"
+          labelLeft="Einfache Ansicht"
+          labelRight="Detaillierte Ansicht"
+        />
       </div>
+      <div className="switch-content">{views[currentView].component}</div>
       <div className="table-container">{/* Deine Tabelle hier */}</div>
     </div>
   );
