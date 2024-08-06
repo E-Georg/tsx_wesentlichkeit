@@ -52,13 +52,13 @@ export const fetchGroupSubGroupAverageValues = async (clientId: number) => {
 };
 
 // [POST] Null muss bei clientSubGroupId explizit gesetzt weden
-export const UpdateRelevanceGroup = async (clientId: number, relevance: number, clientSubGroupId: number | null, clientGroupId: number | null = null) => {
+export const UpdateRelevanceGroup = async (clientId: number, relevance: number,  clientGroupId: number ) => {
   const url = `${API_URL}${ClientTypes.SurveyQuestions}`;
   const data = {
     action: 'er',
     clientId: clientId,
     clientGroupId: clientGroupId,
-    clientSubGroupId: clientSubGroupId,
+    clientSubGroupId: null,
     relevance: relevance,
   };
 
