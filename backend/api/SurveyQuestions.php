@@ -446,7 +446,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'responded' => $responded,
         ];
 
-        // $subStakeholderId = 123; // Replace with the actual ID you want to update
 
 
         $temp = dbUpdate($db, `wa_subStakeholder`, $subStakeholderID, $col);
