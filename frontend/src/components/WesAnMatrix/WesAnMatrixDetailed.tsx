@@ -44,6 +44,7 @@ const WesAnMatrixDetailed = (_: Props) => {
   const filteredSubGroupData = SurveyQuestionAverageValues.map((group) => ({
     groupId: group.groupId,
     groupTitle: group.groupTitle,
+    groupRelevance: group.groupRelevance,
     groupAverageTotal: group.groupAverageTotal,
     subGroups: group.subGroups,
   }));
@@ -122,6 +123,7 @@ const WesAnMatrixDetailed = (_: Props) => {
                   <GroupActionCheckbox
                     groupId={group.groupId}
                     onChange={handleCheckboxChange}
+                    groupRelevance={group.groupRelevance}
                   />
                 </td>
                 <td className="group-average" rowSpan={group.subGroups.length}>

@@ -1,12 +1,25 @@
-import { Cell, Group, HttpAction, Stakeholder } from '../Models/data.interfaces';
-import { useStore } from '../../store';
-import { Classifications, Relevances } from '../../utils/constants';
-import { useEffect, useState } from 'react';
-import styles from './Matrix.module.css'; // Import the updated CSS module
-import useSubStakeholderData from '../Queries/useSubStakeholder';
-import SelectDropdown from '../SelectDropdown/SelectDropdown'; // Unchanged
-import RoundButton from '../RoundButton/RoundButton';
-import { filteredStakeholderCount, handleRelevanceChange, handleSelectChange, onClickCell, onClickColumn, onClickRow, setFilterFunction } from './MatrixFunctions';
+import {
+  Cell,
+  Group,
+  HttpAction,
+  Stakeholder,
+} from "../Models/data.interfaces";
+import { useStore } from "../../store";
+import { Classifications, Relevances } from "../../utils/constants";
+import { useEffect, useState } from "react";
+import styles from "./Matrix.module.scss"; // Import the updated CSS module
+import useSubStakeholderData from "../Queries/useSubStakeholder";
+import SelectDropdown from "../SelectDropdown/SelectDropdown"; // Unchanged
+import RoundButton from "../RoundButton/RoundButton";
+import {
+  filteredStakeholderCount,
+  handleRelevanceChange,
+  handleSelectChange,
+  onClickCell,
+  onClickColumn,
+  onClickRow,
+  setFilterFunction,
+} from "./MatrixFunctions";
 
 interface Props {
   rows: Group[];
@@ -17,7 +30,14 @@ interface Props {
   setDescription: (name: string) => void;
 }
 
-const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescription }: Props) => {
+const Matrix = ({
+  rows,
+  columns,
+  cells,
+  showAddToMatrix,
+  setTitle,
+  setDescription,
+}: Props) => {
   const {
     setShowModal,
     setCellID,
@@ -35,13 +55,20 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
 
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const [selectedRelevance, setSelectedRelevance] = useState<number>(0);
-  const [copyColumns, setCopyColumns] = useState<Stakeholder[]>(Array.isArray(columns) ? columns : []);
+  const [copyColumns, setCopyColumns] = useState<Stakeholder[]>(
+    Array.isArray(columns) ? columns : []
+  );
 
   if (isLoadingStake) <div>Loading...</div>;
 
   useEffect(() => {
     setCopyColumns(Array.isArray(columns) ? columns : []);
-    setFilterFunction(selectedOption, selectedRelevance, setCopyColumns, columns);
+    setFilterFunction(
+      selectedOption,
+      selectedRelevance,
+      setCopyColumns,
+      columns
+    );
   }, [columns, selectedRelevance, selectedOption]);
 
   useEffect(() => {
@@ -60,16 +87,20 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
           <SelectDropdown
             options={Classifications}
             value={selectedOption}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => handleSelectChange(event, setSelectedOption)}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              handleSelectChange(event, setSelectedOption)
+            }
             placeholder="Alle Stakeholder"
-            style={{ width: '200px' }}
+            style={{ width: "200px" }}
           />
           <SelectDropdown
             options={Relevances}
             value={selectedRelevance}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => handleRelevanceChange(event, setSelectedRelevance)}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              handleRelevanceChange(event, setSelectedRelevance)
+            }
             placeholder="Alle Relevanzen"
-            style={{ width: '200px' }}
+            style={{ width: "200px" }}
           />
         </div>
         <div className={styles.checkboxWrapper}>
@@ -113,7 +144,9 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
         <table className={styles.table}>
           <thead>
             <tr>
-              <th className={styles.stakeholderCount}>Anzahl hinterlegter Stakeholder:</th>
+              <th className={styles.stakeholderCount}>
+                Anzahl hinterlegter Stakeholder:
+              </th>
               {/* Display Columns */}
               {copyColumns &&
                 copyColumns.length > 0 &&
@@ -121,7 +154,16 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   <th className={styles.columnHeader} key={column.id}>
                     <div
                       onClick={() => {
-                        onClickColumn(setDescription, column, setTitle, setClassification, setRelevance, DELETE, setOnChangeStakeholder, setShowModal);
+                        onClickColumn(
+                          setDescription,
+                          column,
+                          setTitle,
+                          setClassification,
+                          setRelevance,
+                          DELETE,
+                          setOnChangeStakeholder,
+                          setShowModal
+                        );
                       }}
                       key={column.id}
                     >
@@ -146,7 +188,14 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                   <td
                     key={row.id}
                     onClick={() => {
-                      onClickRow(setDescription, row, setTitle, DELETE, setOnChangeSubGroup, setShowModal);
+                      onClickRow(
+                        setDescription,
+                        row,
+                        setTitle,
+                        DELETE,
+                        setOnChangeSubGroup,
+                        setShowModal
+                      );
                     }}
                     className={styles.rowTitle} // Apply CSS module class
                   >
@@ -159,14 +208,28 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                       <td
                         key={column.id + row.id}
                         onClick={() => {
-                          console.log('hier');
-                          onClickCell(cells, column, row, setCellID, setShowModal, setOnChangeCells, setMessageValueByIndex, DELETE);
+                          console.log("hier");
+                          onClickCell(
+                            cells,
+                            column,
+                            row,
+                            setCellID,
+                            setShowModal,
+                            setOnChangeCells,
+                            setMessageValueByIndex,
+                            DELETE
+                          );
                         }}
                         className={styles.cell} // Apply CSS module class
                       >
                         {cells &&
                           cells.length > 0 &&
-                          cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientGroupId === row.id && c.message.length > 0)?.message?.length}
+                          cells.find(
+                            (c: Cell) =>
+                              c.clientStakeholderId === column.id &&
+                              c.clientGroupId === row.id &&
+                              c.message.length > 0
+                          )?.message?.length}
                       </td>
                     ))}
                 </tr>
