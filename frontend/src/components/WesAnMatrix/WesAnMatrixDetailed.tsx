@@ -16,10 +16,6 @@ const WesAnMatrixDetailed = (_: Props) => {
     return <div className="loading">Loading...</div>;
   }
 
-  console.clear();
-  console.table(SurveyQuestionAverageValues);
-  console.table(Stakeholder);
-
   const stakeholderMap = Stakeholder.reduce((acc, stakeholder) => {
     acc[stakeholder.id] = stakeholder.title;
     return acc;
