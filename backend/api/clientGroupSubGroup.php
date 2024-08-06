@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $query = 'SELECT 
                 g.id as groupId,
+                g.relevance as groupRelevance,
                 g.title as groupTitle,
                 sg.id as subGroupId,
                 sg.title as subGroupTitle,
@@ -54,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $jsonArray[$groupId] = [
                     'groupId' => $clientGroup['groupId'],
                     'groupTitle' => $clientGroup['groupTitle'],
+                    'groupRelevance' => $clientGroup['groupRelevance'],
                     'subGroups' => []
                 ];
             }
@@ -71,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $jsonArray['errorNo'] = 1;
         $jsonArray['errorMessage'] = "nicht gefunden";
     }
+
 
     echo json_encode($jsonArray);
 }
