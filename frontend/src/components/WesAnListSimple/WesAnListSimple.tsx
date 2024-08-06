@@ -3,7 +3,7 @@ import useGroupSubGroupData from "../Queries/useGroupSubGroup";
 import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageValues";
 import useStakeholderData from "../Queries/useStakeholderData";
 import ModalComponent from "../WesAnModal/WesAnModal";
-import "./WesAnListSimple.scss";
+import GroupActionCheckbox from "../GroupActionCheckbox/GroupActionCheckbox";
 
 type Props = {};
 
@@ -12,7 +12,6 @@ const WesAnListSimple = (_: Props) => {
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } =
     useSurveyQuestionAverageValues();
   const { Stakeholder, isStakeholderLoading } = useStakeholderData();
-
   const {
     SubStakeholderSurveyQuestionComments,
     isLoadingSubStakeholderComments,
@@ -21,6 +20,9 @@ const WesAnListSimple = (_: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
   const [currentGroupTitle, setCurrentGroupTitle] = useState("");
+  const [selectedGroups, setSelectedGroups] = useState<Record<number, boolean>>(
+    {}
+  );
 
   console.clear();
   console.table(SubStakeholderSurveyQuestionComments);
@@ -61,13 +63,32 @@ const WesAnListSimple = (_: Props) => {
     setModalIsOpen(false);
   };
 
+  const handleCheckboxChange = (groupId: number, isChecked: boolean) => {
+    setSelectedGroups((prev) => ({
+      ...prev,
+      [groupId]: isChecked,
+    }));
+  };
+
+  const handleSendClick = () => {
+    const dataToSend = Object.entries(selectedGroups)
+      .filter(([_, isChecked]) => isChecked)
+      .map(([groupId]) => ({
+        groupId: Number(groupId),
+        value: 1,
+      }));
+
+    console.log(dataToSend);
+  };
+
   return (
     <div className="wes-an-matrix">
       <table className="matrix-table">
         <thead>
           <tr>
             <th className="header-group-title">Group Title</th>
-            <th className="header-group-text">Stakeholderbefragung Text</th>
+            <th className="header-group-comments">Stakeholderbefragung </th>
+            <th className="header-group-chkbox">Wesentlich bewerten </th>
             <th className="header-group-average">Group Average</th>
             {Array.isArray(Stakeholder) &&
               Stakeholder.map((stakeholder) => (
@@ -82,11 +103,18 @@ const WesAnListSimple = (_: Props) => {
             flattenedData.map((group) => (
               <tr key={group.groupId}>
                 <td className="group-title">{group.groupTitle}</td>
-
                 <td
-                  className="group-text"
+                  className="group-comments"
                   onClick={() => openModal(group.groupTitle, group.groupId)}
-                ></td>
+                >
+                  Einsicht
+                </td>
+                <td>
+                  <GroupActionCheckbox
+                    groupId={group.groupId}
+                    onChange={handleCheckboxChange}
+                  />
+                </td>
                 <td className="group-average">{group.groupAverageTotal}</td>
                 {Stakeholder.map((stakeholder) => (
                   <td
@@ -104,6 +132,10 @@ const WesAnListSimple = (_: Props) => {
             ))}
         </tbody>
       </table>
+
+      <button onClick={handleSendClick} className="send-button">
+        Send Data
+      </button>
 
       <ModalComponent
         isOpen={modalIsOpen}

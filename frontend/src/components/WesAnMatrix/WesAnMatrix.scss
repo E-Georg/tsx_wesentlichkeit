@@ -51,6 +51,19 @@
       text-align: center;
     }
 
+    .group-comments {
+      background-color: #f4f6f7;
+      text-align: center;
+      color: #007bff; 
+      text-decoration: underline; 
+      cursor: pointer; 
+    
+      &:hover {
+        color: #002380;
+        text-decoration: none;
+      }
+    }
+
     .subgroup-title {
       font-style: italic;
       background-color: #f8f9fa;
