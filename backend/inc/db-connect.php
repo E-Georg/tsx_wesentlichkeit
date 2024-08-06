@@ -103,6 +103,7 @@ function dbInsert($db, $table, $cols)
         $stmt->execute($cols);
     } catch (Exception $e) {
         pdoError($e->getMessage(), $query, $cols);
+        return false;               // geändert
     }
     return ($db->lastInsertId());
 }
@@ -173,13 +174,12 @@ function dbSelectId($db, $table, $id, $active = 1)
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_LAZY);
-        if( $stmt->rowCount() == 0 )
-            return( false );
+        if ($stmt->rowCount() == 0)
+            return (false);
         else
-            return( $row );
-    }
-    catch(Exception $e) {
-        pdoError( $e->getMessage(), $query, $cols );
+            return ($row);
+    } catch (Exception $e) {
+        pdoError($e->getMessage(), $query, $cols);
     }
 }
 
@@ -224,11 +224,11 @@ function pdoError($text, $query, $cols)
  * 
  *  28.01.2024  JM
  */
-function loggen( $db, $userId )
+function loggen($db, $userId)
 {
 
     $marker[] = "loggen anfang";
-    $zeitstempel[] = hrtime(true); 
+    $zeitstempel[] = hrtime(true);
 
     $client = gethostbyaddr($_SERVER["REMOTE_ADDR"]);
 
@@ -237,11 +237,11 @@ function loggen( $db, $userId )
     else
         $lcHttpReferer = "";
 
-    $lcHttpReferer = str_replace( 'https://servicehub.e-infra.com', ' ',  $lcHttpReferer );                     // Kosmetik
-    $lcHttpReferer = str_replace( 'http://localhost', ' ',  $lcHttpReferer );
+    $lcHttpReferer = str_replace('https://servicehub.e-infra.com', ' ',  $lcHttpReferer);                     // Kosmetik
+    $lcHttpReferer = str_replace('http://localhost', ' ',  $lcHttpReferer);
 
     $cols = array(
-        "zeit" => date( 'Y-m-d H:i:s' ),
+        "zeit" => date('Y-m-d H:i:s'),
         "ip" => getip(),
         "ip2" => $_SERVER["REMOTE_ADDR"],
         "client" => gethostbyaddr($_SERVER["REMOTE_ADDR"]),
@@ -251,7 +251,7 @@ function loggen( $db, $userId )
         "urlParameter" => $_SERVER['QUERY_STRING'],
     );
 
-    $logid = dbInsert( $db, 'log', $cols);
+    $logid = dbInsert($db, 'log', $cols);
 
     return ($logid);
 }

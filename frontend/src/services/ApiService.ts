@@ -62,42 +62,6 @@ export const fetchGroupSubGroup = async (typeParameter: string, ClientID: number
   return [];
 };
 
-// [GET] with postBody
-export const fetchGroupSubGroup2 = async (typeParameter: string, ClientID: number): Promise<any> => {
-  const url = `${API_URL}${typeParameter}2`;
-
-  const data = {
-    clientId: ClientID,
-  };
-
-  try {
-    const response = await axiosInstance.post(url, data);
-    const fetchedData = response.data;
-    console.log(fetchedData);
-
-    if (response.status === 200) return fetchedData;
-  } catch (error) {
-    console.error(`Error fetching ${typeParameter}:`, error);
-  }
-  return [];
-};
-
-// [GET] with postBody
-export const fetchGroupSubGroupAverageValues = async (clientId: number) => {
-  const url = `${API_URL}${ClientTypes.SurveyQuestions}`;
-  const data = {
-    answererdAverageValues: true,
-    clientId: clientId,
-  };
-
-  try {
-    const res = await axiosInstance.post(url, data);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 // [GET]
 export const fetchDataQuerySubStakeholder = async (): Promise<SubStakeholder[]> => {
   // get all SubStakeHolder

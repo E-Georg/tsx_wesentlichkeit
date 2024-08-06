@@ -13,15 +13,7 @@ const useGroupSubGroupData = () => {
     staleTime: Infinity,
   });
 
-  // const { data: GroupSubGroup2, isLoading: isLoadingGroupSubGroup } = useQuery({
-  //   queryKey: ['GroupSubGroup2'],
-  //   queryFn: () => fetchGroupSubGroup2(ClientTypes.GroupSubGroup, ClientID),
-  //   staleTime: Infinity,
-  // });
-
   return {
-    // GroupSubGroup2,
-    // isLoadingGroupSubGroup,
     GroupSubGroup,
     isLoading,
   };

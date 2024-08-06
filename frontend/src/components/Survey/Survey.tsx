@@ -8,11 +8,10 @@ import SurveyQuestionList from '../SurveyQuestionList/SurveyQuestionList';
 type Props = {
   SurveyQuestions: SurveyQuestion[];
   Group: Group | any;
+  subStakeholderId: number;
 };
 
-const Survey = ({ SurveyQuestions, Group }: Props) => {
-  //const { subStakeholderId } = useParams();
-  const subStakeholderId = 2;
+const Survey = ({ SurveyQuestions, Group, subStakeholderId }: Props) => {
   const { setSurveyText, setSurveyAnswer } = useStore();
   const [visibleDescription, setVisibleDescription] = useState<{ [key: number]: boolean }>({});
 

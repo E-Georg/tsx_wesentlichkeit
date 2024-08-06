@@ -107,10 +107,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
     if ($answererdAverageValues != null && $answererdAverageValues == true) {
-        // Select all function to one groupId ==> values from there subGroup && clientId && Stakeholder
-        // Call function which calculate average of all 
-
-        // gives just the group average
+        // {
+        //     GroupId:
+        //     GroupTitle
+        //     value:[{
+        //              averageValue:
+        //               stakeholderId:
+        //             }]
+        //     GroupAverageTotal: Vorhanden
+        //     SubGroups:[
+        //         {
+        //             SubGroupId:
+        //             SubGroupTitle:
+        //             StakeholderId: (Value hat Connection zu SubStakeholder)
+        //             subGroupAverage:
+        //         }
+        //     ]
+        // }
         $query = "SELECT 
                     g.id as groupId,
                     AVG(a.answer) as answerValue
@@ -179,25 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     g.id ASC;
             ";
 
-
-        // {
-        //     GroupId:
-        //     GroupTitle
-        //     value:[{
-        //              averageValue:
-        //               stakeholderId:
-        //             }]
-        //     GroupAverageTotal: Vorhanden
-        //     SubGroups:[
-        //         {
-        //             SubGroupId:
-        //             SubGroupTitle:
-        //             StakeholderId: (Value hat Connection zu SubStakeholder)
-        //             subGroupAverage:
-        //         }
-        //     ]
-        // }
-
         $cols = array('clientId' => $clientId);
         $results = dbSelect($db, $query, $cols);
 
@@ -250,47 +244,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo $json;
         return;
     } else if ($answererdText != null && $answererdText == true) {
-        // GroupId          [clientGroupId]           wa_clientSubStakeholderAnswersComments
-        // Messages:[
-        //  {
-        //     SubStakeholderId:                    wa_clientSubStakeholderAnswersComments
-        //     SubStakeholderTitle:                 wa_subStakeholder
-        //     text:                                wa_clientSubStakeholderAnswersComments
-        //  },
-        // ]
-
         // {
-        //     subStakeholderId: 
-        //     subStakeholdername:
+        //     groupId:
         //     Messages:[
         //         {
-        //             groupId:
-        //             text:
-        //         },
+        //             SubstakeholderId:
+        //             SubStakeholderName:
+        //             text: 
+        //         }
         //     ]
         // }
 
+
+
         $query = "SELECT
-                        sg.groupId AS groupId,
-                        sg.id AS subGroupId,
+                        g.id AS groupId,
                         sst.stakeholderId AS stakeholderId,
                         sst.id AS subStakeholderId,
                         sst.name AS subStakeholderName,
-                        AVG(a.answer) AS AverageValue
+                        a.comment AS answeredText
                     FROM
-                        wa_clientSubStakeholderAnswers a
+                        wa_clientSubStakeholderAnswersComments a
                     JOIN
                         wa_subStakeholder sst ON a.subStakeholderId = sst.id
                     JOIN
-                        wa_clientSubGroups sg ON a.clientSubGroupsId = sg.id
+                        wa_clientGroups g ON a.clientGroupId = g.id
                     WHERE
                         sst.responded = 1
                         AND sst.active = 1
-                        AND sg.active = 1
-                        AND sg.clientId = :clientId
+                        AND g.active = 1
+                        AND g.clientId = :clientId
                     GROUP BY
-                        sg.groupId, sg.id, sst.stakeholderId, sst.id;
+                        g.id, sst.stakeholderId, sst.id;
         ";
+
+
+        $cols = array('clientId' => $clientId);
+        $results = dbSelect($db, $query, $cols);
+
+        //echo json_encode($results);
+
+        $processedData = [];
+
+        foreach ($results as $row) {
+            $groupId = $row['groupId'];
+            $subStakeholderId = $row['subStakeholderId'];
+            $subStakeholderName = $row['subStakeholderName'];
+            $answeredText = $row['answeredText'];
+
+            if (!isset($processedData[$groupId])) {
+                $processedData[$groupId] = [
+                    'groupId' => $groupId,
+                    'Messages' => []
+                ];
+            }
+
+            $processedData[$groupId]['Messages'][] = [
+                'SubstakeholderId' => $subStakeholderId,
+                'SubStakeholderName' => $subStakeholderName,
+                'text' => $answeredText
+            ];
+        }
+
+        $finalResult = array_values($processedData);
+
+        echo json_encode($finalResult);
+        return;
     } else if ($subStakeholder != null && $subStakeholder == true) {
         // GroupId:                                 wa_clientSubGroups
         // SubGroupId :                             wa_clientSubStakeholderAnswers ===> wa_clientSubGroups : GroupId
@@ -415,8 +434,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ];
         $lastIdComments = dbInsert($db, 'wa_clientSubStakeholderAnswersComments', $colsN);
     }
+    echo json_encode($lastIdAnswers);
+    echo json_encode($lastIdComments);
+    if ($lastIdAnswers != false && $lastIdComments != false) {
+        // update wa_subStakeholder.responded = 1
+        // id = subStakeholderID
+        // $cols = array('id' => $subStakeholderID );
+        $responded = 1;
+        $query = "UPDATE `wa_subStakeholder` SET `responded` = :responded WHERE `id` = :subStakeholderId";
+        $col = [
+            'responded' => $responded,
+        ];
+
+        // $subStakeholderId = 123; // Replace with the actual ID you want to update
 
 
+        $temp = dbUpdate($db, `wa_subStakeholder`, $subStakeholderID, $col);
+        echo json_encode($temp);
+        echo "Record updated successfully!";
+    }
 
     echo json_encode($lastIdAnswers);
     echo json_encode($lastIdComments);
