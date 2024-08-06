@@ -1,6 +1,5 @@
 .wes-an-matrix {
   .matrix-table {
-    margin: 15px;
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
@@ -50,6 +49,19 @@
     .group-average {
       background-color: #f4f6f7;
       text-align: center;
+    }
+
+    .group-comments {
+      background-color: #f4f6f7;
+      text-align: center;
+      color: #007bff; 
+      text-decoration: underline; 
+      cursor: pointer; 
+    
+      &:hover {
+        color: #002380;
+        text-decoration: none;
+      }
     }
 
     .subgroup-title {
