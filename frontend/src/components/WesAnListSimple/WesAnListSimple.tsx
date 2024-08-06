@@ -24,9 +24,6 @@ const WesAnListSimple = (_: Props) => {
     {}
   );
 
-  console.clear();
-  console.table(SubStakeholderSurveyQuestionComments);
-
   if (load || isLoadingQuestionsAverage || isStakeholderLoading) {
     return <div className="loading">Loading...</div>;
   }
@@ -37,10 +34,13 @@ const WesAnListSimple = (_: Props) => {
         return acc;
       }, {} as Record<number, string>)
     : [];
+  console.clear();
+  console.table(SurveyQuestionAverageValues);
 
   const flattenedData = SurveyQuestionAverageValues.map((group) => ({
     groupId: group.groupId,
     groupTitle: group.groupTitle,
+    groupRelevance: group.groupRelevance,
     groupAverageTotal: group.groupAverageTotal,
     subgroupAverage:
       group.subGroups.reduce(
@@ -113,6 +113,7 @@ const WesAnListSimple = (_: Props) => {
                   <GroupActionCheckbox
                     groupId={group.groupId}
                     onChange={handleCheckboxChange}
+                    groupRelevance={group.groupRelevance}
                   />
                 </td>
                 <td className="group-average">{group.groupAverageTotal}</td>
