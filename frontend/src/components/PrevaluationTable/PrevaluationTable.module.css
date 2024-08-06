@@ -1,0 +1,39 @@
+/* Table Styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1em;
+  font-family: 'Arial', sans-serif;
+  text-align: left;
+}
+
+.header {
+  padding: 12px 15px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #f4f4f4;
+  cursor: pointer;
+}
+
+.cell {
+  padding: 12px 15px;
+  border: 1px solid #444;
+  transition: background-color 0.3s ease;
+}
+
+.cell:hover {
+  background-color: #555; /* Highlight cell on hover */
+}
+
+tr:nth-child(even) {
+  background-color: #2e2e2e;
+}
+
+tr:nth-child(odd) {
+  background-color: #3c3c3c;
+}
+
+tr {
+  cursor: default; /* Ensure rows don’t show pointer cursor */
+}

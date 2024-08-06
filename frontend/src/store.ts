@@ -36,11 +36,12 @@ export type SurveyText = {
   SubStakeholderId: number;
   groupId: number;
 };
-// const [selectedValues, setSelectedValues] = useState<SurveyAnswer[]>([]);
-
-//stakeholder : {id, title, description, classification, }
-// onChangePrio({prio: number, id: number})
+export type prevaluationTexts = {
+  id: number;
+  text: string;
+};
 interface State {
+  prevaluationTexts: prevaluationTexts[];
   surveyText: SurveyText[];
   surveyAnswer: SurveyAnswer[];
   relevance: relevance;
@@ -60,6 +61,9 @@ interface State {
 }
 
 interface Action {
+  deleteprevaluationTextById: (id: number) => void;
+  setPrevaluationTexts: (prevaluationText: prevaluationTexts) => void;
+  setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) => void;
   resetSurvey: () => void;
   setSurveyText: (surveyText: SurveyText) => void;
   getSurveyAnswerById: (id: number) => any;
@@ -85,6 +89,16 @@ interface Action {
 
 export const useStore = create<State & Action>()(
   devtools((set, get) => ({
+    prevaluationTexts: [],
+    setPrevaluationTexts: (prevaluationText: prevaluationTexts) => set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
+    setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) => set(() => ({ prevaluationTexts: prevaluationText })),
+    deleteprevaluationTextById: (id: number) =>
+      set((state) => {
+        const newPrevaluationTexts = state.prevaluationTexts.filter((item) => {
+          return item.id != id;
+        });
+        return { prevaluationTexts: newPrevaluationTexts };
+      }),
     surveyAnswer: [],
     setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) => set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
     getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
