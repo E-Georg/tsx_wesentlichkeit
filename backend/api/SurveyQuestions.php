@@ -110,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // {
         //     GroupId:
         //     GroupTitle
+        //     GroupRelevance
         //     value:[{
         //              averageValue:
         //               stakeholderId:
@@ -145,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $query = "SELECT 
                     g.id as groupId,
                     g.title as groupTitle,
+                    g.relevance as groupRelevance,
                     sg.id as subGroupId,
                     sg.title as subGroupTitle,
                     st.id as stakeholderId,
@@ -201,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         foreach ($results as $row) {
             $groupId = $row['groupId'];
             $groupTitle = $row['groupTitle'];
+            $groupRelevance = $row['groupRelevance'];
             $stakeholderId = $row['stakeholderId'];
             $subGroupId = $row['subGroupId'];
             $subGroupTitle = $row['subGroupTitle'];
@@ -210,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $data[$groupId] = [
                     'groupId' => $groupId,
                     'groupTitle' => $groupTitle,
+                    'groupRelevance' => $groupRelevance,
                     'groupAverageTotal' => $row['groupAverageTotal'],
                     'value' => [],
                     'subGroups' => []
