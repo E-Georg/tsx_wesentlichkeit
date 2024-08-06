@@ -6,7 +6,7 @@ import "./WesAnMatrix.scss";
 
 type Props = {};
 
-const WesAnMatrix = (_: Props) => {
+const WesAnMatrixDetailed = (_: Props) => {
   const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } =
     useSurveyQuestionAverageValues();
@@ -103,4 +103,4 @@ const WesAnMatrix = (_: Props) => {
   );
 };
 
-export default WesAnMatrix;
+export default WesAnMatrixDetailed;
