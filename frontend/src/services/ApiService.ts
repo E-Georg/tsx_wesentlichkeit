@@ -53,7 +53,7 @@ export const fetchGroupSubGroup = async (typeParameter: string, ClientID: number
   try {
     const response = await axiosInstance.post(url, data);
     const fetchedData = response.data;
-    console.log(fetchedData);
+    // console.log(fetchedData);
 
     if (response.status === 200) return fetchedData;
   } catch (error) {
