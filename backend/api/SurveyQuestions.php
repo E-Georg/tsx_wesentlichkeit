@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $answererdAverageValues = isset($data['answererdAverageValues']) ? $data['answererdAverageValues'] : null;
     $answererdText = isset($data['answererdText']) ? $data['answererdText'] : null;
     $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+    $subStakeholder = isset($data['subStakeholder']) ? $data['subStakeholder'] : null;
 
 
     if ($answererdAverageValues != null && $answererdAverageValues == true) {
@@ -181,12 +182,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         // {
         //     GroupId:
-        //     GroupAverage:
+        //     GroupTitle
+        //     value:[{
+        //              averageValue:
+        //               stakeholderId:
+        //             }]
         //     GroupAverageTotal: Vorhanden
         //     SubGroups:[
         //         {
         //             SubGroupId:
-        //             SubGroupAverageTotal: Vorhanden
+        //             SubGroupTitle:
         //             StakeholderId: (Value hat Connection zu SubStakeholder)
         //             subGroupAverage:
         //         }
@@ -245,15 +250,137 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo $json;
         return;
     } else if ($answererdText != null && $answererdText == true) {
-        // GroupId
+        // GroupId          [clientGroupId]           wa_clientSubStakeholderAnswersComments
         // Messages:[
         //  {
         //     SubStakeholderId:                    wa_clientSubStakeholderAnswersComments
-        //     subGroupTitle:
+        //     SubStakeholderTitle:                 wa_subStakeholder
         //     text:                                wa_clientSubStakeholderAnswersComments
         //  },
         // ]
 
+        // {
+        //     subStakeholderId: 
+        //     subStakeholdername:
+        //     Messages:[
+        //         {
+        //             groupId:
+        //             text:
+        //         },
+        //     ]
+        // }
+
+        $query = "SELECT
+                        sg.groupId AS groupId,
+                        sg.id AS subGroupId,
+                        sst.stakeholderId AS stakeholderId,
+                        sst.id AS subStakeholderId,
+                        sst.name AS subStakeholderName,
+                        AVG(a.answer) AS AverageValue
+                    FROM
+                        wa_clientSubStakeholderAnswers a
+                    JOIN
+                        wa_subStakeholder sst ON a.subStakeholderId = sst.id
+                    JOIN
+                        wa_clientSubGroups sg ON a.clientSubGroupsId = sg.id
+                    WHERE
+                        sst.responded = 1
+                        AND sst.active = 1
+                        AND sg.active = 1
+                        AND sg.clientId = :clientId
+                    GROUP BY
+                        sg.groupId, sg.id, sst.stakeholderId, sst.id;
+        ";
+    } else if ($subStakeholder != null && $subStakeholder == true) {
+        // GroupId:                                 wa_clientSubGroups
+        // SubGroupId :                             wa_clientSubStakeholderAnswers ===> wa_clientSubGroups : GroupId
+        // StakeholderId:                           wa_subStakeholder              ===> responded
+        // SubStakeholderId:                        wa_clientSubStakeholderAnswers
+        // SubStakeholderName:                      wa_subStakeholder
+        // AverageValue: (for this cell)            wa_clientSubStakeholderAnswers
+
+
+
+        // {
+        // subtakeholderId:
+        // substakeholderName:
+        // stakeholderId
+        // AverageValusGroup:[
+        //     {
+        //         groupId:
+        //         AverageValue:
+        //     }
+        // ]
+        // AverageValueSubGroups:[
+        //     {
+        //         subGroupId:
+        //         AverageValueSubGroup:
+        //     }
+        // ]
+        // }
+
+        $query = "SELECT
+                        sg.groupId AS groupId,
+                        sg.id AS subGroupId,
+                        sst.stakeholderId AS stakeholderId,
+                        sst.id AS subStakeholderId,
+                        sst.name AS subStakeholderName,
+                        AVG(a.answer) AS AverageValue
+                    FROM
+                        wa_clientSubStakeholderAnswers a
+                    JOIN
+                        wa_subStakeholder sst ON a.subStakeholderId = sst.id
+                    JOIN
+                        wa_clientSubGroups sg ON a.clientSubGroupsId = sg.id
+                    WHERE
+                        sst.responded = 1
+                        AND sst.active = 1
+                        AND sg.active = 1
+                        AND sg.clientId = :clientId
+                    GROUP BY
+                        sg.groupId, sg.id, sst.stakeholderId, sst.id;
+        ";
+
+
+        $cols = array('clientId' => $clientId);
+        $results = dbSelect($db, $query, $cols);
+
+        //echo json_encode($results);
+
+        $processedData = [];
+
+        foreach ($results as $row) {
+            $subStakeholderId = $row['subStakeholderId'];
+            $subStakeholderName = $row['subStakeholderName'];
+            $stakeholderId = $row['stakeholderId'];
+            $groupId = $row['groupId'];
+            $subGroupId = $row['subGroupId'];
+            $averageValue = $row['AverageValue'];
+
+            if (!isset($processedData[$subStakeholderId])) {
+                $processedData[$subStakeholderId] = [
+                    'subStakeholderId' => $subStakeholderId,
+                    'subStakeholderName' => $subStakeholderName,
+                    'stakeholderId' => $stakeholderId,
+                    'AverageValusGroup' => [],
+                    'AverageValueSubGroups' => []
+                ];
+            }
+
+            $processedData[$subStakeholderId]['AverageValusGroup'][] = [
+                'groupId' => $groupId,
+                'AverageValue' => $averageValue
+            ];
+
+            $processedData[$subStakeholderId]['AverageValueSubGroups'][] = [
+                'subGroupId' => $subGroupId,
+                'AverageValueSubGroup' => $averageValue
+            ];
+        }
+
+        $finalResult = array_values($processedData);
+        echo json_encode($finalResult);
+        return;
     }
 
 

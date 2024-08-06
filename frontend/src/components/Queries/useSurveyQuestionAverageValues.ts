@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchGroupSubGroupAverageValues } from '../../services/ApiService';
 import { useStore } from '../../store';
+import { fetchSubStakeholderAverageAnswer } from '../../services/ApiServiceAverageValues';
 
 const useSurveyQuestionAverageValues = () => {
   const { ClientID } = useStore();
@@ -15,10 +16,18 @@ const useSurveyQuestionAverageValues = () => {
     staleTime: Infinity,
   });
 
+  const { data: SubStakeholderSurveyQuestionAverageValues, isLoading: isLoadingSubStakeholderQuestionsAverage } = useQuery({
+    queryKey: ['SubStakeholderSurveyQuestionAverageValues'],
+    queryFn: () => fetchSubStakeholderAverageAnswer(ClientID),
+    staleTime: Infinity,
+  });
+
   return {
     SurveyQuestionAverageValues,
     status,
     isLoadingQuestionsAverage,
+    SubStakeholderSurveyQuestionAverageValues,
+    isLoadingSubStakeholderQuestionsAverage,
   };
 };
 
