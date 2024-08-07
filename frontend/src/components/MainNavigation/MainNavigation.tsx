@@ -23,7 +23,7 @@ const MainNavigation = () => {
         </li>
         <li className="nav_listitem">
           <NavLink to="/WesAn" className={({ isActive }) => `${isActive ? 'active' : ''} nav_link`}>
-            Wesentlichkeitsanalyse
+            Themen Vorauswahl
           </NavLink>
         </li>
         {/*  {!token && (
