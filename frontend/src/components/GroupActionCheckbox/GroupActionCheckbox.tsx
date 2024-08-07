@@ -3,18 +3,22 @@ import React, { useState, useEffect } from "react";
 interface GroupActionCheckboxProps {
   groupId: number;
   onChange: (groupId: number, isChecked: boolean) => void;
-  groupRelevance?: boolean; // Optional prop to determine initial checkbox state
+  groupRelevance?: boolean | number;
 }
 
 const GroupActionCheckbox: React.FC<GroupActionCheckboxProps> = ({
   groupId,
   onChange,
-  groupRelevance = false, // Default to false if not provided
+  groupRelevance,
 }) => {
-  const [isChecked, setIsChecked] = useState(groupRelevance);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsChecked(groupRelevance);
+    if (typeof groupRelevance === "number") {
+      setIsChecked(groupRelevance === 1);
+    } else {
+      setIsChecked(Boolean(groupRelevance));
+    }
   }, [groupRelevance]);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {

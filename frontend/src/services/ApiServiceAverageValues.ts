@@ -53,7 +53,7 @@ export const fetchGroupSubGroupAverageValues = async (clientId: number) => {
 
 // [POST] Null muss bei clientSubGroupId explizit gesetzt weden
 export const UpdateRelevanceGroup = async (clientId: number, relevance: number,  clientGroupId: number ) => {
-  const url = `${API_URL}${ClientTypes.SurveyQuestions}`;
+  const url = `${API_URL}${ClientTypes.Groups}`;
   const data = {
     action: 'er',
     clientId: clientId,
@@ -64,6 +64,7 @@ export const UpdateRelevanceGroup = async (clientId: number, relevance: number, 
 
   try {
     const res = await axiosInstance.post(url, data);
+    console.log(res)
     return res.data;
   } catch (error) {
     console.log(error);
