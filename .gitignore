@@ -28,3 +28,19 @@ env
 *.sln
 *.sw?
 
+
+ApiLv/node_modules
+ApiLv/public/hot
+ApiLv/public/storage
+ApiLv/storage/*.key
+ApiLv/vendor
+ApiLv/.env
+ApiLv/.env.backup
+ApiLv/.phpunit.result.cache
+ApiLv/docker-compose.override.yml
+ApiLvHomestead.json
+ApiLv/Homestead.yaml
+ApiLv/npm-debug.log
+ApiLv/yarn-error.log
+ApiLv/.idea
+ApiLv/.vscode

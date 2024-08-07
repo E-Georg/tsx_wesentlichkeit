@@ -4,10 +4,13 @@ import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageV
 import useStakeholderData from "../Queries/useStakeholderData";
 import ModalComponent from "../WesAnModal/WesAnModal";
 import GroupActionCheckbox from "../GroupActionCheckbox/GroupActionCheckbox";
+import { UpdateRelevanceGroup } from "../../services/ApiServiceAverageValues";
+import { useStore } from "../../store";
 
 type Props = {};
 
 const WesAnListSimple = (_: Props) => {
+  const { ClientID } = useStore();
   const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } =
     useSurveyQuestionAverageValues();
@@ -20,6 +23,7 @@ const WesAnListSimple = (_: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
   const [currentGroupTitle, setCurrentGroupTitle] = useState("");
+
   const [selectedGroups, setSelectedGroups] = useState<Record<number, boolean>>(
     {}
   );
@@ -34,6 +38,7 @@ const WesAnListSimple = (_: Props) => {
         return acc;
       }, {} as Record<number, string>)
     : [];
+
   console.clear();
   console.table(SurveyQuestionAverageValues);
 
@@ -70,15 +75,33 @@ const WesAnListSimple = (_: Props) => {
     }));
   };
 
-  const handleSendClick = () => {
-    const dataToSend = Object.entries(selectedGroups)
-      .filter(([_, isChecked]) => isChecked)
-      .map(([groupId]) => ({
-        groupId: Number(groupId),
-        value: 1,
-      }));
+  const handleSendClick = async () => {
+    const clientId = 2;
 
-    console.log(dataToSend);
+    const dataToSend = Object.entries(selectedGroups).map(
+      ([groupId, isChecked]) => ({
+        clientId,
+        relevance: isChecked ? 1 : 0,
+        clientGroupId: Number(groupId),
+      })
+    );
+
+    console.table(selectedGroups);
+
+    // try {
+    //   for (const data of dataToSend) {
+    //     const result = await UpdateRelevanceGroup(
+    //       data.clientId,
+    //       data.relevance,
+    //       data.clientGroupId
+    //     );
+    //     console.log("Update result:", result);
+    //   }
+    //   alert("Relevance updated successfully.");
+    // } catch (error) {
+    //   console.error("Error updating relevance:", error);
+    //   alert("An error occurred while updating relevance.");
+    // }
   };
 
   return (
