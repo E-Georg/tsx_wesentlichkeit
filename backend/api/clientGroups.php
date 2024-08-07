@@ -141,6 +141,7 @@ switch ($action) {
         $relevance = isset($data['relevance']) ? $data['relevance'] : null;
 
 
+        // currently not in use
         if ($clientGroupId == null) {
             $query = 'SELECT
                             g.id AS GroupId

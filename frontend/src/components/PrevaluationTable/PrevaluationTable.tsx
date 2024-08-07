@@ -1,10 +1,8 @@
-import { useState } from "react";
-import {
-  VorbewertungColumns,
-  VorbewertungData,
-} from "../Models/data.interfaces";
-import styles from "./PrevaluationTable.module.scss"; // Import the updated CSS module
-import PrevaluationModal from "../PrevaluationModal/PrevaluationModal";
+import { useState } from 'react';
+import { PrevaluationColumns, PrevaluationData } from '../Models/data.interfaces';
+import styles from './PrevaluationTable.module.scss';
+import PrevaluationModal from '../PrevaluationModal/PrevaluationModal';
+import { STRINGS } from '../../utils/constants';
 
 const PrevaluationTable = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,7 +16,7 @@ const PrevaluationTable = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            {VorbewertungColumns.map((col, index) => (
+            {PrevaluationColumns.map((col, index) => (
               <th key={index} className={styles.header}>
                 {col.label}
               </th>
@@ -26,16 +24,10 @@ const PrevaluationTable = () => {
           </tr>
         </thead>
         <tbody>
-          {VorbewertungData.map((row, rowIndex) => (
+          {PrevaluationData.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              {VorbewertungColumns.map((col, colIndex) => (
-                <td
-                  key={colIndex}
-                  className={styles.cell}
-                  onClick={
-                    col.label === "Betrachtungsfall" ? openModal : undefined
-                  }
-                >
+              {PrevaluationColumns.map((col, colIndex) => (
+                <td key={colIndex} className={styles.cell} onClick={col.label === STRINGS.CASE ? openModal : undefined}>
                   {row[col.label as keyof typeof row]}
                 </td>
               ))}

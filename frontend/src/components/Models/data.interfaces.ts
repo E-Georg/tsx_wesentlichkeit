@@ -104,7 +104,7 @@ export type SetSelectedValues = React.Dispatch<React.SetStateAction<SurveyAnswer
 
 export type SetVisibleDescription = React.Dispatch<React.SetStateAction<VisibleDescription>>;
 
-export interface VorbewertungRow {
+export interface PrevaluationData {
   ID: number;
   'ESRS-Thema': string;
   Unterthema: string;
@@ -119,7 +119,7 @@ export interface VorbewertungRow {
   'Betroffene Systemgrenzen': string;
 }
 
-export const VorbewertungColumns = [
+export const PrevaluationColumns = [
   { label: 'ID' },
   { label: 'ESRS-Thema' },
   { label: 'Unterthema' },
@@ -134,7 +134,7 @@ export const VorbewertungColumns = [
   { label: 'Betroffene Systemgrenzen' },
 ];
 
-export const VorbewertungData: VorbewertungRow[] = [
+export const PrevaluationData: PrevaluationData[] = [
   {
     ID: 1,
     'ESRS-Thema': 'Thema A',

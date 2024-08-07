@@ -9,10 +9,13 @@ export const BUTTONS = {
   DELETE: 'Löschen',
   UPDATE: 'Bearbeiten',
   SEND: 'Senden',
+  ADD: 'Hinzufügen',
 };
 
 export const STRINGS = {
   SUBSTAKEHOLDERCOUNT: 'Anzahl hinterlegter Stakeholder:',
+  CASE: 'Betrachtungsfall',
+  ADD_CASE: 'Betrachtungsfall hinzufügen',
 };
 
 export const Classifications: Classification[] = [
