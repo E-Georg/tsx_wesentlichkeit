@@ -17,7 +17,9 @@ const WesAnListSimple = (_: Props) => {
     isLoadingQuestionsAverage,
     updateRelevance,
   } = useSurveyQuestionAverageValues();
+
   const { Stakeholder, isLoadingStake } = useStakeholderData();
+
   const {
     SubStakeholderSurveyQuestionComments,
     isLoadingSubStakeholderComments,
@@ -29,39 +31,28 @@ const WesAnListSimple = (_: Props) => {
 
   const [state, setState] = useState<checkedBox[]>([]);
 
+  useEffect(() => {
+    if (
+      !isLoadingQuestionsAverage &&
+      Array.isArray(SurveyQuestionAverageValues)
+    ) {
+      const initialState = SurveyQuestionAverageValues.map((item) => ({
+        groupId: item.groupId,
+        relevance: item.groupRelevance,
+      }));
+      setState(initialState);
+    }
+  }, [isLoadingQuestionsAverage, SurveyQuestionAverageValues]);
+
   if (
     isLoadingQuestionsAverage ||
     isLoadingStake ||
     isLoadingSubStakeholderComments
   ) {
-    <div className="loading">Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
-  // const stakeholderMap = Array.isArray(Stakeholder)
-  //   ? Stakeholder.reduce((acc, stakeholder) => {
-  //       acc[stakeholder.id] = stakeholder.title;
-  //       return acc;
-  //     }, {} as Record<number, string>)
-  //   : [];
-
-  console.clear();
-  console.table(SurveyQuestionAverageValues);
-
-  const flattenedData =
-    Array.isArray(SurveyQuestionAverageValues) &&
-    SurveyQuestionAverageValues.map((group) => ({
-      groupId: group.groupId,
-      groupTitle: group.groupTitle,
-      groupRelevance: group.groupRelevance,
-      groupAverageTotal: group.groupAverageTotal,
-      subgroupAverage:
-        group.subGroups.reduce(
-          (acc, subGroup) => acc + subGroup.subgroupAverage,
-          0
-        ) / group.subGroups.length,
-    }));
-
-  const openModal = (groupTitle, groupId) => {
+  const openModal = (groupTitle: string, groupId: number) => {
     const groupComment = SubStakeholderSurveyQuestionComments.find(
       (group) => group.groupId === groupId
     );
@@ -78,7 +69,6 @@ const WesAnListSimple = (_: Props) => {
   const handleSendClick = async () => {
     try {
       await updateRelevance(state);
-
       alert("Relevance updated successfully.");
     } catch (error) {
       console.error("Error updating relevance:", error);
@@ -86,65 +76,19 @@ const WesAnListSimple = (_: Props) => {
     }
   };
 
-  const handleCheckboxChange = (groupId: number, isChecked: boolean) => {
-    setSelectedGroups((prev) => ({
-      ...prev,
-      [groupId]: isChecked,
-    }));
-  };
-
-  // const handleSendClick = async () => {
-  //   const clientId = 2;
-
-  //   const dataToSend = Object.entries(selectedGroups).map(
-  //     ([groupId, isChecked]) => ({
-  //       clientId,
-  //       relevance: isChecked ? 1 : 0,
-  //       clientGroupId: Number(groupId),
-  //     })
-  //   );
-
-  //   console.log(selectedGroups);
-
-  // try {
-  //   for (const data of dataToSend) {
-  //     const result = await UpdateRelevanceGroup(
-  //       data.clientId,
-  //       data.relevance,
-  //       data.clientGroupId
-  //     );
-  //     console.log("Update result:", result);
-  //   }
-  //   alert("Relevance updated successfully.");
-  // } catch (error) {
-  //   console.error("Error updating relevance:", error);
-  //   alert("An error occurred while updating relevance.");
-  // }
-  // };
-
-  // const fillChecked = (groupId: number, relevance: number) => {
-  //   setIsChecked([...isChecked, { id: groupId, checked: relevance }]);
-  // };
-
-  // useEffect(() => {
-  //   Array.isArray(flattenedData) &&
-  //     flattenedData.map((item) =>
-  //       fillChecked(item.groupId, item.groupRelevance)
-  //     );
-  // }, []);
-
-  useEffect(() => {
-    if (
-      !isLoadingQuestionsAverage &&
-      Array.isArray(SurveyQuestionAverageValues)
-    ) {
-      const initialState = SurveyQuestionAverageValues.map((item) => ({
-        groupId: item.groupId,
-        relevance: item.groupRelevance,
-      }));
-      setState(initialState);
-    }
-  }, [isLoadingQuestionsAverage, SurveyQuestionAverageValues]);
+  const flattenedData = Array.isArray(SurveyQuestionAverageValues)
+    ? SurveyQuestionAverageValues.map((group) => ({
+        groupId: group.groupId,
+        groupTitle: group.groupTitle,
+        groupRelevance: group.groupRelevance,
+        groupAverageTotal: group.groupAverageTotal,
+        subgroupAverage:
+          group.subGroups.reduce(
+            (acc, subGroup) => acc + subGroup.subgroupAverage,
+            0
+          ) / group.subGroups.length,
+      }))
+    : [];
 
   return (
     <div className="wes-an-matrix">
@@ -152,8 +96,8 @@ const WesAnListSimple = (_: Props) => {
         <thead>
           <tr>
             <th className="header-group-title">Group Title</th>
-            <th className="header-group-comments">Stakeholderbefragung </th>
-            <th className="header-group-chkbox">Wesentlich bewerten </th>
+            <th className="header-group-comments">Stakeholderbefragung</th>
+            <th className="header-group-chkbox">Wesentlich bewerten</th>
             <th className="header-group-average">Group Average</th>
             {Array.isArray(Stakeholder) &&
               Stakeholder.map((stakeholder) => (
