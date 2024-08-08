@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ClientTopicClassificationClientStakeholders extends Model
+{
+    use HasFactory;
+    protected $table = 'wa_clientTopicClassificationClientStakeholders';
+
+    protected $fillable = [
+        'clientId',
+        'active',
+        'clientTopicClassificationId',
+        'stakeholderId'
+    ];
+
+    public function classification()
+    {
+        return $this->belongsTo(ClientTopicClassification::class, 'clientTopicClassificationId', 'id');
+    }
+}

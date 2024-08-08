@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ClientGroupController;
+use App\Http\Controllers\TopicClassificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ use App\Http\Controllers\ClientGroupController;
 */
 
 Route::apiResource('client-groups', ClientGroupController::class);
+Route::get('/topicClassifictaion', TopicClassificationController::class);
 
 Route::post('/getGroups', [ClientGroupController::class, 'getClientGroups']);
 
