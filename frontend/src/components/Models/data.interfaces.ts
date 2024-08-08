@@ -20,7 +20,7 @@ export interface Cell {
       title: string;
       text: string;
       subStakeholderId: number;
-    }
+    },
   ];
 }
 
@@ -41,6 +41,14 @@ export interface SubStakeholder {
   email: string;
   stakeholderId: number;
   stakeholderName?: string;
+}
+
+//für adis
+export interface Info {
+  title: string;
+  classification: string;
+  relevance: string;
+  relevanceText: string;
 }
 
 export enum ClientTypes {

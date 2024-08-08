@@ -4,6 +4,8 @@ import useSurveyQuestionAverageValues from '../Queries/useSurveyQuestionAverageV
 import useStakeholderData from '../Queries/useStakeholderData';
 import ModalComponent from '../WesAnModal/WesAnModal';
 import GroupActionCheckbox from '../GroupActionCheckbox/GroupActionCheckbox';
+import ModalStakeholderView from '../ModalStakeholderView/ModalStakeholderView';
+import { Info } from '../Models/data.interfaces';
 
 type Props = {};
 export type checkedBox = {
@@ -12,17 +14,21 @@ export type checkedBox = {
 };
 
 const WesAnListSimple = (_: Props) => {
-  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage, updateRelevance } =
-    useSurveyQuestionAverageValues();
+  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage, updateRelevance } = useSurveyQuestionAverageValues();
 
   const { Stakeholder, isLoadingStake } = useStakeholderData();
 
-  const { SubStakeholderSurveyQuestionComments, isLoadingSubStakeholderComments } =
-    useSurveyQuestionAverageValues();
+  console.table(Stakeholder);
+
+  const { SubStakeholderSurveyQuestionComments, isLoadingSubStakeholderComments } = useSurveyQuestionAverageValues();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [ModalStakeholderViewIsOpen, setModalStakeholderView] = useState(false);
+
   const [currentComments, setCurrentComments] = useState([]);
   const [currentGroupTitle, setCurrentGroupTitle] = useState('');
+
+  const [currentStakeholderModal, setCurrentStakeholderModal] = useState<Info | null>(null);
 
   const [state, setState] = useState<checkedBox[]>([]);
 
@@ -41,9 +47,7 @@ const WesAnListSimple = (_: Props) => {
   }
 
   const openModal = (groupTitle: string, groupId: number) => {
-    const groupComment = SubStakeholderSurveyQuestionComments.find(
-      (group) => group.groupId === groupId
-    );
+    const groupComment = SubStakeholderSurveyQuestionComments.find((group) => group.groupId === groupId);
 
     setCurrentComments(groupComment ? groupComment.Messages : []);
     setCurrentGroupTitle(groupTitle);
@@ -52,6 +56,15 @@ const WesAnListSimple = (_: Props) => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+    setModalStakeholderView(false);
+  };
+
+  const openStakeholderModal = (id: number) => {
+    const currentStakeholderModal = Stakeholder!.find((stakeholder) => stakeholder.id === id);
+
+    setCurrentStakeholderModal(currentStakeholderModal);
+
+    setModalStakeholderView(true);
   };
 
   const handleSendClick = async () => {
@@ -71,13 +84,14 @@ const WesAnListSimple = (_: Props) => {
         groupRelevance: group.groupRelevance,
         groupAverageTotal: group.groupAverageTotal,
         subgroupAverage:
-          group.subGroups.reduce((acc, subGroup) => acc + subGroup.subgroupAverage, 0) /
-          group.subGroups.length,
+          group.subGroups.reduce((acc, subGroup) => acc + subGroup.subgroupAverage, 0) / group.subGroups.length,
       }))
     : [];
 
   return (
     <div className="wes-an-matrix">
+      <ModalStakeholderView isOpen={ModalStakeholderViewIsOpen} onClose={closeModal} info={currentStakeholderModal} />
+
       <table className="matrix-table">
         <thead>
           <tr>
@@ -87,12 +101,17 @@ const WesAnListSimple = (_: Props) => {
             <th className="header-group-average">Group Average</th>
             {Array.isArray(Stakeholder) &&
               Stakeholder.map((stakeholder) => (
-                <th className="header-stakeholder" key={stakeholder.id}>
+                <th
+                  className="header-stakeholder"
+                  key={stakeholder.id}
+                  onClick={() => openStakeholderModal(stakeholder.id)}
+                >
                   {stakeholder.title}
                 </th>
               ))}
           </tr>
         </thead>
+
         <tbody>
           {Array.isArray(flattenedData) &&
             flattenedData.map((group, index) => {
@@ -102,10 +121,7 @@ const WesAnListSimple = (_: Props) => {
               return (
                 <tr key={group.groupId}>
                   <td className="group-title">{group.groupTitle}</td>
-                  <td
-                    className="group-comments"
-                    onClick={() => openModal(group.groupTitle, group.groupId)}
-                  >
+                  <td className="group-comments" onClick={() => openModal(group.groupTitle, group.groupId)}>
                     Einsicht
                   </td>
                   <td>
@@ -118,15 +134,11 @@ const WesAnListSimple = (_: Props) => {
                   <td className="group-average">{group.groupAverageTotal}</td>
                   {Array.isArray(Stakeholder) &&
                     Stakeholder.map((stakeholder) => (
-                      <td
-                        className="stakeholder-average"
-                        key={`${stakeholder.id}-${group.groupId}`}
-                      >
+                      <td className="stakeholder-average" key={`${stakeholder.id}-${group.groupId}`}>
                         {(Array.isArray(SurveyQuestionAverageValues) &&
-                          SurveyQuestionAverageValues.find(
-                            (g) => g.groupId === group.groupId
-                          )?.subGroups.find((subGroup) => subGroup.stakeholderId === stakeholder.id)
-                            ?.subgroupAverage) ||
+                          SurveyQuestionAverageValues.find((g) => g.groupId === group.groupId)?.subGroups.find(
+                            (subGroup) => subGroup.stakeholderId === stakeholder.id
+                          )?.subgroupAverage) ||
                           '-'}
                       </td>
                     ))}
@@ -139,7 +151,6 @@ const WesAnListSimple = (_: Props) => {
       <button onClick={handleSendClick} className="send-button">
         Send Data
       </button>
-
       <ModalComponent
         isOpen={modalIsOpen}
         onClose={closeModal}

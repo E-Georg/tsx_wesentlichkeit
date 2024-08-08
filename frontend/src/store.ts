@@ -90,8 +90,10 @@ interface Action {
 export const useStore = create<State & Action>()(
   devtools((set, get) => ({
     prevaluationTexts: [],
-    setPrevaluationTexts: (prevaluationText: prevaluationTexts) => set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
-    setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) => set(() => ({ prevaluationTexts: prevaluationText })),
+    setPrevaluationTexts: (prevaluationText: prevaluationTexts) =>
+      set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
+    setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) =>
+      set(() => ({ prevaluationTexts: prevaluationText })),
     deleteprevaluationTextById: (id: number) =>
       set((state) => {
         const newPrevaluationTexts = state.prevaluationTexts.filter((item) => {
@@ -100,12 +102,15 @@ export const useStore = create<State & Action>()(
         return { prevaluationTexts: newPrevaluationTexts };
       }),
     surveyAnswer: [],
-    setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) => set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
+    setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) =>
+      set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
     getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
     surveyText: [],
     setSurveyText: (newSurveyText: SurveyText) =>
       set((state) => {
-        const existingIndex = state.surveyText.findIndex((item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId);
+        const existingIndex = state.surveyText.findIndex(
+          (item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId
+        );
         if (existingIndex > -1) {
           const updatedSurveyText = [...state.surveyText];
           updatedSurveyText[existingIndex] = { ...updatedSurveyText[existingIndex], text: newSurveyText.text };
@@ -134,7 +139,12 @@ export const useStore = create<State & Action>()(
           newMessageValue.push({ id: 0, text: '', subStakeholderId: 0 });
         }
 
-        newMessageValue[index] = { ...newMessageValue[index], id: value.id, text: value.text, subStakeholderId: value.subStakeholderId };
+        newMessageValue[index] = {
+          ...newMessageValue[index],
+          id: value.id,
+          text: value.text,
+          subStakeholderId: value.subStakeholderId,
+        };
 
         return { messageValue: newMessageValue };
       }),
