@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import useGroupSubGroupData from "../Queries/useGroupSubGroup";
+import { useEffect, useState } from "react";
+
 import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageValues";
 import useStakeholderData from "../Queries/useStakeholderData";
 import ModalComponent from "../WesAnModal/WesAnModal";
 import GroupActionCheckbox from "../GroupActionCheckbox/GroupActionCheckbox";
-import { UpdateRelevanceGroup } from "../../services/ApiServiceAverageValues";
-import { useStore } from "../../store";
 
 type Props = {};
+export type checkedBox = {
+  groupId: number;
+  relevance: number;
+};
 
 const WesAnListSimple = (_: Props) => {
-  const { ClientID } = useStore();
-  const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
-  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage } =
-    useSurveyQuestionAverageValues();
-  const { Stakeholder, isStakeholderLoading } = useStakeholderData();
+  const {
+    SurveyQuestionAverageValues,
+    isLoadingQuestionsAverage,
+    updateRelevance,
+  } = useSurveyQuestionAverageValues();
+  const { Stakeholder, isLoadingStake } = useStakeholderData();
   const {
     SubStakeholderSurveyQuestionComments,
     isLoadingSubStakeholderComments,
@@ -24,35 +27,39 @@ const WesAnListSimple = (_: Props) => {
   const [currentComments, setCurrentComments] = useState([]);
   const [currentGroupTitle, setCurrentGroupTitle] = useState("");
 
-  const [selectedGroups, setSelectedGroups] = useState<Record<number, boolean>>(
-    {}
-  );
+  const [state, setState] = useState<checkedBox[]>([]);
 
-  if (load || isLoadingQuestionsAverage || isStakeholderLoading) {
-    return <div className="loading">Loading...</div>;
+  if (
+    isLoadingQuestionsAverage ||
+    isLoadingStake ||
+    isLoadingSubStakeholderComments
+  ) {
+    <div className="loading">Loading...</div>;
   }
 
-  const stakeholderMap = Array.isArray(Stakeholder)
-    ? Stakeholder.reduce((acc, stakeholder) => {
-        acc[stakeholder.id] = stakeholder.title;
-        return acc;
-      }, {} as Record<number, string>)
-    : [];
+  // const stakeholderMap = Array.isArray(Stakeholder)
+  //   ? Stakeholder.reduce((acc, stakeholder) => {
+  //       acc[stakeholder.id] = stakeholder.title;
+  //       return acc;
+  //     }, {} as Record<number, string>)
+  //   : [];
 
   console.clear();
   console.table(SurveyQuestionAverageValues);
 
-  const flattenedData = SurveyQuestionAverageValues.map((group) => ({
-    groupId: group.groupId,
-    groupTitle: group.groupTitle,
-    groupRelevance: group.groupRelevance,
-    groupAverageTotal: group.groupAverageTotal,
-    subgroupAverage:
-      group.subGroups.reduce(
-        (acc, subGroup) => acc + subGroup.subgroupAverage,
-        0
-      ) / group.subGroups.length,
-  }));
+  const flattenedData =
+    Array.isArray(SurveyQuestionAverageValues) &&
+    SurveyQuestionAverageValues.map((group) => ({
+      groupId: group.groupId,
+      groupTitle: group.groupTitle,
+      groupRelevance: group.groupRelevance,
+      groupAverageTotal: group.groupAverageTotal,
+      subgroupAverage:
+        group.subGroups.reduce(
+          (acc, subGroup) => acc + subGroup.subgroupAverage,
+          0
+        ) / group.subGroups.length,
+    }));
 
   const openModal = (groupTitle, groupId) => {
     const groupComment = SubStakeholderSurveyQuestionComments.find(
@@ -68,6 +75,17 @@ const WesAnListSimple = (_: Props) => {
     setModalIsOpen(false);
   };
 
+  const handleSendClick = async () => {
+    try {
+      await updateRelevance(state);
+
+      alert("Relevance updated successfully.");
+    } catch (error) {
+      console.error("Error updating relevance:", error);
+      alert("An error occurred while updating relevance.");
+    }
+  };
+
   const handleCheckboxChange = (groupId: number, isChecked: boolean) => {
     setSelectedGroups((prev) => ({
       ...prev,
@@ -75,34 +93,58 @@ const WesAnListSimple = (_: Props) => {
     }));
   };
 
-  const handleSendClick = async () => {
-    const clientId = 2;
+  // const handleSendClick = async () => {
+  //   const clientId = 2;
 
-    const dataToSend = Object.entries(selectedGroups).map(
-      ([groupId, isChecked]) => ({
-        clientId,
-        relevance: isChecked ? 1 : 0,
-        clientGroupId: Number(groupId),
-      })
-    );
+  //   const dataToSend = Object.entries(selectedGroups).map(
+  //     ([groupId, isChecked]) => ({
+  //       clientId,
+  //       relevance: isChecked ? 1 : 0,
+  //       clientGroupId: Number(groupId),
+  //     })
+  //   );
 
-    console.table(selectedGroups);
+  //   console.log(selectedGroups);
 
-    // try {
-    //   for (const data of dataToSend) {
-    //     const result = await UpdateRelevanceGroup(
-    //       data.clientId,
-    //       data.relevance,
-    //       data.clientGroupId
-    //     );
-    //     console.log("Update result:", result);
-    //   }
-    //   alert("Relevance updated successfully.");
-    // } catch (error) {
-    //   console.error("Error updating relevance:", error);
-    //   alert("An error occurred while updating relevance.");
-    // }
-  };
+  // try {
+  //   for (const data of dataToSend) {
+  //     const result = await UpdateRelevanceGroup(
+  //       data.clientId,
+  //       data.relevance,
+  //       data.clientGroupId
+  //     );
+  //     console.log("Update result:", result);
+  //   }
+  //   alert("Relevance updated successfully.");
+  // } catch (error) {
+  //   console.error("Error updating relevance:", error);
+  //   alert("An error occurred while updating relevance.");
+  // }
+  // };
+
+  // const fillChecked = (groupId: number, relevance: number) => {
+  //   setIsChecked([...isChecked, { id: groupId, checked: relevance }]);
+  // };
+
+  // useEffect(() => {
+  //   Array.isArray(flattenedData) &&
+  //     flattenedData.map((item) =>
+  //       fillChecked(item.groupId, item.groupRelevance)
+  //     );
+  // }, []);
+
+  useEffect(() => {
+    if (
+      !isLoadingQuestionsAverage &&
+      Array.isArray(SurveyQuestionAverageValues)
+    ) {
+      const initialState = SurveyQuestionAverageValues.map((item) => ({
+        groupId: item.groupId,
+        relevance: item.groupRelevance,
+      }));
+      setState(initialState);
+    }
+  }, [isLoadingQuestionsAverage, SurveyQuestionAverageValues]);
 
   return (
     <div className="wes-an-matrix">
@@ -123,37 +165,50 @@ const WesAnListSimple = (_: Props) => {
         </thead>
         <tbody>
           {Array.isArray(flattenedData) &&
-            flattenedData.map((group) => (
-              <tr key={group.groupId}>
-                <td className="group-title">{group.groupTitle}</td>
-                <td
-                  className="group-comments"
-                  onClick={() => openModal(group.groupTitle, group.groupId)}
-                >
-                  Einsicht
-                </td>
-                <td>
-                  <GroupActionCheckbox
-                    groupId={group.groupId}
-                    onChange={handleCheckboxChange}
-                    groupRelevance={group.groupRelevance}
-                  />
-                </td>
-                <td className="group-average">{group.groupAverageTotal}</td>
-                {Stakeholder.map((stakeholder) => (
+            flattenedData.map((group, index) => {
+              const groupState = state[index];
+              if (!groupState) return null;
+
+              return (
+                <tr key={group.groupId}>
+                  <td className="group-title">{group.groupTitle}</td>
                   <td
-                    className="stakeholder-average"
-                    key={`${stakeholder.id}-${group.groupId}`}
+                    className="group-comments"
+                    onClick={() => openModal(group.groupTitle, group.groupId)}
                   >
-                    {SurveyQuestionAverageValues.find(
-                      (g) => g.groupId === group.groupId
-                    )?.subGroups.find(
-                      (subGroup) => subGroup.stakeholderId === stakeholder.id
-                    )?.subgroupAverage || "-"}
+                    Einsicht
                   </td>
-                ))}
-              </tr>
-            ))}
+                  <td>
+                    <GroupActionCheckbox
+                      groupId={group.groupId}
+                      state={
+                        groupState.relevance != null
+                          ? groupState.relevance
+                          : false
+                      }
+                      setState={setState}
+                    />
+                  </td>
+                  <td className="group-average">{group.groupAverageTotal}</td>
+                  {Array.isArray(Stakeholder) &&
+                    Stakeholder.map((stakeholder) => (
+                      <td
+                        className="stakeholder-average"
+                        key={`${stakeholder.id}-${group.groupId}`}
+                      >
+                        {(Array.isArray(SurveyQuestionAverageValues) &&
+                          SurveyQuestionAverageValues.find(
+                            (g) => g.groupId === group.groupId
+                          )?.subGroups.find(
+                            (subGroup) =>
+                              subGroup.stakeholderId === stakeholder.id
+                          )?.subgroupAverage) ||
+                          "-"}
+                      </td>
+                    ))}
+                </tr>
+              );
+            })}
         </tbody>
       </table>
 

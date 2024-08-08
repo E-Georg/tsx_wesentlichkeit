@@ -1,37 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 interface GroupActionCheckboxProps {
   groupId: number;
-  onChange: (groupId: number, isChecked: boolean) => void;
-  groupRelevance?: boolean | number;
+  state: any;
+  setState: any;
 }
 
 const GroupActionCheckbox: React.FC<GroupActionCheckboxProps> = ({
   groupId,
-  onChange,
-  groupRelevance,
+  state,
+  setState,
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (typeof groupRelevance === "number") {
-      setIsChecked(groupRelevance === 1);
-    } else {
-      setIsChecked(Boolean(groupRelevance));
-    }
-  }, [groupRelevance]);
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    setIsChecked(checked);
-    onChange(groupId, checked);
+  const updateIsChecked = (id: any, newIsChecked: any) => {
+    setState((prevState: any) =>
+      prevState.map((obj: any) =>
+        obj.groupId === id ? { ...obj, relevance: newIsChecked } : obj
+      )
+    );
   };
 
   return (
     <input
       type="checkbox"
-      checked={isChecked}
-      onChange={handleCheckboxChange}
+      checked={state}
+      onChange={(event) =>
+        updateIsChecked(groupId, event.target.checked === true ? 1 : 0)
+      }
     />
   );
 };
