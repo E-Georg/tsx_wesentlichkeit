@@ -1,8 +1,6 @@
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
 import './MessageCellComponent.css';
-import { editorConfig, handleDelete } from './MessageCellComponentFunctions';
+import { handleDelete } from './MessageCellComponentFunctions';
 import { messageValue, useStore } from '../../store';
 import Dropdown from '../Dropdown/Dropdown';
 import useCellData from '../Queries/useCellData';
@@ -34,22 +32,6 @@ const MessageCellComponent = ({ columnID, text, index, messageValueI }: Props) =
           stakeholderID={columnID}
         />
       </div>
-      {/* <CKEditor
-        onChange={(_, editor) => {
-          const newText = editor.getData();
-          const existingMessageValue = messageValue[index];
-          console.log(existingMessageValue);
-
-          setMessageValueByIndex(index, {
-            id: existingMessageValue.id,
-            text: newText,
-            subStakeholderId: existingMessageValue.subStakeholderId,
-          });
-        }}
-        data={text}
-        editor={ClassicEditor}
-        config={editorConfig}
-      /> */}
 
       <EditorComponent
         setMessageValueByIndex={setDelteMessageValueByIndex}

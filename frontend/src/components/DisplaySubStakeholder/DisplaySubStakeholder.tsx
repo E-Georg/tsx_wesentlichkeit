@@ -23,6 +23,7 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
   if (isLoadingStake) {
     return <div>...LOADING</div>;
   }
+  console.log(SubStakeholderQuery);
 
   const options =
     Stakeholder && Stakeholder?.length > 1

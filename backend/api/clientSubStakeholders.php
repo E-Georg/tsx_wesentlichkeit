@@ -41,6 +41,7 @@ switch ($action) {
                 $jsonArray[$pointer]['name'] = $subStakeholder['name'];
                 $jsonArray[$pointer]['email'] = $subStakeholder['email'];
                 $jsonArray[$pointer]['stakeholderId'] = $subStakeholder['stakeholderId'];
+                $jsonArray[$pointer]['responded'] = $subStakeholder['responded'];
                 $pointer++;
             }
         } else {
