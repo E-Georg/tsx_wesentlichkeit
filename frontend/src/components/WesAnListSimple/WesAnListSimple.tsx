@@ -6,6 +6,7 @@ import ModalComponent from '../WesAnModal/WesAnModal';
 import GroupActionCheckbox from '../GroupActionCheckbox/GroupActionCheckbox';
 import ModalStakeholderView from '../ModalStakeholderView/ModalStakeholderView';
 import { Info } from '../Models/data.interfaces';
+import useSubStakeholderData from '../Queries/useSubStakeholder';
 
 type Props = {};
 export type checkedBox = {
@@ -17,8 +18,7 @@ const WesAnListSimple = (_: Props) => {
   const { SurveyQuestionAverageValues, isLoadingQuestionsAverage, updateRelevance } = useSurveyQuestionAverageValues();
 
   const { Stakeholder, isLoadingStake } = useStakeholderData();
-
-  console.table(Stakeholder);
+  const { SubStakeholder, isLoadingSubStake } = useSubStakeholderData();
 
   const { SubStakeholderSurveyQuestionComments, isLoadingSubStakeholderComments } = useSurveyQuestionAverageValues();
 
@@ -31,6 +31,14 @@ const WesAnListSimple = (_: Props) => {
   const [currentStakeholderModal, setCurrentStakeholderModal] = useState<Info | null>(null);
 
   const [state, setState] = useState<checkedBox[]>([]);
+
+  console.clear();
+
+  console.log('SubStakeholder');
+  console.table(SubStakeholder);
+
+  console.log('SurveyQuestionAverageValues');
+  console.table(SurveyQuestionAverageValues);
 
   useEffect(() => {
     if (!isLoadingQuestionsAverage && Array.isArray(SurveyQuestionAverageValues)) {
@@ -140,6 +148,15 @@ const WesAnListSimple = (_: Props) => {
                             (subGroup) => subGroup.stakeholderId === stakeholder.id
                           )?.subgroupAverage) ||
                           '-'}
+
+                        {SubStakeholder?.map((subStakeholder, index) =>
+                          subStakeholder.stakeholderId === stakeholder.id && subStakeholder.responded === 1 ? (
+                            <div key={index}>
+                              {subStakeholder.name}
+                              {subStakeholder.responded}
+                            </div>
+                          ) : null
+                        )}
                       </td>
                     ))}
                 </tr>
