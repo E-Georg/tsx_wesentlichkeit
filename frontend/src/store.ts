@@ -195,15 +195,9 @@ export const useStore = create<State & Action>()(
   devtools((set, get) => ({
     prevaluationTexts: [],
     setPrevaluationTexts: (prevaluationText: prevaluationTexts) =>
-      set((state) => {
-        console.log('Setting prevaluationTexts:', prevaluationText);
-        return { prevaluationTexts: [...state.prevaluationTexts, prevaluationText] };
-      }),
+      set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
     setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) =>
-      set(() => {
-        console.log('Setting prevaluationTextsArray:', prevaluationText);
-        return { prevaluationTexts: prevaluationText };
-      }),
+      set(() => ({ prevaluationTexts: prevaluationText })),
     deleteprevaluationTextById: (id: number) =>
       set((state) => {
         const newPrevaluationTexts = state.prevaluationTexts.filter((item) => item.id != id);
@@ -212,19 +206,11 @@ export const useStore = create<State & Action>()(
       }),
     surveyAnswer: [],
     setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) =>
-      set((state) => {
-        console.log('Setting surveyAnswer:', updateFn(state.surveyAnswer));
-        return { surveyAnswer: updateFn(state.surveyAnswer) };
-      }),
-    getSurveyAnswerById: (id: number) => {
-      const answer = get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer;
-      console.log('Getting surveyAnswer by id:', id, answer);
-      return answer;
-    },
+      set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
+    getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
     surveyText: [],
     setSurveyText: (newSurveyText: SurveyText) =>
       set((state) => {
-        console.log('Setting surveyText:', newSurveyText);
         const existingIndex = state.surveyText.findIndex(
           (item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId
         );
@@ -279,12 +265,14 @@ export const useStore = create<State & Action>()(
         while (newMessageValue.length <= index) {
           newMessageValue.push({ id: 0, text: '', subStakeholderId: 0 });
         }
+
         newMessageValue[index] = {
           ...newMessageValue[index],
           id: value.id,
           text: value.text,
           subStakeholderId: value.subStakeholderId,
         };
+
         return { messageValue: newMessageValue };
       }),
     setDelteMessageValueByIndex: (Id: number) =>

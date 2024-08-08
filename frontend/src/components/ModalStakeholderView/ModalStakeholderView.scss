@@ -1,6 +1,6 @@
-// WesAnModal.scss
+// ModalStakeholderView.scss
 
-.modal-overlay {
+.ModalStakeholderView {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,30 +13,29 @@
   z-index: 1000;
 }
 
-.modal-container {
+.ModalStakeholderView-content {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
-  position: relative;
-}
-
-.modal-header {
   padding: 20px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
+  box-sizing: border-box;
 }
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
+.ModalStakeholderView-content div {
+  margin-bottom: 15px;
+  font-size: 1rem;
   color: #333;
 }
 
-.modal-close {
+.ModalStakeholderView-content div:first-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.ModalStakeholderView-content button {
   background: #f44336; // Red background for close button
   color: #fff;
   border: none;
@@ -45,31 +44,11 @@
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s ease;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 
   &:hover {
     background: #d32f2f; // Darker red on hover
   }
-}
-
-.modal-body {
-  padding: 20px;
-}
-
-.modal-comment {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-}
-
-.modal-comment-header {
-  margin: 0;
-  font-weight: bold;
-  color: #333;
-}
-
-.modal-comment-text {
-  margin: 0;
-  color: #555;
 }

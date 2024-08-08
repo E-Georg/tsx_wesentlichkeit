@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import useGroupSubGroupData from "../Queries/useGroupSubGroup";
-import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageValues";
-import useStakeholderData from "../Queries/useStakeholderData";
-import ModalComponent from "../WesAnModal/WesAnModal";
-import "./WesAnMatrix.scss";
-import GroupActionCheckbox from "../GroupActionCheckbox/GroupActionCheckbox";
+import React, { useEffect, useState } from 'react';
+import useGroupSubGroupData from '../Queries/useGroupSubGroup';
+import useSurveyQuestionAverageValues from '../Queries/useSurveyQuestionAverageValues';
+import useStakeholderData from '../Queries/useStakeholderData';
+import ModalComponent from '../WesAnModal/WesAnModal';
+import './WesAnMatrix.scss';
+import GroupActionCheckbox from '../GroupActionCheckbox/GroupActionCheckbox';
+import ModalStakeholderView from '../ModalStakeholderView/ModalStakeholderView';
 
 type Props = {};
+export type checkedBox = {
+  groupId: number;
+  relevance: number;
+};
 
 const WesAnMatrixDetailed = (_: Props) => {
   const { GroupSubGroup, isLoading: load } = useGroupSubGroupData();
@@ -15,31 +20,39 @@ const WesAnMatrixDetailed = (_: Props) => {
     isLoadingQuestionsAverage,
     SubStakeholderSurveyQuestionComments,
     isLoadingSubStakeholderComments,
+    updateRelevance,
   } = useSurveyQuestionAverageValues();
   const { Stakeholder, isStakeholderLoading } = useStakeholderData();
-  const [selectedGroups, setSelectedGroups] = useState<Record<number, boolean>>(
-    {}
-  );
+  const [selectedGroups, setSelectedGroups] = useState<Record<number, boolean>>({});
+  const [state, setState] = useState<checkedBox[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<{
     groupTitle: string;
     comments: Array<{ SubStakeholderName: string; text: string }>;
-  }>({ groupTitle: "", comments: [] });
+  }>({ groupTitle: '', comments: [] });
 
-  if (
-    load ||
-    isLoadingQuestionsAverage ||
-    isStakeholderLoading ||
-    isLoadingSubStakeholderComments
-  ) {
+  useEffect(() => {
+    if (!isLoadingQuestionsAverage && Array.isArray(SurveyQuestionAverageValues)) {
+      const initialState = SurveyQuestionAverageValues.map((item) => ({
+        groupId: item.groupId,
+        relevance: item.groupRelevance,
+      }));
+      setState(initialState);
+    }
+  }, [isLoadingQuestionsAverage, SurveyQuestionAverageValues]);
+
+  if (load || isLoadingQuestionsAverage || isStakeholderLoading || isLoadingSubStakeholderComments) {
     return <div className="loading">Loading...</div>;
   }
 
-  const stakeholderMap = Stakeholder.reduce((acc, stakeholder) => {
-    acc[stakeholder.id] = stakeholder.title;
-    return acc;
-  }, {} as Record<number, string>);
+  const stakeholderMap = Stakeholder.reduce(
+    (acc, stakeholder) => {
+      acc[stakeholder.id] = stakeholder.title;
+      return acc;
+    },
+    {} as Record<number, string>
+  );
 
   const filteredSubGroupData = SurveyQuestionAverageValues.map((group) => ({
     groupId: group.groupId,
@@ -50,9 +63,7 @@ const WesAnMatrixDetailed = (_: Props) => {
   }));
 
   const getGroupMessages = (groupId: number) => {
-    const group = SubStakeholderSurveyQuestionComments.find(
-      (g) => g.groupId === groupId
-    );
+    const group = SubStakeholderSurveyQuestionComments.find((g) => g.groupId === groupId);
     return group ? group.Messages : [];
   };
 
@@ -66,22 +77,14 @@ const WesAnMatrixDetailed = (_: Props) => {
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (groupId: number, isChecked: boolean) => {
-    setSelectedGroups((prev) => ({
-      ...prev,
-      [groupId]: isChecked,
-    }));
-  };
-
-  const handleSendClick = () => {
-    const dataToSend = Object.entries(selectedGroups)
-      .filter(([_, isChecked]) => isChecked)
-      .map(([groupId]) => ({
-        groupId: Number(groupId),
-        value: 1,
-      }));
-
-    console.log(dataToSend);
+  const handleSendClick = async () => {
+    try {
+      await updateRelevance(state);
+      alert('Relevance updated successfully.');
+    } catch (error) {
+      console.error('Error updating relevance:', error);
+      alert('An error occurred while updating relevance.');
+    }
   };
 
   return (
@@ -104,70 +107,56 @@ const WesAnMatrixDetailed = (_: Props) => {
         </thead>
 
         <tbody>
-          {filteredSubGroupData.map((group) => (
-            <React.Fragment key={group.groupId}>
-              <tr>
-                <td className="group-title" rowSpan={group.subGroups.length}>
-                  {group.groupTitle}
-                </td>
-                <td
-                  className="group-comments"
-                  rowSpan={group.subGroups.length}
-                  onClick={() =>
-                    handleOpenModal(group.groupTitle, group.groupId)
-                  }
-                >
-                  Einsicht
-                </td>
-                <td className="group-checkbox" rowSpan={group.subGroups.length}>
-                  <GroupActionCheckbox
-                    groupId={group.groupId}
-                    onChange={handleCheckboxChange}
-                    groupRelevance={group.groupRelevance}
-                  />
-                </td>
-                <td className="group-average" rowSpan={group.subGroups.length}>
-                  {group.groupAverageTotal}
-                </td>
-                <td className="subgroup-title">
-                  {group.subGroups[0]?.subGroupTitle}
-                </td>
-                <td className="subgroup-average">
-                  {group.subGroups[0]?.subgroupAverage}
-                </td>
-                {Stakeholder.map((stakeholder) => (
+          {filteredSubGroupData.map((group, index) => {
+            const groupState = state[index];
+            if (!groupState) return null;
+
+            return (
+              <React.Fragment key={group.groupId}>
+                <tr>
+                  <td className="group-title" rowSpan={group.subGroups.length}>
+                    {group.groupTitle}
+                  </td>
                   <td
-                    className="stakeholder-average"
-                    key={`${stakeholder.id}-${group.groupId}`}
+                    className="group-comments"
+                    rowSpan={group.subGroups.length}
+                    onClick={() => handleOpenModal(group.groupTitle, group.groupId)}
                   >
-                    {group.subGroups.find(
-                      (subGroup) => subGroup.stakeholderId === stakeholder.id
-                    )?.subgroupAverage || "-"}
+                    Einsicht
                   </td>
-                ))}
-              </tr>
-              {group.subGroups.slice(1).map((subGroup) => (
-                <tr
-                  key={`${subGroup.subGroupId}-${group.groupId}-${subGroup.stakeholderId}`}
-                >
-                  <td className="subgroup-title">{subGroup.subGroupTitle}</td>
-                  <td className="subgroup-average">
-                    {subGroup.subgroupAverage}
+                  <td className="group-checkbox" rowSpan={group.subGroups.length}>
+                    <GroupActionCheckbox
+                      groupId={group.groupId}
+                      state={groupState.relevance != null ? groupState.relevance : false}
+                      setState={setState}
+                    />
                   </td>
+                  <td className="group-average" rowSpan={group.subGroups.length}>
+                    {group.groupAverageTotal}
+                  </td>
+                  <td className="subgroup-title">{group.subGroups[0]?.subGroupTitle}</td>
+                  <td className="subgroup-average">{group.subGroups[0]?.subgroupAverage}</td>
                   {Stakeholder.map((stakeholder) => (
-                    <td
-                      className="stakeholder-average"
-                      key={`${stakeholder.id}-${subGroup.subGroupId}`}
-                    >
-                      {subGroup.stakeholderId === stakeholder.id
-                        ? subGroup.subgroupAverage
-                        : "-"}
+                    <td className="stakeholder-average" key={`${stakeholder.id}-${group.groupId}`}>
+                      {group.subGroups.find((subGroup) => subGroup.stakeholderId === stakeholder.id)?.subgroupAverage ||
+                        '-'}
                     </td>
                   ))}
                 </tr>
-              ))}
-            </React.Fragment>
-          ))}
+                {group.subGroups.slice(1).map((subGroup) => (
+                  <tr key={`${subGroup.subGroupId}-${group.groupId}-${subGroup.stakeholderId}`}>
+                    <td className="subgroup-title">{subGroup.subGroupTitle}</td>
+                    <td className="subgroup-average">{subGroup.subgroupAverage}</td>
+                    {Stakeholder.map((stakeholder) => (
+                      <td className="stakeholder-average" key={`${stakeholder.id}-${subGroup.subGroupId}`}>
+                        {subGroup.stakeholderId === stakeholder.id ? subGroup.subgroupAverage : '-'}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </table>
       <button onClick={handleSendClick} className="send-button">
