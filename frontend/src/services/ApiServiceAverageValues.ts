@@ -1,4 +1,5 @@
 import { ClientTypes } from '../components/Models/data.interfaces';
+import { checkedBox } from '../components/WesAnListSimple/WesAnListSimple';
 import { axiosInstance } from './Axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -52,19 +53,19 @@ export const fetchGroupSubGroupAverageValues = async (clientId: number) => {
 };
 
 // [POST] Null muss bei clientSubGroupId explizit gesetzt weden
-export const UpdateRelevanceGroup = async (clientId: number, relevance: number,  clientGroupId: number ) => {
+export const UpdateRelevanceGroup = async (clientId: number, relevanceObject: checkedBox[]) => {
   const url = `${API_URL}${ClientTypes.Groups}`;
   const data = {
     action: 'er',
     clientId: clientId,
-    clientGroupId: clientGroupId,
-    clientSubGroupId: null,
-    relevance: relevance,
+    relevanceItem: relevanceObject,
   };
+  console.log(url);
+  console.log(data);
 
   try {
     const res = await axiosInstance.post(url, data);
-    console.log(res)
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log(error);

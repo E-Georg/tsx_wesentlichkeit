@@ -1,9 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useStore } from '../../store';
-import { fetchGroupSubGroupAverageValues, fetchSubStakeholderAverageAnswer, fetchSubStakeholderComments } from '../../services/ApiServiceAverageValues';
+import {
+  fetchGroupSubGroupAverageValues,
+  fetchSubStakeholderAverageAnswer,
+  fetchSubStakeholderComments,
+  UpdateRelevanceGroup,
+} from '../../services/ApiServiceAverageValues';
+import { checkedBox } from '../WesAnListSimple/WesAnListSimple';
 
 const useSurveyQuestionAverageValues = () => {
   const { ClientID } = useStore();
+  const queryClient = useQueryClient();
   // Fetch SurveyQuestions
   const {
     data: SurveyQuestionAverageValues,
@@ -27,7 +34,15 @@ const useSurveyQuestionAverageValues = () => {
     staleTime: Infinity,
   });
 
+  const { mutateAsync: updateRelevance } = useMutation({
+    mutationFn: (state: checkedBox[]) => UpdateRelevanceGroup(ClientID, state),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['SubStakeholderSurveyQuestionAverageValues'] });
+    },
+  });
+
   return {
+    updateRelevance,
     SurveyQuestionAverageValues,
     status,
     isLoadingQuestionsAverage,

@@ -71,7 +71,7 @@ switch ($action) {
         $cols['clientId'] = $clientId;
         $cols['title'] = $title;
         $cols['description'] = $description;
-        $cols['relevance'] = null;
+        $cols['relevance'] = 0;
         $cols['sort'] = $lastSort + 10;
         $cols['active'] = 1;
 
@@ -134,45 +134,84 @@ switch ($action) {
         }
 
         break;
+        // case "er":
+        //     $clientGroupId =  isset($data['clientGroupId']) ? $data['clientGroupId'] : null;
+        //     $clientId = isset($data['clientId']) ? $data['clientId'] : null;
+        //     $relevance = isset($data['relevance']) ? $data['relevance'] : null;
+        //     // groupId and Relevance in Array
+
+        //     // currently not in use
+        //     // if ($clientGroupId == null) {
+        //     //     $query = 'SELECT
+        //     //                     g.id AS GroupId
+        //     //                 FROM wa_clientSubGroups sg
+        //     //                 JOIN wa_clientGroups g ON sg.groupId = g.id
+        //     //                 WHERE sg.id = :clientSubGroupId AND g.active = 1
+        //     //                 GROUP BY g.id;
+        //     //     ';
+        //     //     $cols = array('clientSubGroupId' => $clientSubGroupId);
+        //     //     $results = dbSelect($db, $query, $cols);
+
+        //     //     $clientGroupId = $results[0]['GroupId'];
+        //     // }
+        //     $cols = array('id' => $clientGroupId);
+        //     $query = 'SELECT id FROM `wa_clientGroups` WHERE active = 1 AND id = :id';
+        //     $clientGroups = dbSelect($db, $query, $cols);
+
+        //     $jsonArray = array();
+        //     if (count($clientGroups) > 0) {
+        //         $cols = array();
+        //         $cols['relevance'] = $relevance;
+
+        //         $query = 'update `wa_clientGroups` set relevance = :relevance where id = ' . $clientGroupId;
+        //         dbSelect($db, $query, $cols);
+
+        //         $jsonArray['return'] = 1;
+        //     } else {
+        //         $jsonArray['return'] = 0;
+        //     }
+
+        //     break;
     case "er":
-        $clientGroupId =  isset($data['clientGroupId']) ? $data['clientGroupId'] : null;
-        $clientSubGroupId =  isset($data['clientSubGroupId']) ? $data['clientSubGroupId'] : null;
         $clientId = isset($data['clientId']) ? $data['clientId'] : null;
-        $relevance = isset($data['relevance']) ? $data['relevance'] : null;
-
-
-        // currently not in use
-        if ($clientGroupId == null) {
-            $query = 'SELECT
-                            g.id AS GroupId
-                        FROM wa_clientSubGroups sg
-                        JOIN wa_clientGroups g ON sg.groupId = g.id
-                        WHERE sg.id = :clientSubGroupId AND g.active = 1
-                        GROUP BY g.id;
-            ';
-            $cols = array('clientSubGroupId' => $clientSubGroupId);
-            $results = dbSelect($db, $query, $cols);
-
-            $clientGroupId = $results[0]['GroupId'];
-        }
-        $cols = array('id' => $clientGroupId);
-        $query = 'SELECT id FROM `wa_clientGroups` WHERE active = 1 AND id = :id';
-        $clientGroups = dbSelect($db, $query, $cols);
-
+        $relevanceArray = isset($data['relevanceItem']) ? $data['relevanceItem'] : null;
+        echo json_encode($relevanceArray);
         $jsonArray = array();
-        if (count($clientGroups) > 0) {
-            $cols = array();
-            $cols['relevance'] = $relevance;
 
-            $query = 'update `wa_clientGroups` set relevance = :relevance where id = ' . $clientGroupId;
-            dbSelect($db, $query, $cols);
 
-            $jsonArray['return'] = 1;
+        if (is_array($relevanceArray) && count($relevanceArray) > 0) {
+            foreach ($relevanceArray as $relevanceItem) {
+                $clientGroupId = isset($relevanceItem['groupId']) ? $relevanceItem['groupId'] : null;
+                $relevance = isset($relevanceItem['relevance']) ? $relevanceItem['relevance'] : null;
+
+                if ($clientGroupId !== null && $relevance !== null) {
+                    $cols = array('id' => $clientGroupId);
+                    $query = 'SELECT id FROM `wa_clientGroups` WHERE active = 1 AND id = :id';
+                    $clientGroups = dbSelect($db, $query, $cols);
+
+                    if (count($clientGroups) > 0) {
+                        $cols = array();
+                        $cols['relevance'] = $relevance;
+
+                        $query = 'UPDATE `wa_clientGroups` SET relevance = :relevance WHERE id = ' . $clientGroupId;
+                        dbSelect($db, $query, $cols);
+
+                        $jsonArray['return'] = 1;
+                    } else {
+                        $jsonArray['return'] = 0;
+                        break;
+                    }
+                } else {
+                    $jsonArray['return'] = 0;
+                    break;
+                }
+            }
         } else {
             $jsonArray['return'] = 0;
         }
 
         break;
+
 
 
     default:
