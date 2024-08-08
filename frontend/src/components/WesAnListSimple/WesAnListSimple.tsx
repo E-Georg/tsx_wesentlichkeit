@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import useSurveyQuestionAverageValues from "../Queries/useSurveyQuestionAverageValues";
-import useStakeholderData from "../Queries/useStakeholderData";
-import ModalComponent from "../WesAnModal/WesAnModal";
-import GroupActionCheckbox from "../GroupActionCheckbox/GroupActionCheckbox";
+import useSurveyQuestionAverageValues from '../Queries/useSurveyQuestionAverageValues';
+import useStakeholderData from '../Queries/useStakeholderData';
+import ModalComponent from '../WesAnModal/WesAnModal';
+import GroupActionCheckbox from '../GroupActionCheckbox/GroupActionCheckbox';
 
 type Props = {};
 export type checkedBox = {
@@ -12,30 +12,22 @@ export type checkedBox = {
 };
 
 const WesAnListSimple = (_: Props) => {
-  const {
-    SurveyQuestionAverageValues,
-    isLoadingQuestionsAverage,
-    updateRelevance,
-  } = useSurveyQuestionAverageValues();
+  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage, updateRelevance } =
+    useSurveyQuestionAverageValues();
 
   const { Stakeholder, isLoadingStake } = useStakeholderData();
 
-  const {
-    SubStakeholderSurveyQuestionComments,
-    isLoadingSubStakeholderComments,
-  } = useSurveyQuestionAverageValues();
+  const { SubStakeholderSurveyQuestionComments, isLoadingSubStakeholderComments } =
+    useSurveyQuestionAverageValues();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
-  const [currentGroupTitle, setCurrentGroupTitle] = useState("");
+  const [currentGroupTitle, setCurrentGroupTitle] = useState('');
 
   const [state, setState] = useState<checkedBox[]>([]);
 
   useEffect(() => {
-    if (
-      !isLoadingQuestionsAverage &&
-      Array.isArray(SurveyQuestionAverageValues)
-    ) {
+    if (!isLoadingQuestionsAverage && Array.isArray(SurveyQuestionAverageValues)) {
       const initialState = SurveyQuestionAverageValues.map((item) => ({
         groupId: item.groupId,
         relevance: item.groupRelevance,
@@ -44,11 +36,7 @@ const WesAnListSimple = (_: Props) => {
     }
   }, [isLoadingQuestionsAverage, SurveyQuestionAverageValues]);
 
-  if (
-    isLoadingQuestionsAverage ||
-    isLoadingStake ||
-    isLoadingSubStakeholderComments
-  ) {
+  if (isLoadingQuestionsAverage || isLoadingStake || isLoadingSubStakeholderComments) {
     return <div className="loading">Loading...</div>;
   }
 
@@ -69,10 +57,10 @@ const WesAnListSimple = (_: Props) => {
   const handleSendClick = async () => {
     try {
       await updateRelevance(state);
-      alert("Relevance updated successfully.");
+      alert('Relevance updated successfully.');
     } catch (error) {
-      console.error("Error updating relevance:", error);
-      alert("An error occurred while updating relevance.");
+      console.error('Error updating relevance:', error);
+      alert('An error occurred while updating relevance.');
     }
   };
 
@@ -83,10 +71,8 @@ const WesAnListSimple = (_: Props) => {
         groupRelevance: group.groupRelevance,
         groupAverageTotal: group.groupAverageTotal,
         subgroupAverage:
-          group.subGroups.reduce(
-            (acc, subGroup) => acc + subGroup.subgroupAverage,
-            0
-          ) / group.subGroups.length,
+          group.subGroups.reduce((acc, subGroup) => acc + subGroup.subgroupAverage, 0) /
+          group.subGroups.length,
       }))
     : [];
 
@@ -125,11 +111,7 @@ const WesAnListSimple = (_: Props) => {
                   <td>
                     <GroupActionCheckbox
                       groupId={group.groupId}
-                      state={
-                        groupState.relevance != null
-                          ? groupState.relevance
-                          : false
-                      }
+                      state={groupState.relevance != null ? groupState.relevance : false}
                       setState={setState}
                     />
                   </td>
@@ -143,11 +125,9 @@ const WesAnListSimple = (_: Props) => {
                         {(Array.isArray(SurveyQuestionAverageValues) &&
                           SurveyQuestionAverageValues.find(
                             (g) => g.groupId === group.groupId
-                          )?.subGroups.find(
-                            (subGroup) =>
-                              subGroup.stakeholderId === stakeholder.id
-                          )?.subgroupAverage) ||
-                          "-"}
+                          )?.subGroups.find((subGroup) => subGroup.stakeholderId === stakeholder.id)
+                            ?.subgroupAverage) ||
+                          '-'}
                       </td>
                     ))}
                 </tr>
