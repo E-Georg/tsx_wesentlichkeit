@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import './Dropdown.css';
+import './Dropdown.scss';
 import useSubStakeholderData from '../Queries/useSubStakeholder';
 import { messageValue } from '../../store';
 import { SubStakeholder } from '../Models/data.interfaces';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
 import { handleSelectChange } from './DropdownFuntion';
-import { useEffect } from 'react';
+import { STRINGS } from '../../utils/constants';
 
 interface Props {
   stakeholderID: number;
@@ -18,14 +18,10 @@ const Dropdown = ({ index, stakeholderID, setMessageValueByIndex, messageValue }
   const navigate = useNavigate();
   const { SubStakeholder: SubStakeholderQuery } = useSubStakeholderData();
 
-  useEffect(() => {
-    if (sessionStorage) {
-      sessionStorage.clear();
-    }
-  }, []);
-
   const filteredSubStakeholders =
-    SubStakeholderQuery?.length! >= 1 ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID) : [];
+    SubStakeholderQuery?.length! >= 1
+      ? SubStakeholderQuery?.filter((option: SubStakeholder) => option.stakeholderId === stakeholderID)
+      : [];
 
   const options = filteredSubStakeholders!.map((option) => ({
     value: option.id,
@@ -36,13 +32,14 @@ const Dropdown = ({ index, stakeholderID, setMessageValueByIndex, messageValue }
     <div className="dropdown-container">
       <SelectDropdown
         options={options}
-        style={{ height: '2rem' }}
         value={messageValue.subStakeholderId}
         onChange={(event) => handleSelectChange(setMessageValueByIndex, index, messageValue, event)}
-        placeholder="Substakeholder auswählen"
+        placeholder={STRINGS.CHOOSE_SUBSTAKEHOLDER}
       />
 
-      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>Zur Substakeholderliste</button>
+      <button onClick={() => navigate('/stakeholderlist', { state: { from: 'modal' } })}>
+        {STRINGS.TO_SUBSTAKEHOLDERLIST}
+      </button>
     </div>
   );
 };

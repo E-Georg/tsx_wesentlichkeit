@@ -35,7 +35,6 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
     setClassification,
     DELETE,
     SetDELETE,
-    setMessageValueByIndex,
     setRelevance,
   } = useStore();
 
@@ -179,16 +178,7 @@ const Matrix = ({ rows, columns, cells, showAddToMatrix, setTitle, setDescriptio
                         key={column.id + row.id}
                         onClick={() => {
                           console.log('hier');
-                          onClickCell(
-                            cells,
-                            column,
-                            row,
-                            setCellID,
-                            setShowModal,
-                            setOnChangeCells,
-                            setMessageValueByIndex,
-                            DELETE
-                          );
+                          onClickCell(cells, column, row, setCellID, setShowModal, setOnChangeCells, DELETE);
                         }}
                         className={styles.cell} // Apply CSS module class
                       >

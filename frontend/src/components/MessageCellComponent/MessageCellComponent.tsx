@@ -7,33 +7,55 @@ import { messageValue, useStore } from '../../store';
 import Dropdown from '../Dropdown/Dropdown';
 import useCellData from '../Queries/useCellData';
 import TrashButton from '../TrashButton/TrashButton';
+import EditorComponent from '../EditorComponent/EditorComponent';
 
 type Props = {
   text: string;
-  setMessageValueByIndex: (index: number, value: messageValue) => void;
   index: number;
-  messageValue: messageValue;
+  messageValueI: messageValue;
   columnID: number;
 };
 
-const MessageCellComponent = ({ columnID, text, setMessageValueByIndex, index, messageValue }: Props) => {
+const MessageCellComponent = ({ columnID, text, index, messageValueI }: Props) => {
   const { deleteCellMutation } = useCellData();
-  const { setDelteMessageValueByIndex } = useStore();
+  const { setDelteMessageValueByIndex, setMessageValueByIndex, messageValue } = useStore();
 
   return (
     <>
       <div key={index} className="menu-wrapper">
-        <TrashButton handleClick={() => handleDelete(messageValue.id, setDelteMessageValueByIndex, deleteCellMutation)} />
+        <TrashButton
+          handleClick={() => handleDelete(messageValueI.id, setDelteMessageValueByIndex, deleteCellMutation)}
+        />
         {/* SubStakeholder-Dropdown */}
-        <Dropdown messageValue={messageValue} index={index} setMessageValueByIndex={setMessageValueByIndex} stakeholderID={columnID} />
+        <Dropdown
+          messageValue={messageValueI}
+          index={index}
+          setMessageValueByIndex={setMessageValueByIndex}
+          stakeholderID={columnID}
+        />
       </div>
-      <CKEditor
+      {/* <CKEditor
         onChange={(_, editor) => {
-          setMessageValueByIndex(index, { id: messageValue.id, text: editor.getData(), subStakeholderId: messageValue.subStakeholderId });
+          const newText = editor.getData();
+          const existingMessageValue = messageValue[index];
+          console.log(existingMessageValue);
+
+          setMessageValueByIndex(index, {
+            id: existingMessageValue.id,
+            text: newText,
+            subStakeholderId: existingMessageValue.subStakeholderId,
+          });
         }}
         data={text}
         editor={ClassicEditor}
         config={editorConfig}
+      /> */}
+
+      <EditorComponent
+        setMessageValueByIndex={setDelteMessageValueByIndex}
+        messageValue={messageValue}
+        index={index}
+        text={text}
       />
     </>
   );

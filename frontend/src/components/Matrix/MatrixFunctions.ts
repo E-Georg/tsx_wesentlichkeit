@@ -1,7 +1,12 @@
-import { CellID, ChangeObject, messageValue, relevance } from '../../store';
+import { CellID, ChangeObject, relevance } from '../../store';
 import { Cell, Group, HttpAction, Stakeholder, SubGroup, SubStakeholder } from '../Models/data.interfaces';
 
-export const setFilterFunction = (selectedOption: number, selectedRelevance: number, setCopyColums: (columns: Stakeholder[]) => void, columns: Stakeholder[]) => {
+export const setFilterFunction = (
+  selectedOption: number,
+  selectedRelevance: number,
+  setCopyColums: (columns: Stakeholder[]) => void,
+  columns: Stakeholder[]
+) => {
   if (selectedOption !== 0) {
     if (selectedRelevance === 0) {
       setCopyColums(
@@ -42,10 +47,10 @@ export const onClickColumn = (
 ) => {
   setDescription(column.description);
   setTitle(column.title);
-  // console.log(column.classification);
   setClassification(column.classification!!);
   setRelevance({ text: column.relevanceText!!, value: column.relevance!! });
   console.log({ text: column.relevanceText!!, value: column.relevance!! });
+
   // TEMPORÄR
   if (DELETE)
     setOnChangeStakeholder({
@@ -91,10 +96,11 @@ export const onClickCell = (
   setCellID: (cellID: CellID) => void,
   setShowModal: () => void,
   setOnChangeCells: (obj: ChangeObject) => void,
-  setMessageValueByIndex: (index: number, messageValue: messageValue) => void,
   DELETE: boolean
 ) => {
-  const foundCell: Cell | undefined = cells.find((c: Cell) => c.clientStakeholderId === column.id && c.clientGroupId === row.id);
+  const foundCell: Cell | undefined = cells.find(
+    (c: Cell) => c.clientStakeholderId === column.id && c.clientGroupId === row.id
+  );
   const idOfCell = foundCell === undefined ? 0 : foundCell.id;
   setCellID({
     rowID: row.id,
@@ -108,22 +114,12 @@ export const onClickCell = (
   });
 
   if (!foundCell) {
-    console.log('blub');
     setShowModal();
     setOnChangeCells({
       mode: HttpAction.POST,
       ID: idOfCell,
     });
   } else {
-    // iterate and fill the whole object
-
-    foundCell.message.forEach((_, index: number) => {
-      setMessageValueByIndex(index, {
-        id: foundCell.message[index].id,
-        text: foundCell.message[index].text,
-        subStakeholderId: foundCell.message[index].subStakeholderId,
-      });
-    });
     setShowModal();
     // TEMPORÄR
     if (DELETE)
@@ -139,12 +135,18 @@ export const onClickCell = (
   }
 };
 
-export const handleRelevanceChange = (event: React.ChangeEvent<HTMLSelectElement>, setSelectedRelevance: (relevance: number) => void) => {
+export const handleRelevanceChange = (
+  event: React.ChangeEvent<HTMLSelectElement>,
+  setSelectedRelevance: (relevance: number) => void
+) => {
   let value = Number(event.target.value);
   setSelectedRelevance(value);
 };
 
-export const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setSelectedOption: (option: number) => void) => {
+export const handleSelectChange = (
+  event: React.ChangeEvent<HTMLSelectElement>,
+  setSelectedOption: (option: number) => void
+) => {
   let value = Number(event.target.value);
   setSelectedOption(value);
 };

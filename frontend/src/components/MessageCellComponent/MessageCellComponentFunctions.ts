@@ -185,7 +185,15 @@ export const editorConfig: EditorConfig = {
     ],
   },
   image: {
-    toolbar: ['imageTextAlternative', '|', 'imageStyle:alignBlockLeft', 'imageStyle:block', 'imageStyle:alignBlockRight', '|', 'resizeImage'],
+    toolbar: [
+      'imageTextAlternative',
+      '|',
+      'imageStyle:alignBlockLeft',
+      'imageStyle:block',
+      'imageStyle:alignBlockRight',
+      '|',
+      'resizeImage',
+    ],
     styles: {
       options: ['alignBlockLeft', 'block', 'alignBlockRight'],
     },

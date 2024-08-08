@@ -16,6 +16,9 @@ export const STRINGS = {
   SUBSTAKEHOLDERCOUNT: 'Anzahl hinterlegter Stakeholder:',
   CASE: 'Betrachtungsfall',
   ADD_CASE: 'Betrachtungsfall hinzufügen',
+  TO_SUBSTAKEHOLDERLIST: 'Zur Substakeholderliste',
+  CHOOSE_SUBSTAKEHOLDER: 'Substakeholder auswählen',
+  ADD: 'Hinzufügen',
 };
 
 export const Classifications: Classification[] = [

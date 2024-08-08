@@ -17,7 +17,7 @@ const SelectDropdown = ({
   value,
   onChange,
   placeholder,
-  style = {},
+
   defaultValue = 0,
   slice = false,
   disabled = false,
@@ -27,13 +27,7 @@ const SelectDropdown = ({
   }
 
   return (
-    <select
-      value={value != null ? value : ''}
-      onChange={onChange}
-      className="select-dropdown" // Apply the SCSS class
-      style={style} // Allow for inline styles if needed
-      disabled={disabled}
-    >
+    <select value={value != null ? value : ''} onChange={onChange} className="select-dropdown" disabled={disabled}>
       {placeholder != undefined ? <option value={defaultValue}>{placeholder}</option> : ''}
       {options.map((option: Option, index: number) => (
         <option key={index} value={option.value}>

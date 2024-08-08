@@ -7,6 +7,7 @@ import { CellFunction, StakeholderFunction, SubgroupFunction } from './ModalFunc
 import ModalCells from '../ModalCells/ModalCells';
 import ModalTable from '../ModalTable/ModalTable';
 import useGroupData from '../Queries/useGroupData';
+import { STRINGS } from '../../utils/constants';
 
 interface Props {
   title: string;
@@ -27,7 +28,6 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
     setClassification,
     messageValue,
     setMessageValue,
-    setMessageValueByIndex,
     relevance,
     setRelevance,
   } = useStore();
@@ -85,9 +85,9 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
         {onChangeCells.mode !== HttpAction.DEFAULT && (
           <>
             <button onClick={() => setMessageValue({ id: Date.now(), text: '', subStakeholderId: 0 })}>
-              Hinzufügen
+              {STRINGS.ADD}
             </button>
-            <ModalCells cellID={cellID} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
+            <ModalCells cellID={cellID} onChangeCells={onChangeCells} />
           </>
         )}
 

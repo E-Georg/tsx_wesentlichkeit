@@ -87,25 +87,147 @@ interface Action {
   reset: () => void;
 }
 
+// export const useStore = create<State & Action>()(
+//   devtools((set, get) => ({
+//     prevaluationTexts: [],
+//     setPrevaluationTexts: (prevaluationText: prevaluationTexts) =>
+//       set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
+//     setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) =>
+//       set(() => ({ prevaluationTexts: prevaluationText })),
+//     deleteprevaluationTextById: (id: number) =>
+//       set((state) => {
+//         const newPrevaluationTexts = state.prevaluationTexts.filter((item) => {
+//           return item.id != id;
+//         });
+//         return { prevaluationTexts: newPrevaluationTexts };
+//       }),
+//     surveyAnswer: [],
+//     setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) =>
+//       set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
+//     getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
+//     surveyText: [],
+//     setSurveyText: (newSurveyText: SurveyText) =>
+//       set((state) => {
+//         const existingIndex = state.surveyText.findIndex(
+//           (item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId
+//         );
+//         if (existingIndex > -1) {
+//           const updatedSurveyText = [...state.surveyText];
+//           updatedSurveyText[existingIndex] = { ...updatedSurveyText[existingIndex], text: newSurveyText.text };
+//           return { surveyText: updatedSurveyText };
+//         } else {
+//           return { surveyText: [...state.surveyText, newSurveyText] };
+//         }
+//       }),
+//     resetSurvey: () => set(() => ({ surveyAnswer: [], surveyText: [] })),
+//     relevance: { text: '', value: 5 },
+//     setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
+//     DELETE: false,
+//     SetDELETE: (del: boolean) => set(() => ({ DELETE: del })),
+//     title: '',
+//     setTitle: (title: string) => set(() => ({ title: title })),
+//     description: '',
+//     setDescription: (text: string) => set(() => ({ description: text })),
+
+//     messageValue: [{ id: 0, text: '', subStakeholderId: 0 }],
+//     setMessageValue: (value: messageValue) => set((state) => ({ messageValue: [...state.messageValue, value] })),
+//     setMessageValueByIndex: (index: number, value: messageValue) =>
+//       set((state) => {
+//         const newMessageValue = [...state.messageValue];
+
+//         while (newMessageValue.length <= index) {
+//           newMessageValue.push({ id: 0, text: '', subStakeholderId: 0 });
+//         }
+
+//         newMessageValue[index] = {
+//           ...newMessageValue[index],
+//           id: value.id,
+//           text: value.text,
+//           subStakeholderId: value.subStakeholderId,
+//         };
+
+//         return { messageValue: newMessageValue };
+//       }),
+//     setDelteMessageValueByIndex: (Id: number) =>
+//       set((state) => {
+//         const newMessageValue = state.messageValue.filter((cellmessage: messageValue) => {
+//           return cellmessage.id != Id;
+//         });
+
+//         return { messageValue: newMessageValue };
+//       }),
+
+//     classification: 5,
+//     setClassification: (num: number) => set(() => ({ classification: num })),
+//     showModal: false,
+//     setShowModal: () => set((state) => ({ showModal: !state.showModal })),
+//     onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
+//     setOnChangeSubGroup: (obj: ChangeObject) => set(() => ({ onChangeSubGroup: obj })),
+//     onChangeSubStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
+//     setOnChangeSubStakeholder: (obj: ChangeObject) => set(() => ({ onChangeSubStakeholder: obj })),
+//     onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
+//     setOnChangeStakeholder: (obj: ChangeObject) => set(() => ({ onChangeStakeholder: obj })),
+//     onChangeCells: { mode: HttpAction.DEFAULT, ID: 0 },
+//     setOnChangeCells: (obj: ChangeObject) => set(() => ({ onChangeCells: obj })),
+//     cellID: { rowID: 0, coolumnID: 0, cellID: 0 },
+//     setCellID: (cellID: CellID) => set(() => ({ cellID: cellID })),
+//     reset: () =>
+//       set((state) => ({
+//         title: '',
+//         description: '',
+//         classification: 5,
+//         showModal: false,
+//         textsCell: [''],
+//         onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
+//         onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
+//         onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
+//         messageValue: [{ id: 0, text: '', subStakeholderId: 0 }],
+//         relevance: { text: '', value: 5 },
+//       })),
+//     ClientID: 2,
+//     GroupID: 1,
+//     setClientID: (id: number) => set(() => ({ ClientID: id })),
+//     setGroupID: (id: number) => set(() => ({ GroupID: id })),
+//   }))
+// );
+
 export const useStore = create<State & Action>()(
   devtools((set, get) => ({
     prevaluationTexts: [],
-    setPrevaluationTexts: (prevaluationText: prevaluationTexts) => set((state) => ({ prevaluationTexts: [...state.prevaluationTexts, prevaluationText] })),
-    setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) => set(() => ({ prevaluationTexts: prevaluationText })),
+    setPrevaluationTexts: (prevaluationText: prevaluationTexts) =>
+      set((state) => {
+        console.log('Setting prevaluationTexts:', prevaluationText);
+        return { prevaluationTexts: [...state.prevaluationTexts, prevaluationText] };
+      }),
+    setPrevaluationTextsArray: (prevaluationText: prevaluationTexts[]) =>
+      set(() => {
+        console.log('Setting prevaluationTextsArray:', prevaluationText);
+        return { prevaluationTexts: prevaluationText };
+      }),
     deleteprevaluationTextById: (id: number) =>
       set((state) => {
-        const newPrevaluationTexts = state.prevaluationTexts.filter((item) => {
-          return item.id != id;
-        });
+        const newPrevaluationTexts = state.prevaluationTexts.filter((item) => item.id != id);
+        console.log('Deleting prevaluationText with id:', id);
         return { prevaluationTexts: newPrevaluationTexts };
       }),
     surveyAnswer: [],
-    setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) => set((state) => ({ surveyAnswer: updateFn(state.surveyAnswer) })),
-    getSurveyAnswerById: (id: number) => get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer,
+    setSurveyAnswer: (updateFn: (surveyAnswers: SurveyAnswer[]) => SurveyAnswer[]) =>
+      set((state) => {
+        console.log('Setting surveyAnswer:', updateFn(state.surveyAnswer));
+        return { surveyAnswer: updateFn(state.surveyAnswer) };
+      }),
+    getSurveyAnswerById: (id: number) => {
+      const answer = get().surveyAnswer.find((item: any) => item.subGroupId === id)?.answer;
+      console.log('Getting surveyAnswer by id:', id, answer);
+      return answer;
+    },
     surveyText: [],
     setSurveyText: (newSurveyText: SurveyText) =>
       set((state) => {
-        const existingIndex = state.surveyText.findIndex((item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId);
+        console.log('Setting surveyText:', newSurveyText);
+        const existingIndex = state.surveyText.findIndex(
+          (item) => item.SubStakeholderId === newSurveyText.SubStakeholderId && item.groupId === newSurveyText.groupId
+        );
         if (existingIndex > -1) {
           const updatedSurveyText = [...state.surveyText];
           updatedSurveyText[existingIndex] = { ...updatedSurveyText[existingIndex], text: newSurveyText.text };
@@ -114,69 +236,132 @@ export const useStore = create<State & Action>()(
           return { surveyText: [...state.surveyText, newSurveyText] };
         }
       }),
-    resetSurvey: () => set(() => ({ surveyAnswer: [], surveyText: [] })),
+    resetSurvey: () =>
+      set(() => {
+        console.log('Resetting survey');
+        return { surveyAnswer: [], surveyText: [] };
+      }),
     relevance: { text: '', value: 5 },
-    setRelevance: (obj: relevance) => set(() => ({ relevance: obj })),
+    setRelevance: (obj: relevance) =>
+      set(() => {
+        console.log('Setting relevance:', obj);
+        return { relevance: obj };
+      }),
     DELETE: false,
-    SetDELETE: (del: boolean) => set(() => ({ DELETE: del })),
+    SetDELETE: (del: boolean) =>
+      set(() => {
+        console.log('Setting DELETE:', del);
+        return { DELETE: del };
+      }),
     title: '',
-    setTitle: (title: string) => set(() => ({ title: title })),
+    setTitle: (title: string) =>
+      set(() => {
+        console.log('Setting title:', title);
+        return { title: title };
+      }),
     description: '',
-    setDescription: (text: string) => set(() => ({ description: text })),
+    setDescription: (text: string) =>
+      set(() => {
+        console.log('Setting description:', text);
+        return { description: text };
+      }),
 
-    messageValue: [{ id: 0, title: '', text: '', subStakeholderId: 0 }],
-    setMessageValue: (value: messageValue) => set((state) => ({ messageValue: [...state.messageValue, value] })),
+    messageValue: [{ id: 0, text: '', subStakeholderId: 0 }],
+    setMessageValue: (value: messageValue) =>
+      set((state) => {
+        console.log('Adding messageValue:', value);
+        return { messageValue: [...state.messageValue, value] };
+      }),
     setMessageValueByIndex: (index: number, value: messageValue) =>
       set((state) => {
+        console.log('Setting messageValue at index', index, 'to', value);
         const newMessageValue = [...state.messageValue];
-
         while (newMessageValue.length <= index) {
           newMessageValue.push({ id: 0, text: '', subStakeholderId: 0 });
         }
-
-        newMessageValue[index] = { ...newMessageValue[index], id: value.id, text: value.text, subStakeholderId: value.subStakeholderId };
-
+        newMessageValue[index] = {
+          ...newMessageValue[index],
+          id: value.id,
+          text: value.text,
+          subStakeholderId: value.subStakeholderId,
+        };
         return { messageValue: newMessageValue };
       }),
     setDelteMessageValueByIndex: (Id: number) =>
       set((state) => {
-        const newMessageValue = state.messageValue.filter((cellmessage: messageValue) => {
-          return cellmessage.id != Id;
-        });
-
+        console.log('Deleting messageValue with id:', Id);
+        const newMessageValue = state.messageValue.filter((cellmessage: messageValue) => cellmessage.id != Id);
         return { messageValue: newMessageValue };
       }),
 
     classification: 5,
-    setClassification: (num: number) => set(() => ({ classification: num })),
+    setClassification: (num: number) =>
+      set(() => {
+        console.log('Setting classification:', num);
+        return { classification: num };
+      }),
     showModal: false,
-    setShowModal: () => set((state) => ({ showModal: !state.showModal })),
+    setShowModal: () =>
+      set((state) => {
+        console.log('Toggling showModal');
+        return { showModal: !state.showModal };
+      }),
     onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeSubGroup: (obj: ChangeObject) => set(() => ({ onChangeSubGroup: obj })),
+    setOnChangeSubGroup: (obj: ChangeObject) =>
+      set(() => {
+        console.log('Setting onChangeSubGroup:', obj);
+        return { onChangeSubGroup: obj };
+      }),
     onChangeSubStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeSubStakeholder: (obj: ChangeObject) => set(() => ({ onChangeSubStakeholder: obj })),
+    setOnChangeSubStakeholder: (obj: ChangeObject) =>
+      set(() => {
+        console.log('Setting onChangeSubStakeholder:', obj);
+        return { onChangeSubStakeholder: obj };
+      }),
     onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeStakeholder: (obj: ChangeObject) => set(() => ({ onChangeStakeholder: obj })),
+    setOnChangeStakeholder: (obj: ChangeObject) =>
+      set(() => {
+        console.log('Setting onChangeStakeholder:', obj);
+        return { onChangeStakeholder: obj };
+      }),
     onChangeCells: { mode: HttpAction.DEFAULT, ID: 0 },
-    setOnChangeCells: (obj: ChangeObject) => set(() => ({ onChangeCells: obj })),
+    setOnChangeCells: (obj: ChangeObject) =>
+      set(() => {
+        console.log('Setting onChangeCells:', obj);
+        return { onChangeCells: obj };
+      }),
     cellID: { rowID: 0, coolumnID: 0, cellID: 0 },
-    setCellID: (cellID: CellID) => set(() => ({ cellID: cellID })),
+    setCellID: (cellID: CellID) =>
+      set(() => {
+        console.log('Setting cellID:', cellID);
+        return { cellID: cellID };
+      }),
     reset: () =>
-      set((state) => ({
-        title: '',
-        description: '',
-        classification: 5,
-        showModal: false,
-        textsCell: [''],
-        onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
-        onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
-        onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
-        messageValue: [{ id: 0, text: '', subStakeholderId: 0 }],
-        relevance: { text: '', value: 5 },
-      })),
+      set((state) => {
+        console.log('Resetting store');
+        return {
+          title: '',
+          description: '',
+          classification: 5,
+          showModal: false,
+          messageValue: [{ id: 0, text: '', subStakeholderId: 0 }],
+          relevance: { text: '', value: 5 },
+          onChangeSubGroup: { mode: HttpAction.DEFAULT, ID: state.onChangeSubGroup.ID },
+          onChangeStakeholder: { mode: HttpAction.DEFAULT, ID: state.onChangeStakeholder.ID },
+          onChangeCells: { mode: HttpAction.DEFAULT, ID: state.onChangeCells.ID },
+        };
+      }),
     ClientID: 2,
     GroupID: 1,
-    setClientID: (id: number) => set(() => ({ ClientID: id })),
-    setGroupID: (id: number) => set(() => ({ GroupID: id })),
+    setClientID: (id: number) =>
+      set(() => {
+        console.log('Setting ClientID:', id);
+        return { ClientID: id };
+      }),
+    setGroupID: (id: number) =>
+      set(() => {
+        console.log('Setting GroupID:', id);
+        return { GroupID: id };
+      }),
   }))
 );

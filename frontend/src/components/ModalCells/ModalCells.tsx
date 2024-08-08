@@ -1,17 +1,49 @@
-import { Fragment } from 'react/jsx-runtime';
 import { ChangeObject, messageValue, CellID, useStore } from '../../store';
 import MessageCellComponent from '../MessageCellComponent/MessageCellComponent';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
+import { Cell } from '../Models/data.interfaces';
+import useCellData from '../Queries/useCellData';
 
 type Props = {
   onChangeCells: ChangeObject;
   cellID: CellID;
-  setMessageValueByIndex: (index: number, obj: messageValue) => void;
 };
 
-const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
-  const { messageValue } = useStore();
-  useMemo(() => messageValue, [messageValue]);
+const ModalCells = ({ cellID }: Props) => {
+  const { setMessageValueByIndex } = useStore();
+  const { Cells, isLoadingCells } = useCellData();
+  if (isLoadingCells) {
+    <div>...loading</div>;
+  }
+
+  const { messageValue } = useStore((state) => ({
+    messageValue: state.messageValue,
+  }));
+
+  useEffect(() => {
+    console.log('messageValue has changed:', messageValue);
+  }, [messageValue]);
+
+  useEffect(() => {
+    if (Array.isArray(Cells) && cellID) {
+      // Find the cell based on the IDs
+      const foundCell = Cells.find(
+        (c: Cell) => c.clientStakeholderId === cellID.coolumnID && c.clientGroupId === cellID.rowID
+      );
+
+      // Check if foundCell is defined and has a message property
+      if (foundCell && Array.isArray(foundCell.message)) {
+        // Iterate through messages and update state
+        foundCell.message.forEach((message, index) => {
+          setMessageValueByIndex(index, {
+            id: message.id,
+            text: message.text,
+            subStakeholderId: message.subStakeholderId,
+          });
+        });
+      }
+    }
+  }, [Cells, isLoadingCells, cellID]);
 
   return (
     <div
@@ -22,16 +54,15 @@ const ModalCells = ({ cellID, setMessageValueByIndex }: Props) => {
     >
       {/* onChangeCells.mode !== HttpAction.DEFAULT &&  */}
       {messageValue.map((_: messageValue, index: number) => (
-        <Fragment key={index}>
+        <div key={index}>
           {/* CKEditor  */}
           <MessageCellComponent
             columnID={cellID.coolumnID}
             text={messageValue[index].text}
-            setMessageValueByIndex={setMessageValueByIndex}
             index={index}
-            messageValue={messageValue[index]}
+            messageValueI={messageValue[index]}
           />
-        </Fragment>
+        </div>
       ))}
 
       {/* <FileUpload /> */}
