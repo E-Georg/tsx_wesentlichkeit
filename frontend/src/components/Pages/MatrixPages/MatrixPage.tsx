@@ -4,7 +4,7 @@ import Modal from '../../Modal/Modal';
 import useStakeholderData from '../../Queries/useStakeholderData';
 import useCellData from '../../Queries/useCellData';
 import useGroupData from '../../Queries/useGroupData';
-import styles from './MatrixPage.module.css';
+import './MatrixPage.scss';
 
 const MatrixPage = () => {
   const { title, setTitle, description, setDescription } = useStore();
@@ -18,9 +18,16 @@ const MatrixPage = () => {
   }
 
   return (
-    <div className={styles.matrixPage}>
+    <div className="matrixPage">
       {Cells && Stakeholder && Group && (
-        <Matrix rows={Group} columns={Stakeholder} cells={Cells} showAddToMatrix={true} setTitle={setTitle} setDescription={setDescription} />
+        <Matrix
+          rows={Group}
+          columns={Stakeholder}
+          cells={Cells}
+          showAddToMatrix={true}
+          setTitle={setTitle}
+          setDescription={setDescription}
+        />
       )}
 
       <Modal title={title} description={description} setTitle={setTitle} setDescription={setDescription} />

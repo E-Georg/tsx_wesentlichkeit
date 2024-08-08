@@ -1,0 +1,39 @@
+.display-container {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+  }
+  
+  .title {
+    margin-top: 5rem;
+  }
+  
+  .select-dropdown {
+    margin-left: 7rem;
+    padding: 5px;
+    width: 15rem;
+    height: 2rem;
+  }
+  
+  .table {
+    margin: 20px 0;
+    width: 100%;
+    
+    thead {
+      text-align: left;
+      font-size: 20px;
+      text-decoration: underline;
+      text-decoration-thickness: 0.01rem;
+    }
+    
+    tbody {
+      tr {
+        cursor: pointer;
+        
+        &:hover {
+          background-color: #f0f0f0; // Optional: add hover effect
+        }
+      }
+    }
+  }
+  

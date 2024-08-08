@@ -1,5 +1,13 @@
 import axios from 'axios';
-import { Cell, ClientTypes, Group, Stakeholder, SubStakeholder, SurveyAnswer, SurveyQuestion } from '../components/Models/data.interfaces';
+import {
+  Cell,
+  ClientTypes,
+  Group,
+  Stakeholder,
+  SubStakeholder,
+  SurveyAnswer,
+  SurveyQuestion,
+} from '../components/Models/data.interfaces';
 import { axiosInstance } from './Axios';
 import { SurveyText } from '../store';
 
@@ -43,6 +51,7 @@ export const fetchDataQuery = async (typeParameter: string, ClientID: number): P
 };
 
 // [GET] with postBody
+// [temporarily not used!]
 export const fetchGroupSubGroup = async (typeParameter: string, ClientID: number): Promise<any> => {
   const url = `${API_URL}${typeParameter}`;
 
@@ -118,7 +127,11 @@ export const UpdateCellsToDatabaseQuery = async ({ cell }: any): Promise<Cell[]>
 };
 
 // [PUT]
-export const UpdateDataToDatabaseQuery = async ({ matrixObject, typeParameter, ClientID }: any): Promise<Stakeholder[] | Group[]> => {
+export const UpdateDataToDatabaseQuery = async ({
+  matrixObject,
+  typeParameter,
+  ClientID,
+}: any): Promise<Stakeholder[] | Group[]> => {
   console.log(matrixObject);
 
   let params;
@@ -189,7 +202,11 @@ export const AddSubStakeholderToDataBaseQuery = async ({ newStakeholder }: any):
 };
 
 // [POST]
-export const AddDataToDataBaseQuery = async ({ matrixObject, typeParameter, ClientID }: any): Promise<Stakeholder[] | Group[]> => {
+export const AddDataToDataBaseQuery = async ({
+  matrixObject,
+  typeParameter,
+  ClientID,
+}: any): Promise<Stakeholder[] | Group[]> => {
   console.log(matrixObject);
 
   let params;
@@ -249,7 +266,12 @@ export const AddCellToDataBaseQuery = async ({ cell, ClientID }: any): Promise<C
   return [];
 };
 
-export const AddSurveyQuestionAnswers = async (subStakeholderID: number, clientId: number, message: SurveyAnswer[], comment: SurveyText[]) => {
+export const AddSurveyQuestionAnswers = async (
+  subStakeholderID: number,
+  clientId: number,
+  message: SurveyAnswer[],
+  comment: SurveyText[]
+) => {
   let url = `${API_URL}${ClientTypes.SurveyQuestions}`;
   const data = {
     subStakeholderID: subStakeholderID,

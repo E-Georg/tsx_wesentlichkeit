@@ -6,6 +6,7 @@ import useSubStakeholderData from '../Queries/useSubStakeholder';
 import { setEditOrDelete } from './DisplaySubStakeholderFunctions';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
 import EmailButtonList from '../StakeholderEmailList/StakeholderEmailList';
+import './DisplaySubStakeholder.scss'; // Import the SCSS file
 
 type Props = {
   setNewSubStakeholder: (subStakeholder: SubStakeholder) => void;
@@ -20,7 +21,7 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
   const Betreff = 'Umfrage zur Wesentlichkeitsanalyse';
 
   if (isLoadingStake) {
-    <div> ...LOADING</div>;
+    return <div>...LOADING</div>;
   }
 
   const options =
@@ -35,37 +36,18 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
     <>
       {Array.isArray(SubStakeholderQuery) && (
         <div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'baseline',
-            }}
-          >
-            <h2 style={{ marginTop: '5rem' }}>Substakeholder Übersicht </h2>
+          <div className="display-container">
+            <h2 className="title">Substakeholder Übersicht</h2>
             {/* Choose the wanted Stakeholder */}
             <SelectDropdown
               options={options}
               value={filter}
               onChange={(event: ChangeEvent<HTMLSelectElement>) => setFilter(Number(event.target.value))}
               placeholder="Stakeholdergruppe auswählen"
-              style={{
-                marginLeft: '7rem',
-                padding: '5px',
-                width: '15rem',
-                height: '2rem',
-              }}
             />
           </div>
-          <table style={{ margin: '20px 0', width: '100%' }}>
-            <thead
-              style={{
-                textAlign: 'left',
-                fontSize: '20px',
-                textDecoration: 'underline',
-                textDecorationThickness: '0.01rem',
-              }}
-            >
+          <table className="table">
+            <thead>
               <tr>
                 <th>Name</th>
                 <th>E-Mail</th>
@@ -78,7 +60,7 @@ const DisplaySubStakeholder = ({ setNewSubStakeholder: setNewStakeholder }: Prop
                 Array.isArray(SubStakeholderQuery) &&
                 // Sort
                 SubStakeholderQuery?.sort((x: any, y: any) => x.stakeholderId - y.stakeholderId)
-                  // Filter according to choosen stakeholder or all
+                  // Filter according to chosen stakeholder or all
                   .filter((subStake: SubStakeholder) => {
                     if (filter != 0) {
                       return subStake.stakeholderId === filter;

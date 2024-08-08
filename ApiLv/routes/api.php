@@ -25,6 +25,9 @@ use App\Http\Controllers\ClientGroupController;
 
 Route::apiResource('client-groups', ClientGroupController::class);
 
+Route::post('/getGroups', [ClientGroupController::class, 'getClientGroups']);
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

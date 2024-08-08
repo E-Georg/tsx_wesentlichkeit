@@ -26,6 +26,38 @@ class ClientGroupController extends Controller
         return response()->json($clientGroups);
     }
 
+    /**
+     * Handle the POST request to retrieve client groups.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getClientGroups(Request $request)
+    {
+        $clientId = $request->input('clientId');
+
+        if (!$clientId) {
+            return response()->json([
+                'errorNo' => 3,
+                'errorMessage' => 'clientId is required'
+            ], 400);
+        }
+
+        $clientGroups = ClientGroup::where('active', 1)
+            ->where('clientId', $clientId)
+            ->orderBy('sort', 'ASC')
+            ->get(['id', 'title', 'description']);
+
+        if ($clientGroups->isEmpty()) {
+            return response()->json([
+                'errorNo' => 1,
+                'errorMessage' => "nicht gefunden"
+            ], 404);
+        }
+
+        return response()->json($clientGroups, 200);
+    }
+
     public function store(Request $request)
     {
         $clientId = $request->input('clientId');

@@ -1,0 +1,31 @@
+.select-dropdown {
+    margin-left: 3rem;
+    padding: 5px;
+    width: 200px;
+    height: 2rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+  
+    &:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+  
+    /* Add any other styles you need here */
+    
+    /* You can add responsive styles or themes as required */
+    @media (max-width: 600px) {
+      width: 100%;
+    }
+    
+    /* Optional: Style for disabled state */
+    &[disabled] {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+  }
+  

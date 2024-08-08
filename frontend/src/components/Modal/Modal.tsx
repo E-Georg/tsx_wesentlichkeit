@@ -1,4 +1,4 @@
-import './Modal.css';
+import './Modal.scss';
 import { useStore } from '../../store';
 import { HttpAction } from '../Models/data.interfaces';
 import useStakeholderData from '../Queries/useStakeholderData';
@@ -44,7 +44,14 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
     //===============================================================SUBGROUP===================================================================
     if (onChangeSubGroup.mode !== HttpAction.DEFAULT) {
-      SubgroupFunction(deleteGroupMutation, updateGroupMutation, addGroupMutation, onChangeSubGroup, title, description);
+      SubgroupFunction(
+        deleteGroupMutation,
+        updateGroupMutation,
+        addGroupMutation,
+        onChangeSubGroup,
+        title,
+        description
+      );
     }
     //==========================================================STAKEHOLDER========================================================================
     if (onChangeStakeholder.mode !== HttpAction.DEFAULT) {
@@ -77,12 +84,16 @@ const Modal = ({ title, description, setTitle, setDescription }: Props) => {
 
         {onChangeCells.mode !== HttpAction.DEFAULT && (
           <>
-            <button onClick={() => setMessageValue({ id: Date.now(), text: '', subStakeholderId: 0 })}>Hinzufügen</button>
+            <button onClick={() => setMessageValue({ id: Date.now(), text: '', subStakeholderId: 0 })}>
+              Hinzufügen
+            </button>
             <ModalCells cellID={cellID} onChangeCells={onChangeCells} setMessageValueByIndex={setMessageValueByIndex} />
           </>
         )}
 
-        {onChangeSubGroup.mode !== HttpAction.DEFAULT && <ModalTable description={description} setDescription={setDescription} setTitle={setTitle} title={title} />}
+        {onChangeSubGroup.mode !== HttpAction.DEFAULT && (
+          <ModalTable description={description} setDescription={setDescription} setTitle={setTitle} title={title} />
+        )}
 
         {onChangeStakeholder.mode != HttpAction.DEFAULT && (
           <ModalTable

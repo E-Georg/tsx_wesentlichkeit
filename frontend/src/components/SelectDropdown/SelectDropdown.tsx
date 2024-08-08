@@ -1,3 +1,4 @@
+import './SelectDropdown.scss'; // Import the SCSS file
 import { Option } from '../../store';
 
 type Props = {
@@ -11,7 +12,16 @@ type Props = {
   disabled?: boolean;
 };
 
-const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, defaultValue = 0, slice = false, disabled = false }: Props) => {
+const SelectDropdown = ({
+  options,
+  value,
+  onChange,
+  placeholder,
+  style = {},
+  defaultValue = 0,
+  slice = false,
+  disabled = false,
+}: Props) => {
   if (slice) {
     options = options.slice(0, -1);
   }
@@ -20,7 +30,8 @@ const SelectDropdown = ({ options, value, onChange, placeholder, style = {}, def
     <select
       value={value != null ? value : ''}
       onChange={onChange}
-      style={{ margin: '10px 0', padding: '5px', width: '200px', height: '25px', ...style }}
+      className="select-dropdown" // Apply the SCSS class
+      style={style} // Allow for inline styles if needed
       disabled={disabled}
     >
       {placeholder != undefined ? <option value={defaultValue}>{placeholder}</option> : ''}

@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 
 type Props = {
   onChangeCells: ChangeObject;
-  // messageValue: messageValue[];
   cellID: CellID;
   setMessageValueByIndex: (index: number, obj: messageValue) => void;
 };
