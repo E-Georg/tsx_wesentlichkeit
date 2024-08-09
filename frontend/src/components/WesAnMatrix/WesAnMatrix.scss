@@ -8,16 +8,18 @@
     border-radius: 8px;
     overflow: hidden;
 
-    th, td {
+    th,
+    td {
       padding: 12px 15px;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
 
     thead {
-      background-color: #007bff;
+      background-color: #0056b3;
       color: #ffffff;
       font-weight: bold;
+      text-align: center;
     }
 
     th {
@@ -34,10 +36,17 @@
       background-color: #f1f1f1;
     }
 
-    .header-group-title, .header-group-average, .header-subgroup-title, .header-subgroup-average, .header-stakeholder {
-      background-color: #0056b3;
+    .header-subgroup-title,
+    .header-subgroup-average,
+    .header-stakeholder {
       color: #ffffff;
       text-align: center;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #002380;
+        text-decoration: none;
+      }
     }
 
     .group-title {
@@ -54,10 +63,9 @@
     .group-comments {
       background-color: #f4f6f7;
       text-align: center;
-      color: #007bff; 
-      text-decoration: underline; 
-      cursor: pointer; 
-    
+      text-decoration: underline;
+      cursor: pointer;
+
       &:hover {
         color: #002380;
         text-decoration: none;
@@ -93,7 +101,8 @@
       font-size: 14px;
     }
 
-    th, td {
+    th,
+    td {
       padding: 8px;
     }
   }
@@ -111,7 +120,26 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .stakeholder-average {
+    /* Your default styling here */
+  }
+
+  .stakeholder-average.has-substakeholder {
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      color: #3360da;
+
+      text-decoration: underline;
+    }
   }
 }

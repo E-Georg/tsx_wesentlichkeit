@@ -14,6 +14,8 @@ type ModalProps = {
 const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, groupTitle, comments }) => {
   if (!isOpen) return null;
 
+  console.log(comments);
+
   return (
     <div className="modal-overlay">
       <div className="modal-container">

@@ -41,6 +41,7 @@ export interface SubStakeholder {
   email: string;
   stakeholderId: number;
   stakeholderName?: string;
+  responded: number;
 }
 
 //für adis
