@@ -74,7 +74,7 @@ const ModalTable = ({
       />
 
       {classification != undefined && setClassification != undefined && (
-        <div>
+        <div className="dropdownRelevance-container">
           <SelectDropdown
             options={Classifications}
             value={classification}

@@ -1,24 +1,4 @@
-/* styles.css */
-.survey-container {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    color: black; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.groupcontainer {
-    margin-bottom: 40px;
-}
-
-.group-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: white;
-}
+/* SurveyQuestionList.scss */
 
 .question-box {
     border: 1px solid #ccc;
@@ -29,8 +9,8 @@
     position: relative; 
     width: 50rem;
     height: 10rem;
-}
 
+    
 .subgroup-container {
     display: flex;
     align-items: center;
@@ -42,12 +22,21 @@
     font-weight: bold;
     margin-bottom: 10px;
     position: relative; 
+    cursor: pointer;
 }
 
-.icon {
-    cursor: pointer;
+.button1 {
     margin-left: 10px;
-    font-size: 20px; 
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    color: white;
+    padding: 5px;
+    border-radius: 50%;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .question-description {
@@ -108,17 +97,9 @@
     flex: 1;
 }
 
-h1 {
-    color: white;
+img {
+    width: 20px;
+    height: 20px;
 }
 
-.button1{
-    margin-left: 1rem;
-    border: none;
-    background-color: white;
-    cursor: 'pointer';
-    color: 'white';
-    padding: '5px';
-    border-radius: '50%';
-    outline: 'none';
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './Survey.css';
+import './Survey.scss'; // Import the SCSS file
 import { Group, SurveyQuestion } from '../Models/data.interfaces';
 import { useStore } from '../../store';
 import { handleChangeInput } from './SurveyFunctions';
@@ -45,8 +45,10 @@ const Survey = ({ SurveyQuestions, Group, subStakeholderId }: Props) => {
               />
 
               <textarea
-                onChange={(event) => handleChangeInput(setSurveyText, Number(subStakeholderId), event, Number(group.id))}
-                style={{ width: '100%', height: '5rem' }}
+                onChange={(event) =>
+                  handleChangeInput(setSurveyText, Number(subStakeholderId), event, Number(group.id))
+                }
+                className="textarea"
               />
             </div>
           );

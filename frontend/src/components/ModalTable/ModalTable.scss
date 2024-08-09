@@ -3,6 +3,8 @@
 .modal-table-container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 
 
@@ -38,5 +40,11 @@
         margin-right: 2rem;
       }
       
+      .dropdownRelevance-container{
+        display: flex;
+        gap: 0.5rem; 
+        width: 100%; 
+      
+      }
   }
   

@@ -1,0 +1,26 @@
+/* SurveyPage.scss */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .loading-message {
+        text-align: center;
+        margin: 2rem;
+        font-size: 1.5rem;
+      }
+      
+      .save-button {
+        width: 100%;
+        background-color: #cfcfcf;  // Replace with the appropriate color from COLORS.TERTIARY if needed
+        border: none;
+        padding: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        text-align: center;
+      }
+      
+  }
+  
+  
