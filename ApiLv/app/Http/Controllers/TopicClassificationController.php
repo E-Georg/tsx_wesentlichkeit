@@ -9,47 +9,57 @@ class TopicClassificationController extends Controller
 {
     public function index(Request $request)
     {
-        $clientId = 2;
+        $clientId = 2; // Assuming you want to filter by a specific clientId
 
-        // Fetching the data with eager loading
         $clientTopicClassifications = ClientTopicClassification::with([
-            'categorizations.categorizationValues',
-            'stakeholders'
-        ])->where('clientId', $clientId)
+            'clientSubGroup', // To get groupId
+            'answers.categorizationValues', // To get categorization details
+            'stakeholders.stakeholder', // To get stakeholder details
+            'answers' // To get answers details
+        ])
+            ->where('clientId', $clientId)
             ->where('active', 1)
             ->get();
 
-        // Prepare the data to return as JSON
-        $response = [];
-
-        foreach ($clientTopicClassifications as $classification) {
-            $classificationData = [
-                'classificationId' => $classification->id,
-                'clientSubGroupId' => $classification->clientSubGroupId,
-                'specificAmountCase' => $classification->specificAmountCase,
-                'categorizations' => [],
-                'stakeholders' => [],
+        $result = $clientTopicClassifications->map(function ($classification) {
+            return [
+                'caseId' => $classification->id,
+                'caseTitle' => $classification->specificAmountCase,
+                'groupId' => optional($classification->clientSubGroup)->groupId,
+                'subGroupId' => $classification->clientSubGroupId,
+                'stakeholders' => $classification->stakeholders->map(function ($stakeholder) {
+                    return [
+                        'stakeholderId' => $stakeholder->stakeholderId,
+                        'stakeholderTitle' => optional($stakeholder->stakeholder)->title,
+                    ];
+                }),
+                'Answers' => $classification->answers->map(function ($answer) {
+                    return [
+                        'answerId' => $answer->id,
+                        'answerText' => $answer->topicClassificationCategorizationText,
+                        'answerPulldownValue' => $answer->topicClassificationCategorizationValue,
+                    ];
+                }),
+                //         'Questions' => $classification->answers->map(function ($answer) {
+                //             return [
+                //                 'topicId' => $answer->id,
+                //                 'topicTitle' => $answer->topicClassificationCategorizationText, // Adjusted field
+                //             ];
+                //         }),
+                // 'Choices' => $classification->answers->flatMap(function ($answer) {
+                //     return $answer->categorizationValues->map(function ($value) {
+                //         return [
+                //             'choiceId' => $value->id,
+                //             'choiceValue' => $value->topicClassificationCategorizationValueId,
+                //             'choiceText' => $value->text,
+                //             'clientTopicClassificationId' => $value->clientTopicClassificationId,
+                //         ];
+                //     });
+                // })
             ];
+        });
 
-            // Add categorizations and their values
-            foreach ($classification->categorizations as $categorization) {
-                $classificationData['categorizations'][] = [
-                    'categorizationText' => $categorization->topicClassificationCategorizationText,
-                    'categorizationValueTitle' => $categorization->categorizationValues->title ?? null,
-                ];
-            }
-
-            // Add stakeholders
-            foreach ($classification->stakeholders as $stakeholder) {
-                $classificationData['stakeholders'][] = [
-                    'stakeholderId' => $stakeholder->stakeholderId,
-                ];
-            }
-
-            $response[] = $classificationData;
-        }
-
-        // Return the response as JSON
-        return response()->json($response);
+        return response()->json($clientTopicClassifications);
+        //return response()->json($result);
     }
 }

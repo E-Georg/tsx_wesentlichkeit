@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class TopicClassificationCategorizationValues extends Model
 {
     use HasFactory;
+
     protected $table = 'wa_topicClassificationCategorizationValues';
 
     protected $fillable = [
-        'clientId',
-        'active',
-        'topicClassificationCategorizationValueId',
-        'title'
+        'topicClassificationCategorizationId',
+        'text'
     ];
+
+    public function categorizationValues()
+    {
+        return $this->belongsTo(TopicClassificationCategorization::class, 'topicClassificationCategorizationId');
+    }
 }
