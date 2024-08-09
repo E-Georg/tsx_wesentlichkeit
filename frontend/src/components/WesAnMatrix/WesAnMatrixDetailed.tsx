@@ -5,7 +5,6 @@ import useStakeholderData from '../Queries/useStakeholderData';
 import ModalComponent from '../WesAnModal/WesAnModal';
 import './WesAnMatrix.scss';
 import GroupActionCheckbox from '../GroupActionCheckbox/GroupActionCheckbox';
-import ModalStakeholderView from '../ModalStakeholderView/ModalStakeholderView';
 
 type Props = {};
 export type checkedBox = {
@@ -60,11 +59,8 @@ const WesAnMatrixDetailed = (_: Props) => {
     groupRelevance: group.groupRelevance,
     groupAverageTotal: group.groupAverageTotal,
     subGroups: group.subGroups,
+    value: group.value,
   }));
-
-  console.clear();
-
-  console.table(filteredSubGroupData);
 
   const getGroupMessages = (groupId: number) => {
     const group = SubStakeholderSurveyQuestionComments.find((g) => g.groupId === groupId);
@@ -91,33 +87,17 @@ const WesAnMatrixDetailed = (_: Props) => {
     }
   };
 
-  return (
-    <div className="wes-an-matrix">
-      <table className="matrix-table">
-        <thead>
-          <tr>
-            <th className="header-group-title">Group Title</th>
-            <th className="header-group-comments">Stakeholderbefragung </th>
-            <th className="header-group-chkbox">Wesentlich bewerten </th>
-            <th className="header-group-average">Group Average</th>
-            <th className="header-subgroup-title">Subgroup Title</th>
-            <th className="header-subgroup-average">Subgroup Average Score</th>
-            {Stakeholder.map((stakeholder) => (
-              <th className="header-stakeholder" key={stakeholder.id}>
-                {stakeholder.title}
-              </th>
-            ))}
-          </tr>
-        </thead>
+  const renderGroups = () => {
+    return filteredSubGroupData.map((group, index) => {
+      const groupState = state.find((item) => item.groupId === group.groupId);
+      if (!groupState) return null;
 
-        <tbody>
-          {filteredSubGroupData.map((group, index) => {
-            const groupState = state[index];
-            if (!groupState) return null;
-
-            return (
-              <React.Fragment key={group.groupId}>
-                <tr>
+      return (
+        <React.Fragment key={group.groupId}>
+          {group.subGroups.map((subGroup, subIndex) => (
+            <tr key={`${subGroup.subGroupId}-${group.groupId}-${subGroup.subGroupId}`}>
+              {subIndex === 0 && (
+                <>
                   <td className="group-title" rowSpan={group.subGroups.length}>
                     {group.groupTitle}
                   </td>
@@ -129,39 +109,49 @@ const WesAnMatrixDetailed = (_: Props) => {
                     Einsicht
                   </td>
                   <td className="group-checkbox" rowSpan={group.subGroups.length}>
-                    <GroupActionCheckbox
-                      groupId={group.groupId}
-                      state={groupState.relevance != null ? groupState.relevance : false}
-                      setState={setState}
-                    />
+                    <GroupActionCheckbox groupId={group.groupId} state={groupState.relevance} setState={setState} />
                   </td>
                   <td className="group-average" rowSpan={group.subGroups.length}>
                     {group.groupAverageTotal}
                   </td>
-                  <td className="subgroup-title">{group.subGroups[0]?.subGroupTitle}</td>
-                  <td className="subgroup-average">{group.subGroups[0]?.subgroupAverage}</td>
-                  {Stakeholder.map((stakeholder) => (
-                    <td className="stakeholder-average" key={`${stakeholder.id}-${group.groupId}`}>
-                      {group.subGroups.find((subGroup) => subGroup.stakeholderId === stakeholder.id)?.subgroupAverage ||
-                        '-'}
-                    </td>
-                  ))}
-                </tr>
-                {group.subGroups.slice(1).map((subGroup) => (
-                  <tr key={`${subGroup.subGroupId}-${group.groupId}-${subGroup.stakeholderId}`}>
-                    <td className="subgroup-title">{subGroup.subGroupTitle}</td>
-                    <td className="subgroup-average">{subGroup.subgroupAverage}</td>
-                    {Stakeholder.map((stakeholder) => (
-                      <td className="stakeholder-average" key={`${stakeholder.id}-${subGroup.subGroupId}`}>
-                        {subGroup.stakeholderId === stakeholder.id ? subGroup.subgroupAverage : '-'}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
+                </>
+              )}
+              <td className="subgroup-title">{subGroup.subGroupTitle}</td>
+              {Stakeholder.map((stakeholder) => {
+                const stakeholderSubgroup = subGroup.subGroupValues.find(
+                  (value) => value.stakeholderId === stakeholder.id
+                );
+                return (
+                  <td className="stakeholder-average" key={`${stakeholder.id}-${subGroup.subGroupId}`}>
+                    {stakeholderSubgroup ? stakeholderSubgroup.subgroupAverage : '-'}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </React.Fragment>
+      );
+    });
+  };
+
+  return (
+    <div className="wes-an-matrix">
+      <table className="matrix-table">
+        <thead>
+          <tr>
+            <th className="header-group-title">Group Title</th>
+            <th className="header-group-comments">Stakeholderbefragung</th>
+            <th className="header-group-chkbox">Wesentlich bewerten</th>
+            <th className="header-group-average">Group Average</th>
+            <th className="header-subgroup-title">Subgroup Title</th>
+            {Stakeholder.map((stakeholder) => (
+              <th className="header-stakeholder" key={stakeholder.id}>
+                {stakeholder.title}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>{renderGroups()}</tbody>
       </table>
       <button onClick={handleSendClick} className="send-button">
         Send Data
