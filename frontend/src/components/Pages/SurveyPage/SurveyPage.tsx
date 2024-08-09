@@ -3,8 +3,9 @@ import useGroupData from '../../Queries/useGroupData';
 import useSurveyQuestions from '../../Queries/useSurveyQuestions';
 import Survey from '../../Survey/Survey';
 import { useStore } from '../../../store';
-import { BUTTONS, COLORS } from '../../../utils/constants';
+import { BUTTONS } from '../../../utils/constants';
 import { handleClickOnSaveSurvey } from './SurveyPageFunctions';
+import './SurveyPage.scss'; // Import the SCSS file
 
 const SurveyPage = () => {
   const { SurveyQuestions, isLoadingQuestions, addAnswers } = useSurveyQuestions();
@@ -13,24 +14,25 @@ const SurveyPage = () => {
   const { id } = useParams();
 
   if (isLoadingQuestions || isLoading) {
-    <div>Loading ... </div>;
+    return <div className="loading-message">Loading ... </div>;
   }
   console.log(Number(id));
 
   return (
-    <>
+    <div className="container">
+      {' '}
       {SurveyQuestions && Array.isArray(SurveyQuestions) && Group && Array.isArray(Group) && (
         <>
           <Survey SurveyQuestions={SurveyQuestions} Group={Group} subStakeholderId={Number(id)} />
           <button
             onClick={() => handleClickOnSaveSurvey(addAnswers, Number(id), surveyAnswer, surveyText, resetSurvey)}
-            style={{ width: '100%', backgroundColor: COLORS.TERTIARY }}
+            className="save-button"
           >
             {BUTTONS.SEND}
           </button>
         </>
       )}
-    </>
+    </div>
   );
 };
 

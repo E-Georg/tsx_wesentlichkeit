@@ -1,6 +1,7 @@
 import { Importance } from '../../utils/constants';
 import { SurveyQuestion } from '../Models/data.interfaces';
 import { closeDescription, handleChange, toggleDescription } from './SurveyQuestionListFuntions';
+import './SurveyQuestionList.scss';
 
 const SurveyQuestionList = ({ setVisibleDescription, questions, visibleDescription, setSurveyAnswer }: any) => {
   return (
@@ -12,14 +13,7 @@ const SurveyQuestionList = ({ setVisibleDescription, questions, visibleDescripti
               {q.subGroupTitle}
 
               <button onClick={() => toggleDescription(setVisibleDescription, q.questions.id)} className="button1">
-                <img
-                  src="/src/assets/info.svg"
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                  }}
-                  alt="Info"
-                />
+                <img src="/src/assets/info.svg" alt="Info" />
               </button>
             </p>
 
@@ -42,7 +36,12 @@ const SurveyQuestionList = ({ setVisibleDescription, questions, visibleDescripti
             <div className="radio-inputs">
               {Importance.map((imp) => (
                 <label key={imp.answer} className="radio-input">
-                  <input type="radio" name={`question-${q.subGroupId}`} value={imp.answer} onChange={() => handleChange(setSurveyAnswer, q.subGroupId, imp.answer)} />
+                  <input
+                    type="radio"
+                    name={`question-${q.subGroupId}`}
+                    value={imp.answer}
+                    onChange={() => handleChange(setSurveyAnswer, q.subGroupId, imp.answer)}
+                  />
                 </label>
               ))}
             </div>
