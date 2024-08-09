@@ -35,7 +35,12 @@ const WesAnListSimple = (_: Props) => {
 
   const [currentStakeholderModal, setCurrentStakeholderModal] = useState<Info | null>(null);
 
+  // console.clear();
+
+  console.clear();
   console.table(SubStakeholder);
+
+  console.table(SubStakeholderSurveyQuestionAverageValues);
 
   const [state, setState] = useState<checkedBox[]>([]);
 
@@ -163,9 +168,9 @@ const WesAnListSimple = (_: Props) => {
                       >
                         <span>
                           {(Array.isArray(SurveyQuestionAverageValues) &&
-                            SurveyQuestionAverageValues.find((g) => g.groupId === group.groupId)?.subGroups.find(
-                              (subGroup) => subGroup.stakeholderId === stakeholder.id
-                            )?.subgroupAverage) ||
+                            SurveyQuestionAverageValues.find((g) => g.groupId === group.groupId)?.value.find(
+                              (values) => values.stakeholderId === stakeholder.id
+                            )?.groupAverage) ||
                             '-'}
                         </span>
                       </td>
