@@ -127,4 +127,19 @@
       transform: rotate(360deg);
     }
   }
+
+  .stakeholder-average {
+    /* Your default styling here */
+  }
+
+  .stakeholder-average.has-substakeholder {
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      color: #3360da;
+
+      text-decoration: underline;
+    }
+  }
 }
