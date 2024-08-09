@@ -62,6 +62,10 @@ const WesAnMatrixDetailed = (_: Props) => {
     subGroups: group.subGroups,
   }));
 
+  console.clear();
+
+  console.table(filteredSubGroupData);
+
   const getGroupMessages = (groupId: number) => {
     const group = SubStakeholderSurveyQuestionComments.find((g) => g.groupId === groupId);
     return group ? group.Messages : [];

@@ -15,9 +15,14 @@ export type checkedBox = {
 };
 
 const WesAnListSimple = (_: Props) => {
-  const { SurveyQuestionAverageValues, isLoadingQuestionsAverage, updateRelevance } = useSurveyQuestionAverageValues();
+  const {
+    SurveyQuestionAverageValues,
+    SubStakeholderSurveyQuestionAverageValues,
+    isLoadingQuestionsAverage,
+    updateRelevance,
+  } = useSurveyQuestionAverageValues();
   const { Stakeholder, isLoadingStake } = useStakeholderData();
-  const { SubStakeholder, isLoadingSubStake } = useSubStakeholderData();
+  const { SubStakeholder, isLoadingStake: isLoadingSubStake } = useSubStakeholderData();
   const { SubStakeholderSurveyQuestionComments, isLoadingSubStakeholderComments } = useSurveyQuestionAverageValues();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -29,6 +34,8 @@ const WesAnListSimple = (_: Props) => {
   const [currentSubstakeholder, setCurrentSubstakeholder] = useState([]);
 
   const [currentStakeholderModal, setCurrentStakeholderModal] = useState<Info | null>(null);
+
+  console.table(SubStakeholder);
 
   const [state, setState] = useState<checkedBox[]>([]);
 
