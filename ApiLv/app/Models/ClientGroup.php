@@ -19,4 +19,9 @@ class ClientGroup extends Model
         'active',
         'tag'
     ];
+
+    public function subGroup()
+    {
+        return $this->hasMany(ClientSubGroup::class, 'groupId',);
+    }
 }

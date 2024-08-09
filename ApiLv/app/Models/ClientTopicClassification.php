@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientTopicClassification extends Model
 {
     use HasFactory;
+
     protected $table = 'wa_clientTopicClassification';
 
     protected $fillable = [
@@ -17,14 +18,27 @@ class ClientTopicClassification extends Model
         'specificAmountCase'
     ];
 
-
-    public function categorizations()
+    public function clientSubGroup()
     {
-        return $this->hasMany(ClientTopicClassificationCategorization::class, 'clientTopicClassificationId', 'id');
+        return $this->belongsTo(ClientSubGroup::class, 'groupId');
     }
+
+    // In ClientTopicClassification model
+
+    // Relationship to the ClientTopicClassificationCategorization
+    public function answers()
+    {
+        return $this->hasMany(ClientTopicClassificationCategorization::class, 'clientTopicClassificationId');
+    }
+
 
     public function stakeholders()
     {
-        return $this->hasMany(ClientTopicClassificationClientStakeholders::class, 'clientTopicClassificationId', 'id');
+        return $this->hasMany(ClientTopicClassificationClientStakeholders::class, 'clientTopicClassificationId');
     }
+
+    // public function questions()
+    // {
+    //     return $this->hasMany(TopicClassificationCategorization::class, 'clientTopicClassificationId');
+    // }
 }

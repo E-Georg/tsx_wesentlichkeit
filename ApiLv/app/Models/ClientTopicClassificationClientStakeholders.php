@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientTopicClassificationClientStakeholders extends Model
 {
     use HasFactory;
+
     protected $table = 'wa_clientTopicClassificationClientStakeholders';
 
     protected $fillable = [
@@ -17,8 +18,13 @@ class ClientTopicClassificationClientStakeholders extends Model
         'stakeholderId'
     ];
 
-    public function classification()
+    public function stakeholder()
     {
-        return $this->belongsTo(ClientTopicClassification::class, 'clientTopicClassificationId', 'id');
+        return $this->belongsTo(ClientStakeholders::class, 'stakeholderId');
     }
+
+    // public function classification()
+    // {
+    //     return $this->belongsTo(ClientTopicClassification::class, 'id', 'clientTopicClassificationId');
+    // }
 }
