@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'value' => [],
                     'subGroups' => []
                 ];
-            }
+            };
 
             // Add stakeholder group average
             if (!isset($data[$groupId]['value'][$stakeholderId])) {
