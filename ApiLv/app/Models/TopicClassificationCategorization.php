@@ -20,7 +20,7 @@ class TopicClassificationCategorization extends Model
         return $this->belongsTo(ClientTopicClassificationCategorization::class, 'topicClassificationCategorizationId');
     }
 
-    public function categorizationValues()
+    public function categorizationvalues()
     {
         return $this->hasMany(TopicClassificationCategorizationValues::class, 'topicClassificationCategorizationId', 'id');
     }

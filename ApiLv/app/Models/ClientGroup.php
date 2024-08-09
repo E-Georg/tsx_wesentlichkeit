@@ -20,7 +20,7 @@ class ClientGroup extends Model
         'tag'
     ];
 
-    public function subGroup()
+    public function subgroup()
     {
         return $this->hasMany(ClientSubGroup::class, 'groupId',);
     }

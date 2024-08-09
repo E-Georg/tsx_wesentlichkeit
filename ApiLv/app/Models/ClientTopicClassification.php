@@ -18,9 +18,9 @@ class ClientTopicClassification extends Model
         'specificAmountCase'
     ];
 
-    public function clientSubGroup()
+    public function clientsubgroup()
     {
-        return $this->belongsTo(ClientSubGroup::class, 'groupId');
+        return $this->belongsTo(ClientSubGroup::class, 'clientSubGroupId');
     }
 
     // In ClientTopicClassification model

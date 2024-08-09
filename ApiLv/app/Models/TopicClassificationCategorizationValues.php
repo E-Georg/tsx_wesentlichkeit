@@ -16,7 +16,7 @@ class TopicClassificationCategorizationValues extends Model
         'text'
     ];
 
-    public function categorizationValues()
+    public function categorizationvalues()
     {
         return $this->belongsTo(TopicClassificationCategorization::class, 'topicClassificationCategorizationId');
     }

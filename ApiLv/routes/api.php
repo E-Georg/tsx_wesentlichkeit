@@ -25,9 +25,14 @@ use App\Http\Controllers\TopicClassificationController;
 */
 
 Route::apiResource('client-groups', ClientGroupController::class);
-Route::get('/topicClassifictaion', TopicClassificationController::class);
+Route::get('/topicClassifictaion', [TopicClassificationController::class, 'index']);
 
 Route::post('/getGroups', [ClientGroupController::class, 'getClientGroups']);
+
+Route::post('/getanswers', [TopicClassificationController::class, 'getAnswers']);
+Route::post('/getQuestionsAndOptions', [TopicClassificationController::class, 'getQuestionsAndOptions']);
+Route::post('/getRestOfData', [TopicClassificationController::class, 'getRestOfData']);
+
 
 
 

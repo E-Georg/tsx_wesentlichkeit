@@ -1,0 +1,42 @@
+/* ModalTable.scss */
+
+.modal-table-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+
+    .modal-table-input {
+        width: 100%;
+        height: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-size: 18px;
+      }
+      
+      .modal-table-editor {
+        width: 98.5%;
+        height: 200px;
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        overflow: auto;
+        position: relative;
+        color: black;
+      }
+      
+      .modal-table-selectDropdown {
+        width: 100%;
+        height: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      
+      .modal-table-textarea {
+        width: 30rem;
+        height: 4rem;
+        margin-right: 2rem;
+      }
+      
+  }
+  

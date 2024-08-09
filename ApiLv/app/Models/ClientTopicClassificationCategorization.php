@@ -59,8 +59,8 @@ class ClientTopicClassificationCategorization extends Model
         return $this->belongsTo(ClientTopicClassification::class, 'clientTopicClassificationId');
     }
 
-    public function categorizationValues()
+    public function categorizationvalues()
     {
-        return $this->belongsTo(TopicClassificationCategorizationValues::class, 'topicClassificationCategorizationId');
+        return $this->belongsTo(TopicClassificationCategorization::class, 'topicClassificationCategorizationId');
     }
 }

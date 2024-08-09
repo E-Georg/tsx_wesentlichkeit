@@ -31,7 +31,7 @@ class ClientSubGroup extends Model
         return $this->hasMany(ClientTopicClassification::class, 'clientSubGroupId', 'id');
     }
 
-    public function Groups()
+    public function groups()
     {
         return $this->belongsTo(ClientGroup::class, 'groupId');
     }

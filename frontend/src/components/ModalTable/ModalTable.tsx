@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Classifications, Relevances } from '../../utils/constants';
 import { relevance } from '../../store';
 import SelectDropdown from '../SelectDropdown/SelectDropdown';
+import './ModalTable.scss'; // Import the SCSS file
 
 type Props = {
   title: string;
@@ -35,7 +36,6 @@ const ModalTable = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let value = Number(event.target.value);
-    console.log(value);
     value = value === 0 ? 5 : value;
     setRelevance!!({ text: relevance?.text!!, value: value });
   };
@@ -52,19 +52,13 @@ const ModalTable = ({
   }, [description]);
 
   return (
-    <div>
+    <div className="modal-table-container">
       <input
         type="text"
         placeholder="Enter the Title of ..."
         value={title}
         onChange={(event) => setTitle(event.target.value)}
-        style={{
-          width: '100%',
-          height: '2rem',
-          marginBottom: '2rem',
-          textAlign: 'center',
-          fontSize: '18px',
-        }}
+        className="modal-table-input"
       />
 
       <div
@@ -73,16 +67,7 @@ const ModalTable = ({
         id="editor"
         defaultValue={description}
         data-placeholder="Description"
-        style={{
-          width: '98.5%',
-          height: '200px',
-          border: '1px solid #ccc',
-          padding: '0.5rem',
-          marginBottom: '1rem',
-          overflow: 'auto',
-          position: 'relative',
-          color: 'black',
-        }}
+        className="modal-table-editor"
         onBlur={() => {
           isEditorReady && editorRef.current && setDescription(editorRef.current.innerHTML);
         }}
@@ -95,25 +80,26 @@ const ModalTable = ({
             value={classification}
             onChange={handleSelectChange}
             placeholder={'Wähle Stakeholderklassifizierung'}
-            style={{
-              width: '100%',
-              height: '2rem',
-              marginBottom: '1rem',
-              textAlign: 'center',
-            }}
             slice={true}
             defaultValue={5}
           />
 
           <textarea
-            style={{ width: '30rem', height: '4rem', marginRight: '2rem' }}
+            className="modal-table-textarea"
             placeholder="Begründen Sie die Relevanz!"
             value={relevance?.text}
             onChange={handleChangeInput}
             rows={1}
             cols={10}
           />
-          <SelectDropdown options={Relevances} value={relevance?.value!!} onChange={handleChange} placeholder={'Relevanz auswählen'} slice={true} defaultValue={5} />
+          <SelectDropdown
+            options={Relevances}
+            value={relevance?.value!!}
+            onChange={handleChange}
+            placeholder={'Relevanz auswählen'}
+            slice={true}
+            defaultValue={5}
+          />
         </div>
       )}
     </div>

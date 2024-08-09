@@ -380,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 AND sg.active = 1
                 AND sg.clientId = :clientId
             GROUP BY
-                sg.groupId, sg.id, sst.stakeholderId, sst.id;
+                sg.groupId, sst.stakeholderId, sst.id;
 ";
 
         $cols = array('clientId' => $clientId);
@@ -402,7 +402,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (!isset($processedData[$groupId])) {
                 $processedData[$groupId] = [
                     'groupId' => $groupId,
-                    'subGroupId' => $subGroupId,
                     'stakeholderId' => $stakeholderId,
                     'AverageValusGroup' => [],
                     'AverageValueSubGroups' => []

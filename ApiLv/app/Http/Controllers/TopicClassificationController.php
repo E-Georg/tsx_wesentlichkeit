@@ -12,10 +12,9 @@ class TopicClassificationController extends Controller
         $clientId = 2; // Assuming you want to filter by a specific clientId
 
         $clientTopicClassifications = ClientTopicClassification::with([
-            'clientSubGroup', // To get groupId
-            'answers.categorizationValues', // To get categorization details
+            'clientsubgroup.groups', // To get groupId
+            'answers.categorizationvalues.categorizationvalues', // To get categorization details
             'stakeholders.stakeholder', // To get stakeholder details
-            'answers' // To get answers details
         ])
             ->where('clientId', $clientId)
             ->where('active', 1)
@@ -25,7 +24,7 @@ class TopicClassificationController extends Controller
             return [
                 'caseId' => $classification->id,
                 'caseTitle' => $classification->specificAmountCase,
-                'groupId' => optional($classification->clientSubGroup)->groupId,
+                'groupId' => optional($classification->clientsubgroup)->groupId,
                 'subGroupId' => $classification->clientSubGroupId,
                 'stakeholders' => $classification->stakeholders->map(function ($stakeholder) {
                     return [
@@ -33,33 +32,121 @@ class TopicClassificationController extends Controller
                         'stakeholderTitle' => optional($stakeholder->stakeholder)->title,
                     ];
                 }),
-                'Answers' => $classification->answers->map(function ($answer) {
+                'answers' => $classification->answers->map(function ($answer) {
                     return [
                         'answerId' => $answer->id,
+                        'caseId' => $answer->clientTopicClassificationId,
+                        'questionId' => $answer->topicClassificationCategorizationId,
                         'answerText' => $answer->topicClassificationCategorizationText,
                         'answerPulldownValue' => $answer->topicClassificationCategorizationValue,
                     ];
                 }),
-                //         'Questions' => $classification->answers->map(function ($answer) {
-                //             return [
-                //                 'topicId' => $answer->id,
-                //                 'topicTitle' => $answer->topicClassificationCategorizationText, // Adjusted field
-                //             ];
-                //         }),
-                // 'Choices' => $classification->answers->flatMap(function ($answer) {
-                //     return $answer->categorizationValues->map(function ($value) {
-                //         return [
-                //             'choiceId' => $value->id,
-                //             'choiceValue' => $value->topicClassificationCategorizationValueId,
-                //             'choiceText' => $value->text,
-                //             'clientTopicClassificationId' => $value->clientTopicClassificationId,
-                //         ];
-                //     });
-                // })
+                'questionsAndOptions' => $classification->answers->map(function ($answer) {
+                    // Check if `categorization_values` is present and is not null
+                    if ($answer->categorizationvalues) {
+                        return [
+                            'question' => [
+                                'questionId' => $answer->categorizationvalues->id,
+                                'questionTitle' => $answer->categorizationvalues->title,
+                            ],
+                            'options' => $answer->categorizationvalues->categorizationvalues->map(function ($value) {
+                                return [
+                                    'pullDownId' => $value->id,
+                                    'pullDownOption' => $value->text,
+                                ];
+                            })->toArray()
+                        ];
+                    }
+                }),
             ];
         });
+        //return ($clientTopicClassifications);
+        return response()->json($result);
+    }
 
-        return response()->json($clientTopicClassifications);
-        //return response()->json($result);
+
+    public function getAnswers(Request $request)
+    {
+        $clientId = $request->input('clientId');
+
+        $answers = ClientTopicClassification::with(['answers'])
+            ->where('clientId', $clientId)
+            ->where('active', 1)
+            ->get()
+            ->map(function ($classification) {
+                return $classification->answers->map(function ($answer) {
+                    return [
+                        'answerId' => $answer->id,
+                        'caseId' => $answer->clientTopicClassificationId,
+                        'questionId' => $answer->topicClassificationCategorizationId,
+                        'answerText' => $answer->topicClassificationCategorizationText,
+                        'answerPulldownValue' => $answer->topicClassificationCategorizationValue,
+                    ];
+                });
+            });
+
+        return response()->json($answers);
+    }
+
+    public function getQuestionsAndOptions(Request $request)
+    {
+        $clientId = $request->input('clientId');
+
+        $questionsAndOptions = ClientTopicClassification::with([
+            'answers.categorizationvalues.categorizationvalues' // Load related categorization values
+        ])
+            ->where('clientId', $clientId)
+            ->where('active', 1)
+            ->get()
+            ->map(function ($classification) {
+                return $classification->answers->map(function ($answer) {
+                    if ($answer->categorizationvalues) {
+                        return [
+                            'question' => [
+                                'questionId' => $answer->categorizationvalues->id,
+                                'questionTitle' => $answer->categorizationvalues->title,
+                            ],
+                            'options' => $answer->categorizationvalues->categorizationvalues->map(function ($value) {
+                                return [
+                                    'pullDownId' => $value->id,
+                                    'pullDownOption' => $value->text,
+                                ];
+                            })->toArray()
+                        ];
+                    }
+                    return null;
+                })->filter(); // Filter out any null results
+            });
+
+        return response()->json($questionsAndOptions);
+    }
+
+    public function getRestOfData(Request $request)
+    {
+        $clientId = $request->input('clientId');
+
+        $restOfData = ClientTopicClassification::with([
+            'clientsubgroup.groups', // To get groupId
+            'stakeholders.stakeholder', // To get stakeholder details
+        ])
+            ->where('clientId', $clientId)
+            ->where('active', 1)
+            ->get()
+            ->map(function ($classification) {
+                return [
+                    'caseId' => $classification->id,
+                    'caseTitle' => $classification->specificAmountCase,
+                    'groupId' => optional($classification->clientsubgroup)->groupId,
+                    'subGroupId' => $classification->clientSubGroupId,
+                    'stakeholders' => $classification->stakeholders->map(function ($stakeholder) {
+                        return [
+                            'stakeholderId' => $stakeholder->stakeholderId,
+                            'stakeholderTitle' => optional($stakeholder->stakeholder)->title,
+                        ];
+                    }),
+                ];
+            });
+
+        return response()->json($restOfData);
     }
 }
